@@ -1,0 +1,35 @@
+'''
+Created on 26 Aug 2017
+
+@author: Saumitra
+'''
+
+import lasagne
+from lasagne.layers import (InputLayer, DenseLayer, ReshapeLayer, TransposedConv2DLayer)
+
+def architecture_upconv(input_var, input_shape):
+    
+    net = {}
+    
+    net['data'] = InputLayer(input_shape, input_var)
+    net['fc1'] = DenseLayer(net['data'], num_units=64, W=lasagne.init.Orthogonal(), nonlinearity=lasagne.nonlinearities.very_leaky_rectify)
+    net['fc2'] = DenseLayer(net['fc1'], num_units=256, W=lasagne.init.Orthogonal(), nonlinearity=lasagne.nonlinearities.very_leaky_rectify)
+    net['rs1'] = ReshapeLayer(net['fc2'], (32, 16, 4, 4)) # assuming that the shape is batch x depth x row x columns
+    kwargs = dict(filter_size= 4,
+                  stride = 2,
+                  crop = 1,
+                  nonlinearity=lasagne.nonlinearities.very_leaky_rectify,
+                  W=lasagne.init.Orthogonal())
+    net['uc1'] = TransposedConv2DLayer(net['rs1'], num_filters= 16, **kwargs)
+    net['uc2'] = TransposedConv2DLayer(net['uc1'], num_filters= 8, **kwargs)
+    net['uc3'] = TransposedConv2DLayer(net['uc2'], num_filters= 4, **kwargs)
+    net['uc4'] = TransposedConv2DLayer(net['uc3'], num_filters= 2, **kwargs)
+    net['uc5'] = TransposedConv2DLayer(net['uc4'], num_filters= 1, **kwargs)
+
+    # slicing the output to 115 x 80 size
+    print(net['uc5'].output_shape)    
+    net['s1'] = lasagne.layers.SliceLayer(net['uc5'], slice(0, 115), axis=-2)
+    net['out'] = lasagne.layers.SliceLayer(net['s1'], slice(0, 80), axis=-1)
+    print(net['out'] .output_shape)
+    
+    return net['out']
