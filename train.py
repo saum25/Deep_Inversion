@@ -215,7 +215,9 @@ def main():
     outputs = lasagne.layers.get_output(gen_network, deterministic=False)
     #cost = T.mean(lasagne.objectives.squared_error(outputs, inputs))
     # loss: squared euclidean distance per sample in a batch
-    cost = T.mean(T.sum(lasagne.objectives.squared_error(outputs, inputs), axis=[1, 2]))
+    #temp = lasagne.objectives.squared_error(outputs, inputs)
+    #cost_1 = (T.sum(temp, axis=[2, 3]))
+    cost = T.mean(T.sum(lasagne.objectives.squared_error(outputs, inputs), axis=[2, 3]))
         
     # prepare and compile training function
     params = lasagne.layers.get_all_params(gen_network, trainable=True)
