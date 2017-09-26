@@ -12,16 +12,18 @@ def architecture_upconv(input_var, input_shape):
     net = {}
     
     net['data'] = InputLayer(input_shape, input_var)
-    net['fc1'] = DenseLayer(net['data'], num_units=64, W=lasagne.init.Orthogonal(), nonlinearity=lasagne.nonlinearities.very_leaky_rectify)
-    net['fc2'] = DenseLayer(net['fc1'], num_units=256, W=lasagne.init.Orthogonal(), nonlinearity=lasagne.nonlinearities.very_leaky_rectify)
+    #net['fc1'] = DenseLayer(net['data'], num_units=64, W=lasagne.init.Orthogonal(), nonlinearity=lasagne.nonlinearities.very_leaky_rectify)
+    net['fc2'] = DenseLayer(net['data'], num_units=256, W=lasagne.init.Orthogonal(), nonlinearity=lasagne.nonlinearities.leaky_rectify)
     net['rs1'] = ReshapeLayer(net['fc2'], (32, 16, 4, 4)) # assuming that the shape is batch x depth x row x columns
     kwargs = dict(filter_size= 4,
                   stride = 2,
                   crop = 1,
-                  nonlinearity=lasagne.nonlinearities.very_leaky_rectify,
+                  nonlinearity=lasagne.nonlinearities.leaky_rectify,
                   W=lasagne.init.Orthogonal())
     net['uc1'] = TransposedConv2DLayer(net['rs1'], num_filters= 16, **kwargs)
+    print(net['uc1'].output_shape)    
     net['uc2'] = TransposedConv2DLayer(net['uc1'], num_filters= 8, **kwargs)
+    print(net['uc2'].output_shape)    
     net['uc3'] = TransposedConv2DLayer(net['uc2'], num_filters= 4, **kwargs)
     net['uc4'] = TransposedConv2DLayer(net['uc3'], num_filters= 2, **kwargs)
     net['uc5'] = TransposedConv2DLayer(net['uc4'], num_filters= 1, **kwargs)

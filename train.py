@@ -6,8 +6,7 @@ Created on 22 Aug 2017
 
 Code to train an upconvolutional neural network for
 inverting a feature representation captured by Jan's
-SVD
-
+SVD [ISMIR 2015].
 @author: Saumitra
 '''
 
@@ -30,9 +29,11 @@ import upconv
 import sys
 
 def argument_parser():
-    parser = argparse.ArgumentParser(description='Trains an upconvolutional network for feature inversion')
-    parser.add_argument('modelfile', action='store', help='file to load the learned weights from (.npz format)')
-    parser.add_argument('outfile', action='store', help='file to save the trained upconv network weights to (.npz format)')
+    parser = argparse.ArgumentParser(description='Trains an upconvolutional neural network for feature inversion')
+    # Positional arguments
+    parser.add_argument('prediction_file', action='store', help='file to load the prediction network weights from (.npz format)')
+    parser.add_argument('generator_file', action='store', help='file to save the generator network weights to (.npz format)')
+    # Optional arguments
     parser.add_argument('--dataset', default='jamendo', help='Name of the dataset to use.')
     parser.add_argument('--cache-spectra', metavar='DIR', default=None, help='Store spectra in the given directory (disabled by default).')
     parser.add_argument('--augment', action='store_true', default=True, help='If given, perform train-time data augmentation.')
@@ -41,9 +42,11 @@ def argument_parser():
     return parser
     
 def main():
+
     parser = argument_parser()
     args = parser.parse_args()
-    
+
+    # default arguments    
     sample_rate = 22050
     frame_len = 1024
     fps = 70
@@ -179,7 +182,7 @@ def main():
                     num_cached=bg_processes * 25,
                     in_processes=True)
     
-    print("Preparing training functions...")
+    print("Preparing prediction and generator functions...")
     # we create two functions by using two network architectures. One uses the pre-trained network
     # the other trains an upconvolutional network.
     
@@ -191,29 +194,31 @@ def main():
     network = model.architecture(inputs, (None, 1, blocklen, mel_bands))
     
     # load saved weights
-    with np.load(args.modelfile) as f:
+    with np.load(args.prediction_file) as f:
         lasagne.layers.set_all_param_values(
-                network, [f['param%d' % i] for i in range(len(f.files))])
+                network['fc9'], [f['param%d' % i] for i in range(len(f.files))])
 
     # create output expression
-    outputs_fc9 = lasagne.layers.get_output(network, deterministic=True)
+    outputs_score = lasagne.layers.get_output(network['fc8'], deterministic=True)
 
     # prepare and compile prediction function
     print("Compiling prediction function...")
-    pred_fn = theano.function([input_var], outputs_fc9)
+    pred_fn = theano.function([input_var], outputs_score)
     
     # training the Upconvolutional network - Network 2
     
-    input_var_deconv = T.col('input_var_deconv')
-    inputs_deconv = input_var_deconv.dimshuffle(0, 1, 'x', 'x') # 32x 1 x 1 x 1. Adding the width and depth dimensions
-    net = upconv.architecture_upconv(inputs_deconv, (32, 1, 1, 1))
+    input_var_deconv = T.matrix('input_var_deconv')
+    #inputs_deconv = input_var_deconv.dimshuffle(0, 1, 'x', 'x') # 32 x 64 x 1 x 1. Adding the width and depth dimensions
+    gen_network = upconv.architecture_upconv(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['fc8'])[1]))
     
     # create cost expression
-    outputs = lasagne.layers.get_output(net, deterministic=False)
-    cost = T.mean(lasagne.objectives.squared_error(outputs, inputs))
+    outputs = lasagne.layers.get_output(gen_network, deterministic=False)
+    #cost = T.mean(lasagne.objectives.squared_error(outputs, inputs))
+    # loss: squared euclidean distance per sample in a batch
+    cost = T.mean(T.sum(lasagne.objectives.squared_error(outputs, inputs), axis=[1, 2]))
         
     # prepare and compile training function
-    params = lasagne.layers.get_all_params(net, trainable=True)
+    params = lasagne.layers.get_all_params(gen_network, trainable=True)
     initial_eta = 0.01
     eta_decay = 0.85
     momentum = 0.95
@@ -223,10 +228,10 @@ def main():
     train_fn = theano.function([input_var_deconv, input_var], cost, updates=updates)
         
     
-    # run training loop
-    print("Training:")
+    # run the training loop
+    print("Training the inversion network:")
     epochs = 20
-    epochsize = 20
+    epochsize = 2000
     batches = iter(batches)
     for epoch in range(epochs):
         err = 0
@@ -234,13 +239,9 @@ def main():
                 range(epochsize), min_delay=.5,
                 desc='Epoch %d/%d: Batch ' % (epoch + 1, epochs)):
             data, labels = next(batches) # followed a simple styple *next(batches) from Jan is unclear what is passed.
-            pred = pred_fn(data)    # a theano function returns a numpy array always. Here it is a column vector of shape 32  x 1
+            # labels information is a dummy variable its not used in training.
+            pred = pred_fn(data)    # a theano function returns a numpy array always. Here it is a matrix of shape 32  x 64
             err += train_fn(pred, data)
-            
-            '''# printing the weights of the first dense layer after each update            
-            params = lasagne.layers.get_all_param_values(l_dense1)
-            print(params[12])'''
-
             
             if not np.isfinite(err):
                 print("\nEncountered NaN loss in training. Aborting.")
@@ -250,8 +251,8 @@ def main():
 
     # save final network
     print("Saving final model")
-    np.savez(args.outfile, **{'param%d' % i: p for i, p in enumerate(
-            lasagne.layers.get_all_param_values(net))})
+    np.savez(args.generator_file, **{'param%d' % i: p for i, p in enumerate(
+            lasagne.layers.get_all_param_values(gen_network))})
 
 
 if __name__ == '__main__':
