@@ -70,7 +70,7 @@ def main():
     datadir = os.path.join(os.path.dirname(__file__), os.path.pardir, 'datasets', args.dataset)
 
     # load filelist
-    with io.open(os.path.join(datadir, 'filelists', 'valid')) as f:
+    with io.open(os.path.join(datadir, 'filelists', 'test')) as f:
         filelist = [l.rstrip() for l in f if l.rstrip()]
 
     # compute spectra

@@ -62,42 +62,68 @@ def main():
     # prepare dataset
     datadir = os.path.join(os.path.dirname(__file__), os.path.pardir, 'datasets', args.dataset)
 
-    # load filelist
+    # load filelist - training and vaildation
     with io.open(os.path.join(datadir, 'filelists', 'train')) as f:
-        filelist = [l.rstrip() for l in f if l.rstrip()]
+        filelist_tr = [l.rstrip() for l in f if l.rstrip()]
+        
+    with io.open(os.path.join(datadir, 'filelists', 'valid')) as f:
+        filelist_va = [l.rstrip() for l in f if l.rstrip()]
 
     # compute spectra
     print("Computing%s spectra..." %
           (" or loading" if args.cache_spectra else ""))
-    spects = []
-    for fn in progress(filelist, 'File '):
+    spects_tr = []
+    spects_va = []
+    
+    for fn in progress(filelist_tr, 'File '):
         cache_fn = (args.cache_spectra and os.path.join(args.cache_spectra, fn + '.npy'))
-        spects.append(cached(cache_fn, audio.extract_spect, os.path.join(datadir, 'audio', fn),sample_rate, frame_len, fps))
+        spects_tr.append(cached(cache_fn, audio.extract_spect, os.path.join(datadir, 'audio', fn),sample_rate, frame_len, fps))
+    
+    for fn in progress(filelist_va, 'File '):
+        cache_fn = (args.cache_spectra and os.path.join(args.cache_spectra, fn + '.npy'))
+        spects_va.append(cached(cache_fn, audio.extract_spect, os.path.join(datadir, 'audio', fn),sample_rate, frame_len, fps))
+
     
     # load and convert corresponding labels
     print("Loading labels...")
 
-    labels = []
-    for fn, spect in zip(filelist, spects):
+    labels_tr = []
+    labels_va = []
+    for fn, spect in zip(filelist_tr, spects_tr):
         fn = os.path.join(datadir, 'labels', fn.rsplit('.', 1)[0] + '.lab')
         with io.open(fn) as f:
             segments = [l.rstrip().split() for l in f if l.rstrip()]
         segments = [(float(start), float(end), label == 'sing')
                     for start, end, label in segments]
         timestamps = np.arange(len(spect)) / float(fps)
-        labels.append(create_aligned_targets(segments, timestamps, np.bool))
+        labels_tr.append(create_aligned_targets(segments, timestamps, np.bool))
         
+    for fn, spect in zip(filelist_va, spects_va):
+        fn = os.path.join(datadir, 'labels', fn.rsplit('.', 1)[0] + '.lab')
+        with io.open(fn) as f:
+            segments = [l.rstrip().split() for l in f if l.rstrip()]
+        segments = [(float(start), float(end), label == 'sing')
+                    for start, end, label in segments]
+        timestamps = np.arange(len(spect)) / float(fps)
+        labels_va.append(create_aligned_targets(segments, timestamps, np.bool))
+
+    
+    
     # prepare mel filterbank
     filterbank = audio.create_mel_filterbank(sample_rate, frame_len, mel_bands,
                                              mel_min, mel_max)
     filterbank = filterbank[:bin_mel_max].astype(floatX)    
     
     # precompute mel spectra, if needed, otherwise just define a generator
-    mel_spects = (np.log(np.maximum(np.dot(spect[:, :bin_mel_max], filterbank),1e-7)) for spect in spects) # it is not clear why is Jan using natural log in place of log 10.
+    mel_spects_tr = (np.log(np.maximum(np.dot(spect[:, :bin_mel_max], filterbank),1e-7)) for spect in spects_tr) # it is not clear why is Jan using natural log in place of log 10.
+    mel_spects_va = (np.log(np.maximum(np.dot(spect[:, :bin_mel_max], filterbank),1e-7)) for spect in spects_va) 
     
     if not args.augment:
-        mel_spects = list(mel_spects)
-        del spects
+        mel_spects_tr = list(mel_spects_tr)
+        del spects_tr
+        
+        mel_spects_va = list(mel_spects_va)
+        del spects_va
         
     # - load mean/std or compute it, if not computed yet
     meanstd_file = os.path.join(os.path.dirname(__file__), '%s_meanstd.npz' % args.dataset)
@@ -107,7 +133,7 @@ def main():
             std = f['std']
     except (IOError, KeyError):
         print("Computing mean and standard deviation...")
-        mean, std = znorm.compute_mean_std(mel_spects)
+        mean, std = znorm.compute_mean_std(mel_spects_tr)
         np.savez(meanstd_file, mean=mean, std=std)
         
     mean = mean.astype(floatX)
@@ -118,16 +144,21 @@ def main():
     if not args.augment:
         # Without augmentation, we just precompute the normalized mel spectra
         # and create a generator that returns mini-batches of random excerpts
-        mel_spects = [(spect - mean) * istd for spect in mel_spects]
-        batches = augment.grab_random_excerpts(mel_spects, labels, batchsize, blocklen)
+        mel_spects_tr = [(spect - mean) * istd for spect in mel_spects_tr]
+        batches_tr = augment.grab_random_excerpts(mel_spects_tr, labels_tr, batchsize, blocklen)
+        
+        mel_spects_va = [(spect - mean) * istd for spect in mel_spects_va]
+        batches_va = augment.grab_random_excerpts(mel_spects_va, labels_va, batchsize, blocklen)
     else:
+        #####CAUTION###### THE DATA AUGMENT CODE WILL NOT WORK AUTOMATICALLY AS THE TRAINING AND VALIDATION SUPPORT IS NOT ADDED CLEANLY.
+        # IT JUST SHOWS THE TRAINING VARIBALES
         # For time stretching and pitch shifting, it pays off to preapply the
         # spline filter to each input spectrogram, so it does not need to be
         # applied to each mini-batch later.
         spline_order = 2
         if spline_order > 1:
             from scipy.ndimage import spline_filter
-            spects = [spline_filter(spect, spline_order).astype(floatX) for spect in spects]
+            spects = [spline_filter(spect, spline_order).astype(floatX) for spect in spects_tr]
         
         # We define a function to create the mini-batch generator. This allows
         # us to easily create multiple generators for multithreading if needed.
@@ -168,17 +199,17 @@ def main():
         bg_processes = 0
         if not bg_threads and not bg_processes:
             # no background processing: just create a single generator
-            batches = create_datafeed(spects, labels)
+            batches = create_datafeed(spects, labels_tr)
         elif bg_threads:
             # multithreading: create a separate generator per thread
             batches = augment.generate_in_background(
-                    [create_datafeed(spects, labels)
+                    [create_datafeed(spects, labels_tr)
                      for _ in range(bg_threads)],
                     num_cached=bg_threads * 5)
         elif bg_processes:
             # multiprocessing: single generator is forked along with processes
             batches = augment.generate_in_background(
-                    [create_datafeed(spects, labels)] * bg_processes,
+                    [create_datafeed(spects, labels_tr)] * bg_processes,
                     num_cached=bg_processes * 25,
                     in_processes=True)
     
@@ -213,11 +244,8 @@ def main():
     
     # create cost expression
     outputs = lasagne.layers.get_output(gen_network, deterministic=False)
-    #cost = T.mean(lasagne.objectives.squared_error(outputs, inputs))
+    cost = T.mean(lasagne.objectives.squared_error(outputs, inputs))
     # loss: squared euclidean distance per sample in a batch
-    #temp = lasagne.objectives.squared_error(outputs, inputs)
-    #cost_1 = (T.sum(temp, axis=[2, 3]))
-    cost = T.mean(T.sum(lasagne.objectives.squared_error(outputs, inputs), axis=[2, 3]))
         
     # prepare and compile training function
     params = lasagne.layers.get_all_params(gen_network, trainable=True)
@@ -229,18 +257,23 @@ def main():
     print("Compiling training function...")
     train_fn = theano.function([input_var_deconv, input_var], cost, updates=updates)
         
+    print("Compiling validation function...")
+    outputs_val = lasagne.layers.get_output(gen_network, deterministic=True)
+    cost_val = T.mean(lasagne.objectives.squared_error(outputs_val, inputs))
+    val_fn = theano.function([input_var_deconv, input_var], cost_val)
     
     # run the training loop
     print("Training the inversion network:")
-    epochs = 20
+    epochs = 50
     epochsize = 2000
-    batches = iter(batches)
+    batches_tr = iter(batches_tr)
+    batches_va = iter(batches_va)
     for epoch in range(epochs):
         err = 0
-        for batch in progress(
+        for batch_tr in progress(
                 range(epochsize), min_delay=.5,
                 desc='Epoch %d/%d: Batch ' % (epoch + 1, epochs)):
-            data, labels = next(batches) # followed a simple styple *next(batches) from Jan is unclear what is passed.
+            data, labels = next(batches_tr) # followed a simple styple *next(batches) from Jan is unclear what is passed.
             # labels information is a dummy variable its not used in training.
             pred = pred_fn(data)    # a theano function returns a numpy array always. Here it is a matrix of shape 32  x 64
             err += train_fn(pred, data)
@@ -249,6 +282,23 @@ def main():
                 print("\nEncountered NaN loss in training. Aborting.")
                 sys.exit(1)
         print("Train loss: %.3f" % (err / epochsize))
+        
+        # Calculating validation loss per epoch
+        err_va = 0
+        for batch_va in progress(
+                range(epochsize), min_delay=.5,
+                desc='Epoch %d/%d: Batch ' % (epoch + 1, epochs)):
+            data, labels = next(batches_va) # followed a simple styple *next(batches) from Jan is unclear what is passed.
+            # labels information is a dummy variable its not used in training.
+            pred = pred_fn(data)    # a theano function returns a numpy array always. Here it is a matrix of shape 32  x 64
+            err_va += val_fn(pred, data)
+            
+            if not np.isfinite(err):
+                print("\nEncountered NaN loss in training. Aborting.")
+                sys.exit(1)
+        print("Validation loss: %.3f" % (err_va / epochsize))
+        
+        # learning rate decay
         eta.set_value(eta.get_value() * lasagne.utils.floatX(eta_decay))
 
     # save final network
