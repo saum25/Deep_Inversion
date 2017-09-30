@@ -13,12 +13,12 @@ def architecture_upconv(input_var, input_shape):
     
     net['data'] = InputLayer(input_shape, input_var)
     #net['fc1'] = DenseLayer(net['data'], num_units=64, W=lasagne.init.Orthogonal(), nonlinearity=lasagne.nonlinearities.very_leaky_rectify)
-    net['fc2'] = DenseLayer(net['data'], num_units=256, W=lasagne.init.Orthogonal(), nonlinearity=lasagne.nonlinearities.leaky_rectify)
+    net['fc2'] = DenseLayer(net['data'], num_units=256, W=lasagne.init.Orthogonal(), nonlinearity=lasagne.nonlinearities.very_leaky_rectify)
     net['rs1'] = ReshapeLayer(net['fc2'], (32, 16, 4, 4)) # assuming that the shape is batch x depth x row x columns
     kwargs = dict(filter_size= 4,
                   stride = 2,
                   crop = 1,
-                  nonlinearity=lasagne.nonlinearities.leaky_rectify,
+                  nonlinearity=lasagne.nonlinearities.very_leaky_rectify,
                   W=lasagne.init.Orthogonal())
     net['uc1'] = TransposedConv2DLayer(net['rs1'], num_filters= 16, **kwargs)
     #print(net['uc1'].output_shape)    
