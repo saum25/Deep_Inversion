@@ -27,20 +27,20 @@ def grab_random_excerpts(spects, labels, batchsize, frames):
     batch_labels = np.empty((batchsize,) + labels[0].shape[1:],
                             dtype=labels[0].dtype)
     # array of all possible (spect_idx, frame_idx) combinations
-    '''indices = np.vstack(np.vstack((np.ones(len(spect) - frames + 1,
+    indices = np.vstack(np.vstack((np.ones(len(spect) - frames + 1,
                                            dtype=np.int) * spect_idx,
                                    np.arange(len(spect) - frames + 1,
                                              dtype=np.int))).T
                         for spect_idx, spect in enumerate(spects)
-                        if len(spect) >= frames)'''
+                        if len(spect) >= frames)
 
     # changing the way excerpts are formed: Saumitra
-    indices = np.vstack(np.vstack((np.ones(np.shape(np.arange(0, len(spect), frames-1))[0],
+    '''indices = np.vstack(np.vstack((np.ones(np.shape(np.arange(0, len(spect), frames-1))[0],
                                            dtype=np.int) * spect_idx,
                                    np.arange(0, len(spect), frames-1,
                                              dtype=np.int))).T
                         for spect_idx, spect in enumerate(spects)
-                        if len(spect) >= frames)    
+                        if len(spect) >= frames)'''    
     
     # infinite loop
     while True:
