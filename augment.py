@@ -73,18 +73,15 @@ def grab_random_excerpts(spects, labels, batchsize, frames, excerpt_indices):
         # draw without replacement until exhausted
         b = 0
         for spect_idx, frame_idx in indices:
-            if (frame_idx + frames) > len(spects[spect_idx]):
-                print("False case")
-                pass
-            else:
-                batch_spects[b] = spects[spect_idx][frame_idx:frame_idx + frames]
-                batch_labels[b] = labels[spect_idx][frame_idx + frames//2]
-                b += 1
-                if b == batchsize:
-                    # copy the buffers to prevent changing returned data (not a
-                    # problem if it is consumed right away, but if it is collected)
-                    yield batch_spects.copy(), batch_labels.copy()
-                    b = 0
+            
+            batch_spects[b] = spects[spect_idx][frame_idx:frame_idx + frames]
+            batch_labels[b] = labels[spect_idx][frame_idx + frames//2]
+            b += 1
+            if b == batchsize:
+                # copy the buffers to prevent changing returned data (not a
+                # problem if it is consumed right away, but if it is collected)
+                yield batch_spects.copy(), batch_labels.copy()
+                b = 0
 
 
 def apply_random_stretch_shift(batches, max_stretch, max_shift,
