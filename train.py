@@ -28,6 +28,14 @@ import model
 import upconv
 import sys
 
+def cal_excerpts(excerpts_indices):
+    n_excerpt = 0
+    
+    for idx in excerpts_indices:
+        n_excerpt+=len(idx)
+    
+    return n_excerpt
+
 def argument_parser():
     parser = argparse.ArgumentParser(description='Trains an upconvolutional neural network for feature inversion')
     # Positional arguments
@@ -55,6 +63,7 @@ def main():
     mel_max = 8000
     blocklen = 115
     batchsize = 32
+    step = 10
     
     bin_nyquist = frame_len // 2 + 1
     bin_mel_max = bin_nyquist * 2 * mel_max // sample_rate
@@ -75,10 +84,12 @@ def main():
     spects_tr = []
     spects_va = []
     
+    print("\r====Training Files====")
     for fn in progress(filelist_tr, 'File '):
         cache_fn = (args.cache_spectra and os.path.join(args.cache_spectra, fn + '.npy'))
         spects_tr.append(cached(cache_fn, audio.extract_spect, os.path.join(datadir, 'audio', fn),sample_rate, frame_len, fps))
-    
+ 
+    print("\r====Validation Files====")
     for fn in progress(filelist_va, 'File '):
         cache_fn = (args.cache_spectra and os.path.join(args.cache_spectra, fn + '.npy'))
         spects_va.append(cached(cache_fn, audio.extract_spect, os.path.join(datadir, 'audio', fn),sample_rate, frame_len, fps))
@@ -140,15 +151,17 @@ def main():
     istd = np.reciprocal(std).astype(floatX)
     
     # - prepare training data generator
-    print("Preparing training data feed...")
+    print("\rPreparing training data feed...")
     if not args.augment:
         # Without augmentation, we just precompute the normalized mel spectra
         # and create a generator that returns mini-batches of random excerpts
         mel_spects_tr = [(spect - mean) * istd for spect in mel_spects_tr]
-        batches_tr = augment.grab_random_excerpts(mel_spects_tr, labels_tr, batchsize, blocklen)
+        excerpt_indices_tr = augment.select_excerpt_indices(mel_spects_tr, blocklen, step)
+        #batches_tr = augment.grab_random_excerpts(mel_spects_tr, labels_tr, batchsize, blocklen)
         
         mel_spects_va = [(spect - mean) * istd for spect in mel_spects_va]
-        batches_va = augment.grab_random_excerpts(mel_spects_va, labels_va, batchsize, blocklen)
+        excerpt_indices_va = augment.select_excerpt_indices(mel_spects_va, blocklen, step)
+        #batches_va = augment.grab_random_excerpts(mel_spects_va, labels_va, batchsize, blocklen)
     else:
         #####CAUTION###### THE DATA AUGMENT CODE WILL NOT WORK AUTOMATICALLY AS THE TRAINING AND VALIDATION SUPPORT IS NOT ADDED CLEANLY.
         # IT JUST SHOWS THE TRAINING VARIBALES
@@ -263,30 +276,43 @@ def main():
     val_fn = theano.function([input_var_deconv, input_var], cost_val)
     
     # run the training loop
-    print("Training the inversion network:")
+    print("\rTraining the inversion network:")
+    num_excerpts_tr = cal_excerpts(excerpt_indices_tr)
+    num_excerpts_va = cal_excerpts(excerpt_indices_va)
+
     epochs = 50
-    epochsize = 2000
+    epochsize_tr = num_excerpts_tr/batchsize
+    epochsize_va = num_excerpts_va/batchsize
+
+    # remove the extra indices from the last file
+    excerpt_indices_tr[-1] = excerpt_indices_tr[-1][:-(num_excerpts_tr%batchsize)]
+    excerpt_indices_va[-1] = excerpt_indices_va[-1][:-(num_excerpts_va%batchsize)]
+    
+    batches_tr = augment.grab_random_excerpts(mel_spects_tr, labels_tr, batchsize, blocklen, excerpt_indices_tr)
+    batches_va = augment.grab_random_excerpts(mel_spects_va, labels_va, batchsize, blocklen, excerpt_indices_va)
+
     batches_tr = iter(batches_tr)
     batches_va = iter(batches_va)
+    
     for epoch in range(epochs):
         err = 0
         for batch_tr in progress(
-                range(epochsize), min_delay=.5,
+                range(epochsize_tr), min_delay=.5,
                 desc='Epoch %d/%d: Batch ' % (epoch + 1, epochs)):
             data, labels = next(batches_tr) # followed a simple styple *next(batches) from Jan is unclear what is passed.
             # labels information is a dummy variable its not used in training.
             pred = pred_fn(data)    # a theano function returns a numpy array always. Here it is a matrix of shape 32  x 64
             err += train_fn(pred, data)
-            
+
             if not np.isfinite(err):
                 print("\nEncountered NaN loss in training. Aborting.")
                 sys.exit(1)
-        print("Train loss: %.3f" % (err / epochsize))
+        print("Train loss: %.3f" % (err / epochsize_tr))
         
         # Calculating validation loss per epoch
         err_va = 0
         for batch_va in progress(
-                range(epochsize), min_delay=.5,
+                range(epochsize_va), min_delay=.5,
                 desc='Epoch %d/%d: Batch ' % (epoch + 1, epochs)):
             data, labels = next(batches_va) # followed a simple styple *next(batches) from Jan is unclear what is passed.
             # labels information is a dummy variable its not used in training.
@@ -296,7 +322,7 @@ def main():
             if not np.isfinite(err):
                 print("\nEncountered NaN loss in training. Aborting.")
                 sys.exit(1)
-        print("Validation loss: %.3f" % (err_va / epochsize))
+        print("Validation loss: %.3f" % (err_va / epochsize_va))
         
         # learning rate decay
         eta.set_value(eta.get_value() * lasagne.utils.floatX(eta_decay))

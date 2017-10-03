@@ -14,7 +14,33 @@ import subprocess
 import numpy as np
 import scipy.ndimage
 
-def grab_random_excerpts(spects, labels, batchsize, frames):
+
+def select_excerpt_indices(spects, frames, step_size):
+    """ 
+    This function reads in the list of mel spectrogram arrays, one per audio file
+    and using frames information returns the valid array indices located at step_size 
+    that can be used to generate excerpts.
+    """
+    excerpt_idxs = []
+    
+    for spect in spects:
+        if len(spect) >= frames:
+            # generates an array of all indices at a fix step size but the last or last few might exceed the maximum bound
+            array_idx = np.arange(0, len(spect), step_size, dtype=np.int)
+            # we need to filter out problematic cases : bad way of doing it
+            # ideally there should be a stop point that should consider the frames effect
+            for loc, idx in enumerate(array_idx):
+                if idx + frames >= len(spect):
+                    excerpt_idxs.append(array_idx[:loc])
+                    break
+                else:
+                    pass                
+        else:
+            pass
+    
+    return excerpt_idxs
+
+def grab_random_excerpts(spects, labels, batchsize, frames, excerpt_indices):
     """
     Extracts random excerpts of `frames` frames from the spectrograms in
     `spects` paired with the label from `labels` associated with the central
@@ -27,20 +53,18 @@ def grab_random_excerpts(spects, labels, batchsize, frames):
     batch_labels = np.empty((batchsize,) + labels[0].shape[1:],
                             dtype=labels[0].dtype)
     # array of all possible (spect_idx, frame_idx) combinations
-    indices = np.vstack(np.vstack((np.ones(len(spect) - frames + 1,
+    '''indices = np.vstack(np.vstack((np.ones(len(spect) - frames + 1,
                                            dtype=np.int) * spect_idx,
                                    np.arange(len(spect) - frames + 1,
                                              dtype=np.int))).T
                         for spect_idx, spect in enumerate(spects)
-                        if len(spect) >= frames)
+                        if len(spect) >= frames)'''
+    
+    #step_size=10 # means it comes after 10 frames/ indices or it starts at 140 ms after the previous ones
 
     # changing the way excerpts are formed: Saumitra
-    '''indices = np.vstack(np.vstack((np.ones(np.shape(np.arange(0, len(spect), frames-1))[0],
-                                           dtype=np.int) * spect_idx,
-                                   np.arange(0, len(spect), frames-1,
-                                             dtype=np.int))).T
-                        for spect_idx, spect in enumerate(spects)
-                        if len(spect) >= frames)'''    
+    indices = np.vstack(np.vstack((np.ones(len(spect), dtype=np.int) * spect_idx, spect)).T for spect_idx, spect in enumerate(excerpt_indices))
+                    
     
     # infinite loop
     while True:
@@ -49,14 +73,18 @@ def grab_random_excerpts(spects, labels, batchsize, frames):
         # draw without replacement until exhausted
         b = 0
         for spect_idx, frame_idx in indices:
-            batch_spects[b] = spects[spect_idx][frame_idx:frame_idx + frames]
-            batch_labels[b] = labels[spect_idx][frame_idx + frames//2]
-            b += 1
-            if b == batchsize:
-                # copy the buffers to prevent changing returned data (not a
-                # problem if it is consumed right away, but if it is collected)
-                yield batch_spects.copy(), batch_labels.copy()
-                b = 0
+            if (frame_idx + frames) > len(spects[spect_idx]):
+                print("False case")
+                pass
+            else:
+                batch_spects[b] = spects[spect_idx][frame_idx:frame_idx + frames]
+                batch_labels[b] = labels[spect_idx][frame_idx + frames//2]
+                b += 1
+                if b == batchsize:
+                    # copy the buffers to prevent changing returned data (not a
+                    # problem if it is consumed right away, but if it is collected)
+                    yield batch_spects.copy(), batch_labels.copy()
+                    b = 0
 
 
 def apply_random_stretch_shift(batches, max_stretch, max_shift,
