@@ -247,7 +247,7 @@ def main():
 
     # prepare and compile prediction function
     print("Compiling prediction function...")
-    pred_fn = theano.function([input_var], outputs_score)
+    pred_fn = theano.function([input_var], outputs_score, allow_input_downcast=True)
     
     # training the Upconvolutional network - Network 2
     
@@ -262,25 +262,31 @@ def main():
         
     # prepare and compile training function
     params = lasagne.layers.get_all_params(gen_network, trainable=True)
-    initial_eta = 0.01
-    eta_decay = 0.85
+    initial_eta = 0.001
+    eta_decay_fix = 0.1
+    eta_decay_variable = 0.5
+    fix_decay = False
+    var_decay = False
+    loss_prev_epoch = 0
+    loss_current_epoch = 0
     momentum = 0.95
     eta = theano.shared(lasagne.utils.floatX(initial_eta))
-    updates = lasagne.updates.nesterov_momentum(cost, params, eta, momentum)
+    #updates = lasagne.updates.nesterov_momentum(cost, params, eta, momentum)
+    updates = lasagne.updates.adam(cost, params, eta)
     print("Compiling training function...")
-    train_fn = theano.function([input_var_deconv, input_var], cost, updates=updates)
+    train_fn = theano.function([input_var_deconv, input_var], cost, updates=updates, allow_input_downcast=True)
         
     print("Compiling validation function...")
     outputs_val = lasagne.layers.get_output(gen_network, deterministic=True)
     cost_val = T.mean(lasagne.objectives.squared_error(outputs_val, inputs))
-    val_fn = theano.function([input_var_deconv, input_var], cost_val)
+    val_fn = theano.function([input_var_deconv, input_var], cost_val, allow_input_downcast=True)
     
     # run the training loop
     print("\rTraining the inversion network:")
     num_excerpts_tr = cal_excerpts(excerpt_indices_tr)
     num_excerpts_va = cal_excerpts(excerpt_indices_va)
 
-    epochs = 50
+    epochs = 30
     epochsize_tr = num_excerpts_tr/batchsize
     epochsize_va = num_excerpts_va/batchsize
 
@@ -308,6 +314,7 @@ def main():
                 print("\nEncountered NaN loss in training. Aborting.")
                 sys.exit(1)
         print("Train loss: %.3f" % (err / epochsize_tr))
+        loss_current_epoch = err/ epochsize_tr
         
         # Calculating validation loss per epoch
         err_va = 0
@@ -325,7 +332,19 @@ def main():
         print("Validation loss: %.3f" % (err_va / epochsize_va))
         
         # learning rate decay
-        eta.set_value(eta.get_value() * lasagne.utils.floatX(eta_decay))
+	# decaying learning rate by 50% when ever last two loss values are same
+        print("Training loss: previous epoch: %f current epoch:%f" %(loss_prev_epoch, loss_current_epoch))
+        if fix_decay:
+        	eta.set_value(eta.get_value() * lasagne.utils.floatX(eta_decay_fix))
+        elif var_decay:
+        	if loss_prev_epoch == loss_current_epoch:
+			eta.set_value(eta.get_value() * lasagne.utils.floatX(eta_decay_variable))
+		else:
+			pass
+		loss_prev_epoch = loss_current_epoch
+	else:
+		pass # don't decay the learning rate at all
+        	
 
     # save final network
     print("Saving final model")
