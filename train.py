@@ -28,6 +28,10 @@ import model
 import upconv
 import sys
 
+# String formatting in python %.2f does rounding so need to write a separate function
+def truncate(loss):
+    return (int(loss * 100)/float(100))
+
 def cal_excerpts(excerpts_indices):
     n_excerpt = 0
     
@@ -48,6 +52,7 @@ def argument_parser():
     parser.add_argument('--no-augment', action='store_false', dest='augment', help='If given, disable train-time data augmentation.')
     
     # lr decay schedule
+    parser.add_argument('--lr_init', default= 0.001, type =float, help='initial learning rate')
     parser.add_argument('--lr_decay', default= 0, type =int, help=' performs learning rate decay based on the selected schedule.') 
 
     return parser
@@ -268,7 +273,7 @@ def main():
     momentum = 0.95
     
     # learning rate params
-    initial_eta = 0.001
+    initial_eta = args.lr_init
     # decay by 10% in each epoch
     eta_decay_fix = 0.1
     # decay by 50% on demand
@@ -311,6 +316,7 @@ def main():
     batches_va = iter(batches_va)
     
     for epoch in range(epochs):
+        print("\rLearning rate epoch %d: %f" %(epoch, eta.get_value()))
         err = 0
         for batch_tr in progress(
                 range(epochsize_tr), min_delay=.5,
@@ -343,7 +349,7 @@ def main():
         
         # learning rate decay
         # decaying the learning rate by different schemes
-        print("Training loss: previous epoch: %f current epoch:%f" %(loss_prev_epoch, loss_current_epoch))
+        print("\rTraining loss: previous epoch: %f current epoch:%f" %(loss_prev_epoch, loss_current_epoch))
         
         if decay_schedule==1:
             print("Decaying lr, based on schedule 1")
@@ -353,7 +359,7 @@ def main():
                 print("Decaying lr, based on schedule 2")
                 eta.set_value(eta.get_value() * lasagne.utils.floatX(eta_decay_variable))
         elif decay_schedule==3:
-            if round(loss_prev_epoch, 2) == round(loss_current_epoch, 2):
+            if truncate(loss_prev_epoch) == truncate(loss_current_epoch):
                 print("Decaying lr, based on schedule 3")
                 eta.set_value(eta.get_value() * lasagne.utils.floatX(eta_decay_variable))
         else:
