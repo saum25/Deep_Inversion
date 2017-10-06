@@ -45,7 +45,10 @@ def argument_parser():
     parser.add_argument('--dataset', default='jamendo', help='Name of the dataset to use.')
     parser.add_argument('--cache-spectra', metavar='DIR', default=None, help='Store spectra in the given directory (disabled by default).')
     parser.add_argument('--augment', action='store_true', default=True, help='If given, perform train-time data augmentation.')
-    parser.add_argument('--no-augment', action='store_false', dest='augment', help='If given, disable train-time data augmentation.') 
+    parser.add_argument('--no-augment', action='store_false', dest='augment', help='If given, disable train-time data augmentation.')
+    
+    # lr decay schedule
+    parser.add_argument('--lr_decay', default= 0, type =int, help=' performs learning rate decay based on the selected schedule.') 
 
     return parser
     
@@ -262,14 +265,21 @@ def main():
         
     # prepare and compile training function
     params = lasagne.layers.get_all_params(gen_network, trainable=True)
+    momentum = 0.95
+    
+    # learning rate params
     initial_eta = 0.001
+    # decay by 10% in each epoch
     eta_decay_fix = 0.1
+    # decay by 50% on demand
     eta_decay_variable = 0.5
-    fix_decay = False
-    var_decay = False
+    # flags to control decay schedule
+    decay_schedule = args.lr_decay
+
+
     loss_prev_epoch = 0
     loss_current_epoch = 0
-    momentum = 0.95
+    
     eta = theano.shared(lasagne.utils.floatX(initial_eta))
     #updates = lasagne.updates.nesterov_momentum(cost, params, eta, momentum)
     updates = lasagne.updates.adam(cost, params, eta)
@@ -332,20 +342,25 @@ def main():
         print("Validation loss: %.3f" % (err_va / epochsize_va))
         
         # learning rate decay
-	# decaying learning rate by 50% when ever last two loss values are same
+        # decaying the learning rate by different schemes
         print("Training loss: previous epoch: %f current epoch:%f" %(loss_prev_epoch, loss_current_epoch))
-        if fix_decay:
-        	eta.set_value(eta.get_value() * lasagne.utils.floatX(eta_decay_fix))
-        elif var_decay:
-        	if loss_prev_epoch == loss_current_epoch:
-			eta.set_value(eta.get_value() * lasagne.utils.floatX(eta_decay_variable))
-		else:
-			pass
-		loss_prev_epoch = loss_current_epoch
-	else:
-		pass # don't decay the learning rate at all
-        	
-
+        
+        if decay_schedule==1:
+            print("Decaying lr, based on schedule 1")
+            eta.set_value(eta.get_value() * lasagne.utils.floatX(eta_decay_fix))
+        elif decay_schedule==2:
+            if epoch == 15 or epoch == 22:
+                print("Decaying lr, based on schedule 2")
+                eta.set_value(eta.get_value() * lasagne.utils.floatX(eta_decay_variable))
+        elif decay_schedule==3:
+            if round(loss_prev_epoch, 2) == round(loss_current_epoch, 2):
+                print("Decaying lr, based on schedule 3")
+                eta.set_value(eta.get_value() * lasagne.utils.floatX(eta_decay_variable))
+        else:
+            print("Decaying lr, based on schedule 0") # don't decay the learning rate at all
+            
+        loss_prev_epoch = loss_current_epoch
+        
     # save final network
     print("Saving final model")
     np.savez(args.generator_file, **{'param%d' % i: p for i, p in enumerate(
