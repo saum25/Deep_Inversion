@@ -264,9 +264,14 @@ def main():
     gen_network = upconv.architecture_upconv(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['fc8'])[1]))
     
     # create cost expression
+    # loss: squared euclidean distance per sample in a batch
     outputs = lasagne.layers.get_output(gen_network, deterministic=False)
     cost = T.mean(lasagne.objectives.squared_error(outputs, inputs))
-    # loss: squared euclidean distance per sample in a batch
+    
+    # add weight decay or regularisation loss
+    all_layers = lasagne.layers.get_all_layers(gen_network)
+    l2_penalty = lasagne.regularization.regularize_layer_params(all_layers, lasagne.regularization.l2) * 0.0001
+    cost = cost + l2_penalty
         
     # prepare and compile training function
     params = lasagne.layers.get_all_params(gen_network, trainable=True)
