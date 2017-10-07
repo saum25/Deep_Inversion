@@ -25,7 +25,7 @@ def architecture_upconv(input_var, input_shape):
                   W=lasagne.init.HeNormal())'''
     net['uc1'] = batch_norm(TransposedConv2DLayer(net['rs1'], num_filters= 16, filter_size= 4, stride = 2, crop=1, **kwargs))
     print(net['uc1'].output_shape)
-    net['c1'] = batch_norm(Conv2DLayer(net['uc1'], num_filters= 32, filter_size= 3, stride = 1, pad=1, **kwargs))
+    net['c1'] = batch_norm(Conv2DLayer(net['uc1'], num_filters= 16, filter_size= 3, stride = 1, pad=1, **kwargs))
     print(net['c1'].output_shape)    
     
     net['uc2'] = batch_norm(TransposedConv2DLayer(net['c1'], num_filters= 8, filter_size= 4, stride = 2, crop=1, **kwargs))
