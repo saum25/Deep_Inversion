@@ -5,7 +5,7 @@ Created on 26 Aug 2017
 '''
 
 import lasagne
-from lasagne.layers import (InputLayer, DenseLayer, ReshapeLayer, TransposedConv2DLayer, batch_norm)
+from lasagne.layers import (InputLayer, DenseLayer, ReshapeLayer, TransposedConv2DLayer, batch_norm, Conv2DLayer)
 
 def architecture_upconv(input_var, input_shape):
     
@@ -15,24 +15,41 @@ def architecture_upconv(input_var, input_shape):
     #net['fc1'] = DenseLayer(net['data'], num_units=64, W=lasagne.init.Orthogonal(), nonlinearity=lasagne.nonlinearities.very_leaky_rectify)
     net['fc2'] = batch_norm(DenseLayer(net['data'], num_units=256, W=lasagne.init.HeNormal(), nonlinearity=lasagne.nonlinearities.elu))
     net['rs1'] = ReshapeLayer(net['fc2'], (32, 16, 4, 4)) # assuming that the shape is batch x depth x row x columns
-    kwargs = dict(filter_size= 4,
-                  stride = 2,
-                  crop = 1,
-                  nonlinearity=lasagne.nonlinearities.elu,
+    kwargs = dict(nonlinearity=lasagne.nonlinearities.elu,
                   W=lasagne.init.HeNormal())
-    net['uc1'] = batch_norm(TransposedConv2DLayer(net['rs1'], num_filters= 16, **kwargs))
-    #print(net['uc1'].output_shape)    
-    net['uc2'] = batch_norm(TransposedConv2DLayer(net['uc1'], num_filters= 8, **kwargs))
-    #print(net['uc2'].output_shape)    
-    net['uc3'] = batch_norm(TransposedConv2DLayer(net['uc2'], num_filters= 4, **kwargs))
-    net['uc4'] = batch_norm(TransposedConv2DLayer(net['uc3'], num_filters= 2, **kwargs))
-    # In Jan's GAN code no batch_norm in the last layer: Need to find why?
-    net['uc5'] = TransposedConv2DLayer(net['uc4'], num_filters= 1, **kwargs)
+    
+    '''k1wargs = dict(filter_size= 3,
+                  stride = 1,
+                  pad = 1,
+                  nonlinearity=lasagne.nonlinearities.elu,
+                  W=lasagne.init.HeNormal())'''
+    net['uc1'] = batch_norm(TransposedConv2DLayer(net['rs1'], num_filters= 16, filter_size= 4, stride = 2, crop=1, **kwargs))
+    print(net['uc1'].output_shape)
+    net['c1'] = batch_norm(Conv2DLayer(net['uc1'], num_filters= 32, filter_size= 3, stride = 1, pad=1, **kwargs))
+    print(net['c1'].output_shape)    
+    
+    net['uc2'] = batch_norm(TransposedConv2DLayer(net['c1'], num_filters= 8, filter_size= 4, stride = 2, crop=1, **kwargs))
+    print(net['uc2'].output_shape)
+    net['c2'] = batch_norm(Conv2DLayer(net['uc2'], num_filters= 8, filter_size= 3, stride = 1, pad=1, **kwargs))
+    print(net['c2'].output_shape)    
+    
+    net['uc3'] = batch_norm(TransposedConv2DLayer(net['c2'], num_filters= 4, filter_size= 4, stride = 2, crop=1, **kwargs))
+    print(net['uc3'].output_shape)
+    net['c3'] = batch_norm(Conv2DLayer(net['uc3'], num_filters= 4, filter_size= 3, stride = 1, pad=1, **kwargs))
+    print(net['c3'].output_shape)
+
+    net['uc4'] = batch_norm(TransposedConv2DLayer(net['c3'], num_filters= 2, filter_size= 4, stride = 2, crop=1, **kwargs))
+    print(net['uc4'].output_shape)
+    net['c4'] = batch_norm(Conv2DLayer(net['uc4'], num_filters= 2, filter_size= 3, stride = 1, pad=1, **kwargs))
+    print(net['c4'].output_shape)
+    
+    net['uc5'] = TransposedConv2DLayer(net['c4'], num_filters= 1, filter_size= 4, stride = 2, crop=1, **kwargs)
+    print(net['uc5'].output_shape)
 
     # slicing the output to 115 x 80 size
     #print(net['uc5'].output_shape)    
     net['s1'] = lasagne.layers.SliceLayer(net['uc5'], slice(0, 115), axis=-2)
     net['out'] = lasagne.layers.SliceLayer(net['s1'], slice(0, 80), axis=-1)
-    #print(net['out'] .output_shape)
+    print(net['out'] .output_shape)
     
     return net['out']
