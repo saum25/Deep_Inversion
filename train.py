@@ -265,7 +265,7 @@ def main():
     input_var_deconv = T.tensor4('input_var_deconv')
     #inputs_deconv = input_var_deconv.dimshuffle(0, 1, 'x', 'x') # 32 x 64 x 1 x 1. Adding the width and depth dimensions
     #gen_network = upconv.architecture_upconv_mp6(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['mp6'])[1]))
-    gen_network = upconv.architecture_upconv_mp6(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['mp6'])[1], lasagne.layers.get_output_shape(network['mp6'])[2], lasagne.layers.get_output_shape(network['mp6'])[3]))
+    gen_network = upconv.architecture_upconv_mp6_exp(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['mp6'])[1], lasagne.layers.get_output_shape(network['mp6'])[2], lasagne.layers.get_output_shape(network['mp6'])[3]))
     
     # create cost expression
     # loss: squared euclidean distance per sample in a batch
