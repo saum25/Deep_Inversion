@@ -7,13 +7,14 @@ Created on 26 Aug 2017
 import lasagne
 from lasagne.layers import (InputLayer, DenseLayer, ReshapeLayer, TransposedConv2DLayer, batch_norm, Conv2DLayer)
 
-def architecture_upconv(input_var, input_shape):
+def architecture_upconv_fc8(input_var, input_shape):
     
     net = {}
     
     net['data'] = InputLayer(input_shape, input_var)
-    net['fc1'] = batch_norm(DenseLayer(net['data'], num_units=64, W=lasagne.init.HeNormal(), nonlinearity=lasagne.nonlinearities.elu))
-    net['fc2'] = batch_norm(DenseLayer(net['fc1'], num_units=256, W=lasagne.init.HeNormal(), nonlinearity=lasagne.nonlinearities.elu))
+    #net['fc1'] = batch_norm(DenseLayer(net['data'], num_units=64, W=lasagne.init.HeNormal(), nonlinearity=lasagne.nonlinearities.elu))
+    net['fc2'] = batch_norm(DenseLayer(net['data'], num_units=256, W=lasagne.init.HeNormal(), nonlinearity=lasagne.nonlinearities.elu))
+    print(net['fc2'].output_shape)
     net['rs1'] = ReshapeLayer(net['fc2'], (32, 16, 4, 4)) # assuming that the shape is batch x depth x row x columns
     kwargs = dict(nonlinearity=lasagne.nonlinearities.elu,
                   W=lasagne.init.HeNormal())
@@ -25,25 +26,25 @@ def architecture_upconv(input_var, input_shape):
                   W=lasagne.init.HeNormal())'''
     net['uc1'] = batch_norm(TransposedConv2DLayer(net['rs1'], num_filters= 16, filter_size= 4, stride = 2, crop=1, **kwargs))
     print(net['uc1'].output_shape)
-    net['c1'] = batch_norm(Conv2DLayer(net['uc1'], num_filters= 16, filter_size= 3, stride = 1, pad=1, **kwargs))
-    print(net['c1'].output_shape)    
+    #net['c1'] = batch_norm(Conv2DLayer(net['uc1'], num_filters= 16, filter_size= 3, stride = 1, pad=1, **kwargs))
+    #print(net['c1'].output_shape)    
     
-    net['uc2'] = batch_norm(TransposedConv2DLayer(net['c1'], num_filters= 8, filter_size= 4, stride = 2, crop=1, **kwargs))
+    net['uc2'] = batch_norm(TransposedConv2DLayer(net['uc1'], num_filters= 8, filter_size= 4, stride = 2, crop=1, **kwargs))
     print(net['uc2'].output_shape)
-    net['c2'] = batch_norm(Conv2DLayer(net['uc2'], num_filters= 8, filter_size= 3, stride = 1, pad=1, **kwargs))
-    print(net['c2'].output_shape)    
+    #net['c2'] = batch_norm(Conv2DLayer(net['uc2'], num_filters= 8, filter_size= 3, stride = 1, pad=1, **kwargs))
+    #print(net['c2'].output_shape)    
     
-    net['uc3'] = batch_norm(TransposedConv2DLayer(net['c2'], num_filters= 4, filter_size= 4, stride = 2, crop=1, **kwargs))
+    net['uc3'] = batch_norm(TransposedConv2DLayer(net['uc2'], num_filters= 4, filter_size= 4, stride = 2, crop=1, **kwargs))
     print(net['uc3'].output_shape)
-    net['c3'] = batch_norm(Conv2DLayer(net['uc3'], num_filters= 4, filter_size= 3, stride = 1, pad=1, **kwargs))
-    print(net['c3'].output_shape)
+    #net['c3'] = batch_norm(Conv2DLayer(net['uc3'], num_filters= 4, filter_size= 3, stride = 1, pad=1, **kwargs))
+    #print(net['c3'].output_shape)
 
-    net['uc4'] = batch_norm(TransposedConv2DLayer(net['c3'], num_filters= 2, filter_size= 4, stride = 2, crop=1, **kwargs))
+    net['uc4'] = batch_norm(TransposedConv2DLayer(net['uc3'], num_filters= 2, filter_size= 4, stride = 2, crop=1, **kwargs))
     print(net['uc4'].output_shape)
-    net['c4'] = batch_norm(Conv2DLayer(net['uc4'], num_filters= 2, filter_size= 3, stride = 1, pad=1, **kwargs))
-    print(net['c4'].output_shape)
+    #net['c4'] = batch_norm(Conv2DLayer(net['uc4'], num_filters= 2, filter_size= 3, stride = 1, pad=1, **kwargs))
+    #print(net['c4'].output_shape)
     
-    net['uc5'] = TransposedConv2DLayer(net['c4'], num_filters= 1, filter_size= 4, stride = 2, crop=1, **kwargs)
+    net['uc5'] = TransposedConv2DLayer(net['uc4'], num_filters= 1, filter_size= 4, stride = 2, crop=1, **kwargs)
     print(net['uc5'].output_shape)
 
     # slicing the output to 115 x 80 size
@@ -114,15 +115,17 @@ def architecture_upconv_mp6(input_var, input_shape):
     print(net['data'].output_shape)
     
     # Bunch of 3 x 3 convolution layers: experimentally we found that, adding 3 conv layers in start than in middle is better: but why?
-    '''net['c1'] = batch_norm(Conv2DLayer(net['data'], num_filters= 64, filter_size= 3, stride = 1, pad=1, **kwargs))
+    net['c1'] = batch_norm(Conv2DLayer(net['data'], num_filters= 64, filter_size= 3, stride = 1, pad=1, **kwargs))
     print(net['c1'].output_shape)   
     net['c2'] = batch_norm(Conv2DLayer(net['c1'], num_filters= 64, filter_size= 3, stride = 1, pad=1, **kwargs))
     print(net['c2'].output_shape)
     net['c3'] = batch_norm(Conv2DLayer(net['c2'], num_filters= 64, filter_size= 3, stride = 1, pad=1, **kwargs))
-    print(net['c3'].output_shape)'''
+    print(net['c3'].output_shape)
+    net['c4'] = batch_norm(Conv2DLayer(net['c3'], num_filters= 64, filter_size= 3, stride = 1, pad=1, **kwargs))
+    print(net['c3'].output_shape)
     
     # Bunch of transposed convolution layers  
-    net['uc1'] = batch_norm(TransposedConv2DLayer(net['data'], num_filters= 64, filter_size= 4, stride = 2, crop=1, **kwargs))
+    net['uc1'] = batch_norm(TransposedConv2DLayer(net['c4'], num_filters= 64, filter_size= 4, stride = 2, crop=1, **kwargs))
     print(net['uc1'].output_shape)
     '''net['c1'] = batch_norm(Conv2DLayer(net['uc1'], num_filters= 16, filter_size= 3, stride = 1, pad=1, **kwargs))
     print(net['c1'].output_shape)'''
