@@ -53,6 +53,8 @@ def architecture_upconv_fc8(input_var, input_shape):
     net['out'] = lasagne.layers.SliceLayer(net['s1'], slice(0, 80), axis=-1)
     print(net['out'] .output_shape)
     
+    print("\r Number of parameter to be learned: %d" %(lasagne.layers.count_params(net['out'])))
+    
     return net['out']
 
 def architecture_upconv_fc7(input_var, input_shape):
