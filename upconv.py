@@ -17,14 +17,10 @@ def architecture_upconv_fc8(input_var, input_shape):
     net['fc2'] = batch_norm(DenseLayer(net['fc1'], num_units=256, W=lasagne.init.HeNormal(), nonlinearity=lasagne.nonlinearities.elu))
     print(net['fc2'].output_shape)
     net['rs1'] = ReshapeLayer(net['fc2'], (32, 16, 4, 4)) # assuming that the shape is batch x depth x row x columns
+    
     kwargs = dict(nonlinearity=lasagne.nonlinearities.elu,
                   W=lasagne.init.HeNormal())
     
-    '''k1wargs = dict(filter_size= 3,
-                  stride = 1,
-                  pad = 1,
-                  nonlinearity=lasagne.nonlinearities.elu,
-                  W=lasagne.init.HeNormal())'''
     net['uc1'] = batch_norm(TransposedConv2DLayer(net['rs1'], num_filters= 16, filter_size= 4, stride = 2, crop=1, **kwargs))
     print(net['uc1'].output_shape)
     net['c1'] = batch_norm(Conv2DLayer(net['uc1'], num_filters= 16, filter_size= 3, stride = 1, pad=1, **kwargs))
@@ -49,7 +45,6 @@ def architecture_upconv_fc8(input_var, input_shape):
     print(net['uc5'].output_shape)
 
     # slicing the output to 115 x 80 size
-    #print(net['uc5'].output_shape)    
     net['s1'] = lasagne.layers.SliceLayer(net['uc5'], slice(0, 115), axis=-2)
     net['out'] = lasagne.layers.SliceLayer(net['s1'], slice(0, 80), axis=-1)
     print(net['out'] .output_shape)
@@ -66,15 +61,12 @@ def architecture_upconv_fc7(input_var, input_shape):
     print(net['data'].output_shape)
     net['fc2'] = batch_norm(DenseLayer(net['data'], num_units=256, W=lasagne.init.HeNormal(), nonlinearity=lasagne.nonlinearities.elu))
     print(net['fc2'].output_shape)
+    
     net['rs1'] = ReshapeLayer(net['fc2'], (32, 16, 4, 4)) # assuming that the shape is batch x depth x row x columns
+    
     kwargs = dict(nonlinearity=lasagne.nonlinearities.elu,
                   W=lasagne.init.HeNormal())
     
-    '''k1wargs = dict(filter_size= 3,
-                  stride = 1,
-                  pad = 1,
-                  nonlinearity=lasagne.nonlinearities.elu,
-                  W=lasagne.init.HeNormal())'''
     net['uc1'] = batch_norm(TransposedConv2DLayer(net['rs1'], num_filters= 16, filter_size= 4, stride = 2, crop=1, **kwargs))
     print(net['uc1'].output_shape)
     net['c1'] = batch_norm(Conv2DLayer(net['uc1'], num_filters= 16, filter_size= 3, stride = 1, pad=1, **kwargs))
@@ -99,7 +91,6 @@ def architecture_upconv_fc7(input_var, input_shape):
     print(net['uc5'].output_shape)
 
     # slicing the output to 115 x 80 size
-    #print(net['uc5'].output_shape)    
     net['s1'] = lasagne.layers.SliceLayer(net['uc5'], slice(0, 115), axis=-2)
     net['out'] = lasagne.layers.SliceLayer(net['s1'], slice(0, 80), axis=-1)
     print(net['out'] .output_shape)
