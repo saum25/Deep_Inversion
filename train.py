@@ -273,9 +273,9 @@ def main():
     cost = T.mean(lasagne.objectives.squared_error(outputs, inputs))
     
     # add weight decay or regularisation loss for training
-    all_layers = lasagne.layers.get_all_layers(gen_network)
-    l2_penalty = lasagne.regularization.regularize_layer_params(all_layers, lasagne.regularization.l2) * 0.0001
-    cost = cost + l2_penalty
+    #all_layers = lasagne.layers.get_all_layers(gen_network)
+    #l2_penalty_tr = lasagne.regularization.regularize_layer_params(all_layers, lasagne.regularization.l2) * 0.0001
+    #cost = cost + l2_penalty_tr
         
     # prepare and compile training function
     params = lasagne.layers.get_all_params(gen_network, trainable=True)
@@ -305,9 +305,9 @@ def main():
     outputs_val = lasagne.layers.get_output(gen_network, deterministic=True)
     cost_val = T.mean(lasagne.objectives.squared_error(outputs_val, inputs))
     # add weight decay or regularisation loss for validation: this loss is just to make training and validation come to same scale.
-    all_layers = lasagne.layers.get_all_layers(gen_network)
-    l2_penalty = lasagne.regularization.regularize_layer_params(all_layers, lasagne.regularization.l2) * 0.0001
-    cost_val = cost_val + l2_penalty
+    #all_layers = lasagne.layers.get_all_layers(gen_network)
+    #l2_penalty_val = lasagne.regularization.regularize_layer_params(all_layers, lasagne.regularization.l2) * 0.0001
+    #cost_val = cost_val + l2_penalty_val
     
     val_fn = theano.function([input_var_deconv, input_var], cost_val, allow_input_downcast=True)
     
