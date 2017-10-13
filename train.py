@@ -273,9 +273,9 @@ def main():
     cost = T.mean(lasagne.objectives.squared_error(outputs, inputs))
     
     # add weight decay or regularisation loss for training
-    #all_layers = lasagne.layers.get_all_layers(gen_network)
-    #l2_penalty_tr = lasagne.regularization.regularize_layer_params(all_layers, lasagne.regularization.l2) * 0.0001
-    #cost = cost + l2_penalty_tr
+    all_layers = lasagne.layers.get_all_layers(gen_network)
+    l2_penalty = lasagne.regularization.regularize_layer_params(all_layers, lasagne.regularization.l2) * 0.0001
+    cost = cost + l2_penalty
         
     # prepare and compile training function
     params = lasagne.layers.get_all_params(gen_network, trainable=True)
@@ -303,12 +303,7 @@ def main():
     print("Compiling validation function...")
     
     outputs_val = lasagne.layers.get_output(gen_network, deterministic=True)
-    cost_val = T.mean(lasagne.objectives.squared_error(outputs_val, inputs))
-    # add weight decay or regularisation loss for validation: this loss is just to make training and validation come to same scale.
-    #all_layers = lasagne.layers.get_all_layers(gen_network)
-    #l2_penalty_val = lasagne.regularization.regularize_layer_params(all_layers, lasagne.regularization.l2) * 0.0001
-    #cost_val = cost_val + l2_penalty_val
-    
+    cost_val = T.mean(lasagne.objectives.squared_error(outputs_val, inputs))    
     val_fn = theano.function([input_var_deconv, input_var], cost_val, allow_input_downcast=True)
     
     # run the training loop
@@ -330,6 +325,8 @@ def main():
     batches_tr = iter(batches_tr)
     batches_va = iter(batches_va)
     
+    patience = 10
+    
     for epoch in range(epochs):
         print("\rLearning rate epoch %d: %f" %(epoch, eta.get_value()))
         err = 0
@@ -347,6 +344,21 @@ def main():
         print("Train loss: %.3f" % (err / epochsize_tr))
         loss_current_epoch = err/ epochsize_tr
         
+        # Running the evaluation on training set after training one epoch, just to see how low is the error
+        err = 0
+        for batch_tr in progress(
+        range(epochsize_tr), min_delay=.5,
+        desc='Epoch %d/%d: Batch ' % (epoch + 1, epochs)):
+            data, labels = next(batches_tr) # followed a simple styple *next(batches) from Jan is unclear what is passed.
+        # labels information is a dummy variable its not used in training.
+        pred = pred_fn(data)    # a theano function returns a numpy array always. Here it is a matrix of shape 32  x 64
+        err += val_fn(pred, data)
+
+        if not np.isfinite(err):
+            print("\nEncountered NaN loss in training. Aborting.")
+            sys.exit(1)
+        print(" Testing the train data :Train loss: %.3f" % (err / epochsize_tr))
+    
         # Calculating validation loss per epoch
         err_va = 0
         for batch_va in progress(
@@ -381,11 +393,36 @@ def main():
             print("Decaying lr, based on schedule 0") # don't decay the learning rate at all
             
         loss_prev_epoch = loss_current_epoch
+
+        # code for early stopping the model training to prevent overfitting   
+             
+        if epoch == 0:# save the model parameters after first epoch
+            print("Saving model after epoch:%d" %(epoch+1))
+            np.savez(args.generator_file, **{'param%d' % i: p for i, p in enumerate(lasagne.layers.get_all_param_values(gen_network))})
+            val_loss = err_va / epochsize_va
+            train_loss = loss_current_epoch
+        else: # update the model iff training and validation both losses are coming down
+            if (truncate(err_va / epochsize_va) <= truncate(val_loss)) and (truncate(loss_current_epoch) - truncate(train_loss) < 0):
+                print("Saving model after epoch:%d" %(epoch+1))
+                np.savez(args.generator_file, **{'param%d' % i: p for i, p in enumerate(lasagne.layers.get_all_param_values(gen_network))})
+                val_loss = err_va / epochsize_va
+                train_loss = loss_current_epoch
+            else:# else wait till patience runs down.
+                while(patience):
+                    print("waiting for the validation loss to decrease!!")
+                    patience = patience - 1
+                    print("Epochs left to view the loss decrease: %d" %(patience))
+                
+                
+            
+            
+            
+        
         
     # save final network
-    print("Saving final model")
+    '''print("Saving final model")
     np.savez(args.generator_file, **{'param%d' % i: p for i, p in enumerate(
-            lasagne.layers.get_all_param_values(gen_network))})
+            lasagne.layers.get_all_param_values(gen_network))})'''
 
 
 if __name__ == '__main__':
