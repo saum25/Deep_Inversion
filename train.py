@@ -251,21 +251,21 @@ def main():
                 network['fc9'], [f['param%d' % i] for i in range(len(f.files))])
 
     # create output expression
-    outputs_score = lasagne.layers.get_output(network['fc7'], deterministic=True)
+    outputs_score = lasagne.layers.get_output(network['mp6'], deterministic=True)
 
     # prepare and compile prediction function
     print("Compiling prediction function...")
     pred_fn = theano.function([input_var], outputs_score, allow_input_downcast=True)
     
-    print (lasagne.layers.get_output_shape(network['fc7']))
+    print (lasagne.layers.get_output_shape(network['mp6']))
     
     # training the Upconvolutional network - Network 2
     
-    input_var_deconv = T.matrix('input_var_deconv')
-    #input_var_deconv = T.tensor4('input_var_deconv')
+    #input_var_deconv = T.matrix('input_var_deconv')
+    input_var_deconv = T.tensor4('input_var_deconv')
     #inputs_deconv = input_var_deconv.dimshuffle(0, 1, 'x', 'x') # 32 x 64 x 1 x 1. Adding the width and depth dimensions
-    gen_network = upconv.architecture_upconv_fc7(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['fc7'])[1]))
-    #gen_network = upconv.architecture_upconv_mp6(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['mp6'])[1], lasagne.layers.get_output_shape(network['mp6'])[2], lasagne.layers.get_output_shape(network['mp6'])[3]))
+    #gen_network = upconv.architecture_upconv_fc7(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['fc7'])[1]))
+    gen_network = upconv.architecture_upconv_c5_mp6(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['mp6'])[1], lasagne.layers.get_output_shape(network['mp6'])[2], lasagne.layers.get_output_shape(network['mp6'])[3]))
     
     # create cost expression
     # loss: squared euclidean distance per sample in a batch
