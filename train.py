@@ -325,7 +325,7 @@ def main():
     batches_tr = iter(batches_tr)
     batches_va = iter(batches_va)
     
-    patience = 10
+    patience = 15
     
     for epoch in range(epochs):
         print("\rLearning rate epoch %d: %f" %(epoch, eta.get_value()))
@@ -397,17 +397,17 @@ def main():
         # code for early stopping the model training to prevent overfitting   
              
         if epoch == 0:# save the model parameters after first epoch
-            print("Saving model after epoch:%d" %(epoch+1))
+            print("----------------------------------Saving model after epoch:%d" %(epoch+1))
             np.savez(args.generator_file, **{'param%d' % i: p for i, p in enumerate(lasagne.layers.get_all_param_values(gen_network))})
             val_loss = err_va / epochsize_va
             train_loss = loss_current_epoch
         else: # update the model iff training and validation both losses are coming down
             if (truncate(err_va / epochsize_va) <= truncate(val_loss)) and (truncate(loss_current_epoch) - truncate(train_loss) < 0):
-                print("Saving model after epoch:%d" %(epoch+1))
+                print("-------------------------------Saving model after epoch:%d" %(epoch+1))
                 np.savez(args.generator_file, **{'param%d' % i: p for i, p in enumerate(lasagne.layers.get_all_param_values(gen_network))})
                 val_loss = err_va / epochsize_va
                 train_loss = loss_current_epoch
-                patience = 10   # restarts from once the model is saved
+                patience = 15   # restarts from once the model is saved
             else:# else wait till patience runs down.
                 if patience!=0:
                     print("waiting for the validation loss to decrease!!")
