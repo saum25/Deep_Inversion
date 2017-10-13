@@ -345,7 +345,7 @@ def main():
         loss_current_epoch = err/ epochsize_tr
         
         # Running the evaluation on training set after training one epoch, just to see how low is the error
-        err = 0
+        '''err = 0
         for batch_tr in progress(
         range(epochsize_tr), min_delay=.5,
         desc='Epoch %d/%d: Batch ' % (epoch + 1, epochs)):
@@ -357,7 +357,7 @@ def main():
         if not np.isfinite(err):
             print("\nEncountered NaN loss in training. Aborting.")
             sys.exit(1)
-        print(" Testing the train data :Train loss: %.3f" % (err / epochsize_tr))
+        print(" Testing the train data :Train loss: %.3f" % (err / epochsize_tr))'''
     
         # Calculating validation loss per epoch
         err_va = 0
@@ -408,10 +408,13 @@ def main():
                 val_loss = err_va / epochsize_va
                 train_loss = loss_current_epoch
             else:# else wait till patience runs down.
-                while(patience):
+                if patience!=0:
                     print("waiting for the validation loss to decrease!!")
                     patience = patience - 1
                     print("Epochs left to view the loss decrease: %d" %(patience))
+                else:
+                    print("patience ran out......")
+                    break
                 
                 
             
