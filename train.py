@@ -28,9 +28,9 @@ import model
 import upconv
 import sys
 
-# String formatting in python %.2f does rounding so need to write a separate function
+# String formatting in python %.3f does rounding so need to write a separate function
 def truncate(loss):
-    return (int(loss * 100)/float(100))
+    return (int(loss * 1000)/float(1000))
 
 def cal_excerpts(excerpts_indices):
     n_excerpt = 0
@@ -407,6 +407,7 @@ def main():
                 np.savez(args.generator_file, **{'param%d' % i: p for i, p in enumerate(lasagne.layers.get_all_param_values(gen_network))})
                 val_loss = err_va / epochsize_va
                 train_loss = loss_current_epoch
+                patience = 10   # restarts from once the model is saved
             else:# else wait till patience runs down.
                 if patience!=0:
                     print("waiting for the validation loss to decrease!!")
