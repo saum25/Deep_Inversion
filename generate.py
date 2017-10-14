@@ -209,8 +209,10 @@ def main():
     # training the Upconvolutional network - Network 2
     
     input_var_deconv = T.matrix('input_var_deconv')
+    #input_var_deconv = T.tensor4('input_var_deconv')
     #inputs_deconv = input_var_deconv.dimshuffle(0, 1, 'x', 'x') # 32x 1 x 1 x 1. Adding the width and depth dimensions
-    gen_network = upconv.architecture_upconv(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['fc8'])[1]))
+    gen_network = upconv.architecture_upconv_fc8(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['fc8'])[1]))
+    #gen_network = upconv.architecture_upconv_c5_mp6(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['mp6'])[1], lasagne.layers.get_output_shape(network['mp6'])[2], lasagne.layers.get_output_shape(network['mp6'])[3]))
     
     # load saved weights
     with np.load(args.generatorfile) as f:
@@ -227,7 +229,7 @@ def main():
     # run prediction loop
     print("Predicting:")
     # we select n_excerpts per input audio file sequentially after randomly shuffling the indices of excerpts
-    n_excerpts = 64
+    n_excerpts = 32
     # array of n_excerpts randomly chosen excerpts
     sampled_excerpts = np.zeros((len(filelist) * n_excerpts, blocklen, spect.shape[1]))
     # list of n_excerpts (randomly chosen) per file 
@@ -235,7 +237,7 @@ def main():
     counter = 0
     
     # we calculate the reconstruction error for five random draws and the final value is average of it.
-    iterations = 5
+    iterations = 10
     n_count = 0
     avg_error_n = 0
 
@@ -310,8 +312,21 @@ def main():
     print('======')    
     print("Average normalised reconstruction error:%f after %d iteration" %(avg_error_n/n_count, n_count))
     
-    # plotting a randomly selected input excerpt and its reconstruction after inversion from the uponv network
-    excerpt_index = np.random.randint(0, len(sampled_excerpts))
+    # plotting a fixed selected input excerpt and its reconstruction after inversion from the uponv network
+    print("Plotting the excerpt's reconstruction")
+    num_excerpts = len(mel_spects[0]) - blocklen + 1
+    # excerpts is a numpy array of shape num_excerpts x blocklen x spect.shape[1]
+    excerpts = np.lib.stride_tricks.as_strided(mel_spects[0], shape=(num_excerpts, blocklen, mel_spects[0].shape[1]), strides=(mel_spects[0].strides[0], mel_spects[0].strides[0], mel_spects[0].strides[1]))
+    
+    preds = []
+    pos = 100
+    preds.append((pred_fn(excerpts[pos:pos + batchsize])))
+    
+    mel_predictions = []
+    mel_predictions.append(np.squeeze((test_fn(preds[0])), axis = 1))
+    #print(mel_predictions[0].shape)
+
+    excerpt_index = pos
     '''fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
     ax1.imshow(sampled_excerpts[excerpt_index].T, vmin=-3, cmap='jet', aspect='auto',
                interpolation='nearest')
@@ -325,11 +340,13 @@ def main():
     plt.ylabel('Frequency')
     fig.suptitle('Plots for excerpt index: %d' %(excerpt_index), fontsize=16)'''
     
+    print("Error in generating the displayed instance: %f" %(dist_euclidean(excerpts[excerpt_index], mel_predictions[0][0])))
+    
     plt.subplot(2, 1, 1)
-    disp.specshow(sampled_excerpts[excerpt_index].T, y_axis='mel', hop_length= 315, x_axis='time', fmin=27.5, fmax=8000)
+    disp.specshow(excerpts[excerpt_index].T, y_axis='mel', hop_length= 315, x_axis='time', fmin=27.5, fmax=8000)
     plt.colorbar()
     plt.subplot(2, 1, 2)
-    disp.specshow(mel_predictions_array[excerpt_index].T, y_axis='mel', hop_length= 315, x_axis='time', fmin=27.5, fmax=8000)
+    disp.specshow(mel_predictions[0][0].T, y_axis='mel', hop_length= 315, x_axis='time', fmin=27.5, fmax=8000)
     plt.colorbar()
     plt.suptitle('Plots for excerpt index: %d' %(excerpt_index), fontsize=16)
     #print(sampled_excerpts[excerpt_index])
