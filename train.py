@@ -30,7 +30,7 @@ import sys
 
 # String formatting in python %.3f does rounding so need to write a separate function
 def truncate(loss):
-    return (int(loss * 1000)/float(1000))
+    return (int(loss * 100)/float(100))
 
 def cal_excerpts(excerpts_indices):
     n_excerpt = 0
@@ -396,7 +396,7 @@ def main():
 
         # code for early stopping the model training to prevent overfitting   
              
-        if epoch == 0:# save the model parameters after first epoch
+        '''if epoch == 0:# save the model parameters after first epoch
             print("----------------------------------Saving model after epoch:%d" %(epoch+1))
             np.savez(args.generator_file, **{'param%d' % i: p for i, p in enumerate(lasagne.layers.get_all_param_values(gen_network))})
             val_loss = err_va / epochsize_va
@@ -415,12 +415,13 @@ def main():
                     print("Epochs left to view the loss decrease: %d" %(patience))
                 else:
                     print("patience ran out......")
-                    break                                
+                    break'''                                
         
     # save final network
-    '''print("Saving final model")
+    print("Saving final model")
     np.savez(args.generator_file, **{'param%d' % i: p for i, p in enumerate(
-            lasagne.layers.get_all_param_values(gen_network))})'''
+            lasagne.layers.get_all_param_values(gen_network))})
+            
 
 
 if __name__ == '__main__':
