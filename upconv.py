@@ -172,7 +172,7 @@ def architecture_upconv_conv4(input_var, input_shape):
     print(net['c3'].output_shape)'''
     
     # Bunch of transposed convolution layers  
-    net['uc1'] = batch_norm(TransposedConv2DLayer(net['data'], num_filters= 32, filter_size= 4, stride = 2, crop=1, **kwargs))
+    net['uc1'] = batch_norm(TransposedConv2DLayer(net['data'], num_filters= 64, filter_size= 4, stride = 2, crop=1, **kwargs))
     print(net['uc1'].output_shape)
     
     net['uc2'] = batch_norm(TransposedConv2DLayer(net['uc1'], num_filters= 1, filter_size= 4, stride = 2, crop=1, **kwargs))
