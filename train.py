@@ -253,7 +253,7 @@ def main():
                 network['fc9'], [f['param%d' % i] for i in range(len(f.files))])
 
     # create output expression
-    outputs_score = lasagne.layers.get_output(network['conv4'], deterministic=True)
+    outputs_score = lasagne.layers.get_output(network['mp3'], deterministic=True)
 
     # prepare and compile prediction function
     print("Compiling prediction function...")
@@ -267,7 +267,7 @@ def main():
     input_var_deconv = T.tensor4('input_var_deconv')
     #inputs_deconv = input_var_deconv.dimshuffle(0, 1, 'x', 'x') # 32 x 64 x 1 x 1. Adding the width and depth dimensions
     #gen_network = upconv.architecture_upconv_fc8(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['fc8'])[1]))
-    gen_network = upconv.architecture_upconv_conv4(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['conv4'])[1], lasagne.layers.get_output_shape(network['conv4'])[2], lasagne.layers.get_output_shape(network['conv4'])[3]), args.n_conv_layers, args.n_conv_filters)
+    gen_network = upconv.architecture_upconv_c2_mp3(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['mp3'])[1], lasagne.layers.get_output_shape(network['mp3'])[2], lasagne.layers.get_output_shape(network['mp3'])[3]), args.n_conv_layers, args.n_conv_filters)
     
     # create cost expression
     # loss: squared euclidean distance per sample in a batch
