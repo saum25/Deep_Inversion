@@ -250,7 +250,7 @@ def architecture_upconv_c1(input_var, input_shape, n_conv_layers, n_conv_filters
     print(net['data'].output_shape)
     
     # Bunch of 3 x 3 convolution layers: experimentally we found that, adding 3 conv layers in start than in middle is better: but why?    
-    ''''i = 'data'
+    i = 'data'
     j = 'c1'
     for idx in range(n_conv_layers):
         print("Conv layer index: %d" %(idx+1))
@@ -258,14 +258,11 @@ def architecture_upconv_c1(input_var, input_shape, n_conv_layers, n_conv_filters
         print(net[j].output_shape)
         # renaming for next iteration
         i = j
-        j = j[:-1] + str(idx + 2)'''        
+        j = j[:-1] + str(idx + 2)     
     
     # Bunch of transposed convolution layers  
     net['uc1'] = batch_norm(TransposedConv2DLayer(net['data'], num_filters= 1, filter_size= 4, stride = 2, crop=1, **kwargs))
     print(net['uc1'].output_shape)
-    
-    #net['uc2'] = batch_norm(TransposedConv2DLayer(net['uc1'], num_filters= 1, filter_size= 4, stride = 2, crop=1, **kwargs))
-    #print(net['uc2'].output_shape)
 
     # slicing the output to 115 x 80 size  
     net['s1'] = lasagne.layers.SliceLayer(net['uc1'], slice(0, 115), axis=-2)
