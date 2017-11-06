@@ -261,7 +261,7 @@ def architecture_upconv_c1(input_var, input_shape, n_conv_layers, n_conv_filters
         j = j[:-1] + str(idx + 2)     
     
     # Bunch of transposed convolution layers  
-    net['uc1'] = batch_norm(TransposedConv2DLayer(net['data'], num_filters= 1, filter_size= 4, stride = 2, crop=1, **kwargs))
+    net['uc1'] = batch_norm(TransposedConv2DLayer(net[i], num_filters= 1, filter_size= 4, stride = 2, crop=1, **kwargs))
     print(net['uc1'].output_shape)
 
     # slicing the output to 115 x 80 size  
