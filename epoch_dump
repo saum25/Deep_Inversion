@@ -1,898 +1,2899 @@
 ====setup creation====
+
 ====training inversion model====
-Using gpu device 0: Tesla K80 (CNMeM is enabled with initial size: 50.0% of memory, cuDNN 5105)
+
+Number of filters: 32
+Number of convolutional layers: 1
+Using gpu device 0: TITAN X (Pascal) (CNMeM is enabled with initial size: 50.0% of memory, cuDNN 5105)
 Computing spectra...
 ====Training Files====
-File 61/61 (100.00%) (took 1:18) 
+File 61/61 (100.00%) (took 0:54) 
 ====Validation Files====
-File 16/16 (100.00%) (took 0:19) 
+File 16/16 (100.00%) (took 0:13) 
 Loading labels...
 Preparing training data feed...
 Preparing prediction and generator functions...
-/import/linux/DEEP_LEARNING/cuda-8-0/c4dm-theano/lib/python2.7/site-packages/lasagne/layers/pool.py:266: UserWarning: DEPRECATION: the 'ds' parameter is not going to exist anymore as it is going to be replaced by the parameter 'ws'.
-  mode=self.mode,
-/import/linux/DEEP_LEARNING/cuda-8-0/c4dm-theano/lib/python2.7/site-packages/lasagne/layers/pool.py:266: UserWarning: DEPRECATION: the 'st' parameter is not going to exist anymore as it is going to be replaced by the parameter 'stride'.
-  mode=self.mode,
-/import/linux/DEEP_LEARNING/cuda-8-0/c4dm-theano/lib/python2.7/site-packages/lasagne/layers/pool.py:266: UserWarning: DEPRECATION: the 'padding' parameter is not going to exist anymore as it is going to be replaced by the parameter 'pad'.
-  mode=self.mode,
 Compiling prediction function...
+(None, 64, 113, 78)
+Layer output shapes
+(32, 64, 113, 78)
+Conv layer index: 1
+(32, 32, 113, 78)
+(32, 1, 226, 156)
+(32, 1, 115, 156)
+(32, 1, 115, 80)
+Number of parameter to be learned: 19076
 Compiling training function...
 Compiling validation function...
 Training the inversion network:
 Learning rate epoch 0: 0.001000
-Epoch 1/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.653
-Epoch 1/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.540
-Training loss: previous epoch: 0.000000 current epoch:0.653049
-Decaying lr, based on schedule 0
+Epoch 1/30: Batch 3111/3111 (100.00%) (took 2:25) 
+Train loss: 0.546
+Epoch 1/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.464
+Training loss: previous epoch: 0.000000 current epoch:0.546029
 Learning rate epoch 1: 0.001000
-Epoch 2/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.604
-Epoch 2/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.533
-Training loss: previous epoch: 0.653049 current epoch:0.604378
-Decaying lr, based on schedule 0
+Epoch 2/30: Batch 3111/3111 (100.00%) (took 2:27) 
+Train loss: 0.535
+Epoch 2/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.442
+Training loss: previous epoch: 0.546029 current epoch:0.534790
 Learning rate epoch 2: 0.001000
-Epoch 3/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.598
-Epoch 3/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.523
-Training loss: previous epoch: 0.604378 current epoch:0.598058
-Decaying lr, based on schedule 0
-Learning rate epoch 3: 0.001000
-Epoch 4/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.594
-Epoch 4/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.547
-Training loss: previous epoch: 0.598058 current epoch:0.593516
-Decaying lr, based on schedule 0
-Learning rate epoch 4: 0.001000
-Epoch 5/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.591
-Epoch 5/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.534
-Training loss: previous epoch: 0.593516 current epoch:0.590530
-Decaying lr, based on schedule 0
-Learning rate epoch 5: 0.001000
-Epoch 6/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.588
+Epoch 3/30: Batch 3111/3111 (100.00%) (took 2:27) 
+Train loss: 0.532
+Epoch 3/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.455
+Training loss: previous epoch: 0.534790 current epoch:0.532307
+Decaying lr, based on schedule 3
+Learning rate epoch 3: 0.000500
+Epoch 4/30: Batch 3111/3111 (100.00%) (took 2:27) 
+Train loss: 0.530
+Epoch 4/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.451
+Training loss: previous epoch: 0.532307 current epoch:0.529894
+Learning rate epoch 4: 0.000500
+Epoch 5/30: Batch 3111/3111 (100.00%) (took 2:27) 
+Train loss: 0.529
+Epoch 5/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.432
+Training loss: previous epoch: 0.529894 current epoch:0.529048
+Decaying lr, based on schedule 3
+Learning rate epoch 5: 0.000250
+Epoch 6/30: Batch 3111/3111 (100.00%) (took 2:27) 
+Train loss: 0.527
 Epoch 6/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.526
-Training loss: previous epoch: 0.590530 current epoch:0.588398
-Decaying lr, based on schedule 0
-Learning rate epoch 6: 0.001000
-Epoch 7/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.587
-Epoch 7/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.527
-Training loss: previous epoch: 0.588398 current epoch:0.586734
-Decaying lr, based on schedule 0
-Learning rate epoch 7: 0.001000
-Epoch 8/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.585
-Epoch 8/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.525
-Training loss: previous epoch: 0.586734 current epoch:0.584578
-Decaying lr, based on schedule 0
-Learning rate epoch 8: 0.001000
-Epoch 9/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.583
-Epoch 9/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.515
-Training loss: previous epoch: 0.584578 current epoch:0.583087
-Decaying lr, based on schedule 0
-Learning rate epoch 9: 0.001000
-Epoch 10/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.581
-Epoch 10/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.517
-Training loss: previous epoch: 0.583087 current epoch:0.581396
-Decaying lr, based on schedule 0
-Learning rate epoch 10: 0.001000
-Epoch 11/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.580
-Epoch 11/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.526
-Training loss: previous epoch: 0.581396 current epoch:0.579675
-Decaying lr, based on schedule 0
-Learning rate epoch 11: 0.001000
-Epoch 12/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.579
-Epoch 12/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.524
-Training loss: previous epoch: 0.579675 current epoch:0.579324
-Decaying lr, based on schedule 0
-Learning rate epoch 12: 0.001000
-Epoch 13/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.578
-Epoch 13/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.503
-Training loss: previous epoch: 0.579324 current epoch:0.578243
-Decaying lr, based on schedule 0
-Learning rate epoch 13: 0.001000
-Epoch 14/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.577
-Epoch 14/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.521
-Training loss: previous epoch: 0.578243 current epoch:0.577295
-Decaying lr, based on schedule 0
-Learning rate epoch 14: 0.001000
-Epoch 15/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.577
-Epoch 15/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.531
-Training loss: previous epoch: 0.577295 current epoch:0.576590
-Decaying lr, based on schedule 0
-Learning rate epoch 15: 0.001000
-Epoch 16/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.576
-Epoch 16/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.513
-Training loss: previous epoch: 0.576590 current epoch:0.575533
-Decaying lr, based on schedule 0
-Learning rate epoch 16: 0.001000
-Epoch 17/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.575
-Epoch 17/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.512
-Training loss: previous epoch: 0.575533 current epoch:0.574929
-Decaying lr, based on schedule 0
-Learning rate epoch 17: 0.001000
-Epoch 18/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.574
-Epoch 18/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.518
-Training loss: previous epoch: 0.574929 current epoch:0.574430
-Decaying lr, based on schedule 0
-Learning rate epoch 18: 0.001000
-Epoch 19/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.574
-Epoch 19/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.517
-Training loss: previous epoch: 0.574430 current epoch:0.573682
-Decaying lr, based on schedule 0
-Learning rate epoch 19: 0.001000
-Epoch 20/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.573
-Epoch 20/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.510
-Training loss: previous epoch: 0.573682 current epoch:0.573435
-Decaying lr, based on schedule 0
-Learning rate epoch 20: 0.001000
-Epoch 21/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.573
-Epoch 21/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.528
-Training loss: previous epoch: 0.573435 current epoch:0.573104
-Decaying lr, based on schedule 0
-Learning rate epoch 21: 0.001000
-Epoch 22/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.572
-Epoch 22/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.515
-Training loss: previous epoch: 0.573104 current epoch:0.572028
-Decaying lr, based on schedule 0
-Learning rate epoch 22: 0.001000
-Epoch 23/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.572
-Epoch 23/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.515
-Training loss: previous epoch: 0.572028 current epoch:0.571586
-Decaying lr, based on schedule 0
-Learning rate epoch 23: 0.001000
-Epoch 24/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.572
-Epoch 24/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.508
-Training loss: previous epoch: 0.571586 current epoch:0.571732
-Decaying lr, based on schedule 0
-Learning rate epoch 24: 0.001000
-Epoch 25/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.571
-Epoch 25/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.523
-Training loss: previous epoch: 0.571732 current epoch:0.570828
-Decaying lr, based on schedule 0
-Learning rate epoch 25: 0.001000
-Epoch 26/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.571
-Epoch 26/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.513
-Training loss: previous epoch: 0.570828 current epoch:0.570575
-Decaying lr, based on schedule 0
-Learning rate epoch 26: 0.001000
-Epoch 27/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.571
-Epoch 27/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.517
-Training loss: previous epoch: 0.570575 current epoch:0.570572
-Decaying lr, based on schedule 0
-Learning rate epoch 27: 0.001000
-Epoch 28/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.569
-Epoch 28/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.513
-Training loss: previous epoch: 0.570572 current epoch:0.569319
-Decaying lr, based on schedule 0
-Learning rate epoch 28: 0.001000
-Epoch 29/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.570
-Epoch 29/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.513
-Training loss: previous epoch: 0.569319 current epoch:0.569574
-Decaying lr, based on schedule 0
-Learning rate epoch 29: 0.001000
-Epoch 30/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.569
-Epoch 30/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.506
-Training loss: previous epoch: 0.569574 current epoch:0.569314
-Decaying lr, based on schedule 0
-Saving final model
-====training ends====
-====training inversion model====
-Using gpu device 0: Tesla K80 (CNMeM is enabled with initial size: 50.0% of memory, cuDNN 5105)
-Computing spectra...
-====Training Files====
-File 61/61 (100.00%) (took 1:20) 
-====Validation Files====
-File 16/16 (100.00%) (took 0:19) 
-Loading labels...
-Preparing training data feed...
-Preparing prediction and generator functions...
-/import/linux/DEEP_LEARNING/cuda-8-0/c4dm-theano/lib/python2.7/site-packages/lasagne/layers/pool.py:266: UserWarning: DEPRECATION: the 'ds' parameter is not going to exist anymore as it is going to be replaced by the parameter 'ws'.
-  mode=self.mode,
-/import/linux/DEEP_LEARNING/cuda-8-0/c4dm-theano/lib/python2.7/site-packages/lasagne/layers/pool.py:266: UserWarning: DEPRECATION: the 'st' parameter is not going to exist anymore as it is going to be replaced by the parameter 'stride'.
-  mode=self.mode,
-/import/linux/DEEP_LEARNING/cuda-8-0/c4dm-theano/lib/python2.7/site-packages/lasagne/layers/pool.py:266: UserWarning: DEPRECATION: the 'padding' parameter is not going to exist anymore as it is going to be replaced by the parameter 'pad'.
-  mode=self.mode,
-Compiling prediction function...
-Compiling training function...
-Compiling validation function...
-Training the inversion network:
-Learning rate epoch 0: 0.100000
-Epoch 1/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.665
-Epoch 1/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.544
-Training loss: previous epoch: 0.000000 current epoch:0.664847
-Decaying lr, based on schedule 1
-Learning rate epoch 1: 0.010000
-Epoch 2/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.606
-Epoch 2/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.546
-Training loss: previous epoch: 0.664847 current epoch:0.605620
-Decaying lr, based on schedule 1
-Learning rate epoch 2: 0.001000
-Epoch 3/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.599
-Epoch 3/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.528
-Training loss: previous epoch: 0.605620 current epoch:0.599326
-Decaying lr, based on schedule 1
-Learning rate epoch 3: 0.000100
-Epoch 4/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.599
-Epoch 4/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.523
-Training loss: previous epoch: 0.599326 current epoch:0.598799
-Decaying lr, based on schedule 1
-Learning rate epoch 4: 0.000010
-Epoch 5/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.599
-Epoch 5/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.543
-Training loss: previous epoch: 0.598799 current epoch:0.598940
-Decaying lr, based on schedule 1
-Learning rate epoch 5: 0.000001
-Epoch 6/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.599
-Epoch 6/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.511
-Training loss: previous epoch: 0.598940 current epoch:0.599010
-Decaying lr, based on schedule 1
-Learning rate epoch 6: 0.000000
-Epoch 7/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.599
-Epoch 7/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.531
-Training loss: previous epoch: 0.599010 current epoch:0.599089
-Decaying lr, based on schedule 1
-Learning rate epoch 7: 0.000000
-Epoch 8/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.598
-Epoch 8/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.535
-Training loss: previous epoch: 0.599089 current epoch:0.598496
-Decaying lr, based on schedule 1
-Learning rate epoch 8: 0.000000
-Epoch 9/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.599
-Epoch 9/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.528
-Training loss: previous epoch: 0.598496 current epoch:0.599181
-Decaying lr, based on schedule 1
-Learning rate epoch 9: 0.000000
-Epoch 10/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.599
-Epoch 10/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.530
-Training loss: previous epoch: 0.599181 current epoch:0.598787
-Decaying lr, based on schedule 1
-Learning rate epoch 10: 0.000000
-Epoch 11/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.599
-Epoch 11/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.522
-Training loss: previous epoch: 0.598787 current epoch:0.599169
-Decaying lr, based on schedule 1
-Learning rate epoch 11: 0.000000
-Epoch 12/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.599
-Epoch 12/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.526
-Training loss: previous epoch: 0.599169 current epoch:0.599443
-Decaying lr, based on schedule 1
-Learning rate epoch 12: 0.000000
-Epoch 13/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.599
-Epoch 13/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.528
-Training loss: previous epoch: 0.599443 current epoch:0.599241
-Decaying lr, based on schedule 1
-Learning rate epoch 13: 0.000000
-Epoch 14/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.599
-Epoch 14/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.532
-Training loss: previous epoch: 0.599241 current epoch:0.598915
-Decaying lr, based on schedule 1
+Validation loss: 0.445
+Training loss: previous epoch: 0.529048 current epoch:0.527470
+Decaying lr, based on schedule 3
+Learning rate epoch 6: 0.000125
+Epoch 7/30: Batch 3111/3111 (100.00%) (took 2:27) 
+Train loss: 0.526
+Epoch 7/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.437
+Training loss: previous epoch: 0.527470 current epoch:0.526305
+Decaying lr, based on schedule 3
+Learning rate epoch 7: 0.000063
+Epoch 8/30: Batch 3111/3111 (100.00%) (took 2:27) 
+Train loss: 0.526
+Epoch 8/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.451
+Training loss: previous epoch: 0.526305 current epoch:0.525955
+Decaying lr, based on schedule 3
+Learning rate epoch 8: 0.000031
+Epoch 9/30: Batch 3111/3111 (100.00%) (took 2:27) 
+Train loss: 0.526
+Epoch 9/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.438
+Training loss: previous epoch: 0.525955 current epoch:0.525840
+Decaying lr, based on schedule 3
+Learning rate epoch 9: 0.000016
+Epoch 10/30: Batch 3111/3111 (100.00%) (took 2:27) 
+Train loss: 0.526
+Epoch 10/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.443
+Training loss: previous epoch: 0.525840 current epoch:0.525716
+Decaying lr, based on schedule 3
+Learning rate epoch 10: 0.000008
+Epoch 11/30: Batch 3111/3111 (100.00%) (took 2:27) 
+Train loss: 0.525
+Epoch 11/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.445
+Training loss: previous epoch: 0.525716 current epoch:0.525351
+Decaying lr, based on schedule 3
+Learning rate epoch 11: 0.000004
+Epoch 12/30: Batch 3111/3111 (100.00%) (took 2:27) 
+Train loss: 0.526
+Epoch 12/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.439
+Training loss: previous epoch: 0.525351 current epoch:0.525747
+Decaying lr, based on schedule 3
+Learning rate epoch 12: 0.000002
+Epoch 13/30: Batch 3111/3111 (100.00%) (took 2:27) 
+Train loss: 0.525
+Epoch 13/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.442
+Training loss: previous epoch: 0.525747 current epoch:0.525216
+Decaying lr, based on schedule 3
+Learning rate epoch 13: 0.000001
+Epoch 14/30: Batch 3111/3111 (100.00%) (took 2:27) 
+Train loss: 0.525
+Epoch 14/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.452
+Training loss: previous epoch: 0.525216 current epoch:0.525410
+Decaying lr, based on schedule 3
 Learning rate epoch 14: 0.000000
-Epoch 15/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.599
-Epoch 15/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.522
-Training loss: previous epoch: 0.598915 current epoch:0.598958
-Decaying lr, based on schedule 1
+Epoch 15/30: Batch 3111/3111 (100.00%) (took 2:27) 
+Train loss: 0.526
+Epoch 15/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.439
+Training loss: previous epoch: 0.525410 current epoch:0.525563
+Decaying lr, based on schedule 3
 Learning rate epoch 15: 0.000000
-Epoch 16/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.600
-Epoch 16/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.530
-Training loss: previous epoch: 0.598958 current epoch:0.599615
-Decaying lr, based on schedule 1
+Epoch 16/30: Batch 3111/3111 (100.00%) (took 2:27) 
+Train loss: 0.526
+Epoch 16/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.444
+Training loss: previous epoch: 0.525563 current epoch:0.525504
+Decaying lr, based on schedule 3
 Learning rate epoch 16: 0.000000
-Epoch 17/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.599
-Epoch 17/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.531
-Training loss: previous epoch: 0.599615 current epoch:0.598920
-Decaying lr, based on schedule 1
+Epoch 17/30: Batch 3111/3111 (100.00%) (took 2:27) 
+Train loss: 0.525
+Epoch 17/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.440
+Training loss: previous epoch: 0.525504 current epoch:0.525359
+Decaying lr, based on schedule 3
 Learning rate epoch 17: 0.000000
-Epoch 18/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.599
-Epoch 18/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.524
-Training loss: previous epoch: 0.598920 current epoch:0.599103
-Decaying lr, based on schedule 1
+Epoch 18/30: Batch 3111/3111 (100.00%) (took 2:27) 
+Train loss: 0.525
+Epoch 18/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.437
+Training loss: previous epoch: 0.525359 current epoch:0.525435
+Decaying lr, based on schedule 3
 Learning rate epoch 18: 0.000000
-Epoch 19/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.599
-Epoch 19/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.537
-Training loss: previous epoch: 0.599103 current epoch:0.599067
-Decaying lr, based on schedule 1
+Epoch 19/30: Batch 3111/3111 (100.00%) (took 2:27) 
+Train loss: 0.526
+Epoch 19/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.450
+Training loss: previous epoch: 0.525435 current epoch:0.525682
+Decaying lr, based on schedule 3
 Learning rate epoch 19: 0.000000
-Epoch 20/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.599
-Epoch 20/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.531
-Training loss: previous epoch: 0.599067 current epoch:0.598983
-Decaying lr, based on schedule 1
+Epoch 20/30: Batch 3111/3111 (100.00%) (took 2:27) 
+Train loss: 0.525
+Epoch 20/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.441
+Training loss: previous epoch: 0.525682 current epoch:0.525330
+Decaying lr, based on schedule 3
 Learning rate epoch 20: 0.000000
-Epoch 21/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.599
-Epoch 21/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.511
-Training loss: previous epoch: 0.598983 current epoch:0.599059
-Decaying lr, based on schedule 1
+Epoch 21/30: Batch 3111/3111 (100.00%) (took 2:27) 
+Train loss: 0.525
+Epoch 21/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.443
+Training loss: previous epoch: 0.525330 current epoch:0.525048
+Decaying lr, based on schedule 3
 Learning rate epoch 21: 0.000000
-Epoch 22/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.599
-Epoch 22/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.543
-Training loss: previous epoch: 0.599059 current epoch:0.598840
-Decaying lr, based on schedule 1
+Epoch 22/30: Batch 3111/3111 (100.00%) (took 2:28) 
+Train loss: 0.525
+Epoch 22/30: Batch 792/792 (100.00%) (took 0:20) 
+Validation loss: 0.455
+Training loss: previous epoch: 0.525048 current epoch:0.524735
+Decaying lr, based on schedule 3
 Learning rate epoch 22: 0.000000
-Epoch 23/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.599
-Epoch 23/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.529
-Training loss: previous epoch: 0.598840 current epoch:0.599347
-Decaying lr, based on schedule 1
+Epoch 23/30: Batch 3111/3111 (100.00%) (took 2:30) 
+Train loss: 0.526
+Epoch 23/30: Batch 792/792 (100.00%) (took 0:20) 
+Validation loss: 0.437
+Training loss: previous epoch: 0.524735 current epoch:0.525616
+Decaying lr, based on schedule 3
 Learning rate epoch 23: 0.000000
-Epoch 24/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.599
-Epoch 24/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.518
-Training loss: previous epoch: 0.599347 current epoch:0.598985
-Decaying lr, based on schedule 1
+Epoch 24/30: Batch 3111/3111 (100.00%) (took 2:27) 
+Train loss: 0.526
+Epoch 24/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.439
+Training loss: previous epoch: 0.525616 current epoch:0.525778
+Decaying lr, based on schedule 3
 Learning rate epoch 24: 0.000000
-Epoch 25/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.599
-Epoch 25/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.532
-Training loss: previous epoch: 0.598985 current epoch:0.598918
-Decaying lr, based on schedule 1
+Epoch 25/30: Batch 3111/3111 (100.00%) (took 2:27) 
+Train loss: 0.526
+Epoch 25/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.456
+Training loss: previous epoch: 0.525778 current epoch:0.525652
+Decaying lr, based on schedule 3
 Learning rate epoch 25: 0.000000
-Epoch 26/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.599
-Epoch 26/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.529
-Training loss: previous epoch: 0.598918 current epoch:0.599159
-Decaying lr, based on schedule 1
+Epoch 26/30: Batch 3111/3111 (100.00%) (took 2:27) 
+Train loss: 0.526
+Epoch 26/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.434
+Training loss: previous epoch: 0.525652 current epoch:0.525542
+Decaying lr, based on schedule 3
 Learning rate epoch 26: 0.000000
-Epoch 27/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.600
-Epoch 27/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.535
-Training loss: previous epoch: 0.599159 current epoch:0.599534
-Decaying lr, based on schedule 1
+Epoch 27/30: Batch 3111/3111 (100.00%) (took 2:27) 
+Train loss: 0.525
+Epoch 27/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.442
+Training loss: previous epoch: 0.525542 current epoch:0.525460
+Decaying lr, based on schedule 3
 Learning rate epoch 27: 0.000000
-Epoch 28/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.599
-Epoch 28/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.522
-Training loss: previous epoch: 0.599534 current epoch:0.599268
-Decaying lr, based on schedule 1
+Epoch 28/30: Batch 3111/3111 (100.00%) (took 2:28) 
+Train loss: 0.525
+Epoch 28/30: Batch 792/792 (100.00%) (took 0:20) 
+Validation loss: 0.442
+Training loss: previous epoch: 0.525460 current epoch:0.525295
+Decaying lr, based on schedule 3
 Learning rate epoch 28: 0.000000
-Epoch 29/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.599
-Epoch 29/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.531
-Training loss: previous epoch: 0.599268 current epoch:0.599111
-Decaying lr, based on schedule 1
+Epoch 29/30: Batch 3111/3111 (100.00%) (took 2:30) 
+Train loss: 0.525
+Epoch 29/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.450
+Training loss: previous epoch: 0.525295 current epoch:0.525460
+Decaying lr, based on schedule 3
 Learning rate epoch 29: 0.000000
-Epoch 30/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.599
-Epoch 30/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.525
-Training loss: previous epoch: 0.599111 current epoch:0.599324
-Decaying lr, based on schedule 1
+Epoch 30/30: Batch 3111/3111 (100.00%) (took 2:27) 
+Train loss: 0.526
+Epoch 30/30: Batch 792/792 (100.00%) (took 0:19) 
+Validation loss: 0.435
+Training loss: previous epoch: 0.525460 current epoch:0.525591
+Decaying lr, based on schedule 3
 Saving final model
+
 ====training ends====
 ====training inversion model====
-Using gpu device 0: Tesla K80 (CNMeM is enabled with initial size: 50.0% of memory, cuDNN 5105)
+
+Number of filters: 32
+Number of convolutional layers: 2
+Using gpu device 0: TITAN X (Pascal) (CNMeM is enabled with initial size: 50.0% of memory, cuDNN 5105)
 Computing spectra...
 ====Training Files====
-File 61/61 (100.00%) (took 1:20) 
+File 61/61 (100.00%) (took 0:54) 
 ====Validation Files====
-File 16/16 (100.00%) (took 0:19) 
+File 16/16 (100.00%) (took 0:13) 
 Loading labels...
 Preparing training data feed...
 Preparing prediction and generator functions...
-/import/linux/DEEP_LEARNING/cuda-8-0/c4dm-theano/lib/python2.7/site-packages/lasagne/layers/pool.py:266: UserWarning: DEPRECATION: the 'ds' parameter is not going to exist anymore as it is going to be replaced by the parameter 'ws'.
-  mode=self.mode,
-/import/linux/DEEP_LEARNING/cuda-8-0/c4dm-theano/lib/python2.7/site-packages/lasagne/layers/pool.py:266: UserWarning: DEPRECATION: the 'st' parameter is not going to exist anymore as it is going to be replaced by the parameter 'stride'.
-  mode=self.mode,
-/import/linux/DEEP_LEARNING/cuda-8-0/c4dm-theano/lib/python2.7/site-packages/lasagne/layers/pool.py:266: UserWarning: DEPRECATION: the 'padding' parameter is not going to exist anymore as it is going to be replaced by the parameter 'pad'.
-  mode=self.mode,
 Compiling prediction function...
+(None, 64, 113, 78)
+Layer output shapes
+(32, 64, 113, 78)
+Conv layer index: 1
+(32, 32, 113, 78)
+Conv layer index: 2
+(32, 32, 113, 78)
+(32, 1, 226, 156)
+(32, 1, 115, 156)
+(32, 1, 115, 80)
+Number of parameter to be learned: 28420
 Compiling training function...
 Compiling validation function...
 Training the inversion network:
 Learning rate epoch 0: 0.001000
-Epoch 1/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.643
-Epoch 1/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.546
-Training loss: previous epoch: 0.000000 current epoch:0.643404
+Epoch 1/30: Batch 3111/3111 (100.00%) (took 3:12) 
+Train loss: 0.537
+Epoch 1/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.436
+Training loss: previous epoch: 0.000000 current epoch:0.537338
 Learning rate epoch 1: 0.001000
-Epoch 2/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.603
-Epoch 2/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.516
-Training loss: previous epoch: 0.643404 current epoch:0.603178
+Epoch 2/30: Batch 3111/3111 (100.00%) (took 3:13) 
+Train loss: 0.524
+Epoch 2/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.438
+Training loss: previous epoch: 0.537338 current epoch:0.524132
 Learning rate epoch 2: 0.001000
-Epoch 3/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.597
-Epoch 3/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.523
-Training loss: previous epoch: 0.603178 current epoch:0.596788
-Learning rate epoch 3: 0.001000
-Epoch 4/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.592
-Epoch 4/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.545
-Training loss: previous epoch: 0.596788 current epoch:0.592304
-Learning rate epoch 4: 0.001000
-Epoch 5/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.589
-Epoch 5/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.530
-Training loss: previous epoch: 0.592304 current epoch:0.589133
-Learning rate epoch 5: 0.001000
-Epoch 6/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.586
-Epoch 6/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.530
-Training loss: previous epoch: 0.589133 current epoch:0.586468
-Learning rate epoch 6: 0.001000
-Epoch 7/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.585
-Epoch 7/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.518
-Training loss: previous epoch: 0.586468 current epoch:0.584621
-Learning rate epoch 7: 0.001000
-Epoch 8/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.582
-Epoch 8/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.527
-Training loss: previous epoch: 0.584621 current epoch:0.582436
-Learning rate epoch 8: 0.001000
-Epoch 9/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.581
-Epoch 9/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.531
-Training loss: previous epoch: 0.582436 current epoch:0.581209
-Learning rate epoch 9: 0.001000
-Epoch 10/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.580
-Epoch 10/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.519
-Training loss: previous epoch: 0.581209 current epoch:0.580482
-Learning rate epoch 10: 0.001000
-Epoch 11/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.580
-Epoch 11/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.538
-Training loss: previous epoch: 0.580482 current epoch:0.579652
-Learning rate epoch 11: 0.001000
-Epoch 12/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.578
-Epoch 12/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.506
-Training loss: previous epoch: 0.579652 current epoch:0.577965
-Learning rate epoch 12: 0.001000
-Epoch 13/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.577
-Epoch 13/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.525
-Training loss: previous epoch: 0.577965 current epoch:0.577344
-Learning rate epoch 13: 0.001000
-Epoch 14/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.577
-Epoch 14/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.517
-Training loss: previous epoch: 0.577344 current epoch:0.577057
-Learning rate epoch 14: 0.001000
-Epoch 15/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.576
-Epoch 15/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.512
-Training loss: previous epoch: 0.577057 current epoch:0.576332
-Learning rate epoch 15: 0.001000
-Epoch 16/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.575
-Epoch 16/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.523
-Training loss: previous epoch: 0.576332 current epoch:0.575205
-Decaying lr, based on schedule 2
-Learning rate epoch 16: 0.000500
-Epoch 17/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.571
-Epoch 17/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.508
-Training loss: previous epoch: 0.575205 current epoch:0.570626
-Learning rate epoch 17: 0.000500
-Epoch 18/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.570
-Epoch 18/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.520
-Training loss: previous epoch: 0.570626 current epoch:0.570124
-Learning rate epoch 18: 0.000500
-Epoch 19/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.570
-Epoch 19/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.512
-Training loss: previous epoch: 0.570124 current epoch:0.569674
-Learning rate epoch 19: 0.000500
-Epoch 20/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.569
-Epoch 20/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.511
-Training loss: previous epoch: 0.569674 current epoch:0.568820
-Learning rate epoch 20: 0.000500
-Epoch 21/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.569
-Epoch 21/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.527
-Training loss: previous epoch: 0.568820 current epoch:0.568940
-Learning rate epoch 21: 0.000500
-Epoch 22/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.568
-Epoch 22/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.507
-Training loss: previous epoch: 0.568940 current epoch:0.568294
-Learning rate epoch 22: 0.000500
-Epoch 23/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.568
-Epoch 23/30: Batch 792/792 (100.00%) (took 0:17) 
-Validation loss: 0.510
-Training loss: previous epoch: 0.568294 current epoch:0.568088
-Decaying lr, based on schedule 2
-Learning rate epoch 23: 0.000250
-Epoch 24/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.566
-Epoch 24/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.506
-Training loss: previous epoch: 0.568088 current epoch:0.565878
-Learning rate epoch 24: 0.000250
-Epoch 25/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.566
-Epoch 25/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.518
-Training loss: previous epoch: 0.565878 current epoch:0.565526
-Learning rate epoch 25: 0.000250
-Epoch 26/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.565
-Epoch 26/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.524
-Training loss: previous epoch: 0.565526 current epoch:0.565159
-Learning rate epoch 26: 0.000250
-Epoch 27/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.565
-Epoch 27/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.507
-Training loss: previous epoch: 0.565159 current epoch:0.564986
-Learning rate epoch 27: 0.000250
-Epoch 28/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.565
-Epoch 28/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.510
-Training loss: previous epoch: 0.564986 current epoch:0.564812
-Learning rate epoch 28: 0.000250
-Epoch 29/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.565
-Epoch 29/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.514
-Training loss: previous epoch: 0.564812 current epoch:0.564573
-Learning rate epoch 29: 0.000250
-Epoch 30/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.565
-Epoch 30/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.506
-Training loss: previous epoch: 0.564573 current epoch:0.564614
+Epoch 3/30: Batch 3111/3111 (100.00%) (took 3:13) 
+Train loss: 0.520
+Epoch 3/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.423
+Training loss: previous epoch: 0.524132 current epoch:0.520163
+Decaying lr, based on schedule 3
+Learning rate epoch 3: 0.000500
+Epoch 4/30: Batch 3111/3111 (100.00%) (took 3:13) 
+Train loss: 0.516
+Epoch 4/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.443
+Training loss: previous epoch: 0.520163 current epoch:0.516204
+Learning rate epoch 4: 0.000500
+Epoch 5/30: Batch 3111/3111 (100.00%) (took 3:13) 
+Train loss: 0.515
+Epoch 5/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.437
+Training loss: previous epoch: 0.516204 current epoch:0.514835
+Decaying lr, based on schedule 3
+Learning rate epoch 5: 0.000250
+Epoch 6/30: Batch 3111/3111 (100.00%) (took 3:14) 
+Train loss: 0.512
+Epoch 6/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.426
+Training loss: previous epoch: 0.514835 current epoch:0.512356
+Decaying lr, based on schedule 3
+Learning rate epoch 6: 0.000125
+Epoch 7/30: Batch 3111/3111 (100.00%) (took 3:13) 
+Train loss: 0.511
+Epoch 7/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.431
+Training loss: previous epoch: 0.512356 current epoch:0.510761
+Decaying lr, based on schedule 3
+Learning rate epoch 7: 0.000063
+Epoch 8/30: Batch 3111/3111 (100.00%) (took 3:15) 
+Train loss: 0.510
+Epoch 8/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.429
+Training loss: previous epoch: 0.510761 current epoch:0.509886
+Learning rate epoch 8: 0.000063
+Epoch 9/30: Batch 3111/3111 (100.00%) (took 3:14) 
+Train loss: 0.509
+Epoch 9/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.446
+Training loss: previous epoch: 0.509886 current epoch:0.509329
+Decaying lr, based on schedule 3
+Learning rate epoch 9: 0.000031
+Epoch 10/30: Batch 3111/3111 (100.00%) (took 3:13) 
+Train loss: 0.509
+Epoch 10/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.436
+Training loss: previous epoch: 0.509329 current epoch:0.509026
+Decaying lr, based on schedule 3
+Learning rate epoch 10: 0.000016
+Epoch 11/30: Batch 3111/3111 (100.00%) (took 3:13) 
+Train loss: 0.509
+Epoch 11/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.427
+Training loss: previous epoch: 0.509026 current epoch:0.508776
+Decaying lr, based on schedule 3
+Learning rate epoch 11: 0.000008
+Epoch 12/30: Batch 3111/3111 (100.00%) (took 3:13) 
+Train loss: 0.508
+Epoch 12/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.426
+Training loss: previous epoch: 0.508776 current epoch:0.508416
+Decaying lr, based on schedule 3
+Learning rate epoch 12: 0.000004
+Epoch 13/30: Batch 3111/3111 (100.00%) (took 3:13) 
+Train loss: 0.508
+Epoch 13/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.439
+Training loss: previous epoch: 0.508416 current epoch:0.508422
+Decaying lr, based on schedule 3
+Learning rate epoch 13: 0.000002
+Epoch 14/30: Batch 3111/3111 (100.00%) (took 3:13) 
+Train loss: 0.508
+Epoch 14/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.436
+Training loss: previous epoch: 0.508422 current epoch:0.508187
+Decaying lr, based on schedule 3
+Learning rate epoch 14: 0.000001
+Epoch 15/30: Batch 3111/3111 (100.00%) (took 3:13) 
+Train loss: 0.508
+Epoch 15/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.423
+Training loss: previous epoch: 0.508187 current epoch:0.508392
+Decaying lr, based on schedule 3
+Learning rate epoch 15: 0.000000
+Epoch 16/30: Batch 3111/3111 (100.00%) (took 3:13) 
+Train loss: 0.508
+Epoch 16/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.437
+Training loss: previous epoch: 0.508392 current epoch:0.508256
+Decaying lr, based on schedule 3
+Learning rate epoch 16: 0.000000
+Epoch 17/30: Batch 3111/3111 (100.00%) (took 3:14) 
+Train loss: 0.508
+Epoch 17/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.432
+Training loss: previous epoch: 0.508256 current epoch:0.508263
+Decaying lr, based on schedule 3
+Learning rate epoch 17: 0.000000
+Epoch 18/30: Batch 3111/3111 (100.00%) (took 3:13) 
+Train loss: 0.508
+Epoch 18/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.433
+Training loss: previous epoch: 0.508263 current epoch:0.508197
+Decaying lr, based on schedule 3
+Learning rate epoch 18: 0.000000
+Epoch 19/30: Batch 3111/3111 (100.00%) (took 3:13) 
+Train loss: 0.508
+Epoch 19/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.431
+Training loss: previous epoch: 0.508197 current epoch:0.508284
+Decaying lr, based on schedule 3
+Learning rate epoch 19: 0.000000
+Epoch 20/30: Batch 3111/3111 (100.00%) (took 3:13) 
+Train loss: 0.508
+Epoch 20/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.435
+Training loss: previous epoch: 0.508284 current epoch:0.508443
+Decaying lr, based on schedule 3
+Learning rate epoch 20: 0.000000
+Epoch 21/30: Batch 3111/3111 (100.00%) (took 3:13) 
+Train loss: 0.508
+Epoch 21/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.419
+Training loss: previous epoch: 0.508443 current epoch:0.508352
+Decaying lr, based on schedule 3
+Learning rate epoch 21: 0.000000
+Epoch 22/30: Batch 3111/3111 (100.00%) (took 3:13) 
+Train loss: 0.508
+Epoch 22/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.448
+Training loss: previous epoch: 0.508352 current epoch:0.508201
+Decaying lr, based on schedule 3
+Learning rate epoch 22: 0.000000
+Epoch 23/30: Batch 3111/3111 (100.00%) (took 3:13) 
+Train loss: 0.508
+Epoch 23/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.421
+Training loss: previous epoch: 0.508201 current epoch:0.508212
+Decaying lr, based on schedule 3
+Learning rate epoch 23: 0.000000
+Epoch 24/30: Batch 3111/3111 (100.00%) (took 3:13) 
+Train loss: 0.508
+Epoch 24/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.447
+Training loss: previous epoch: 0.508212 current epoch:0.508135
+Decaying lr, based on schedule 3
+Learning rate epoch 24: 0.000000
+Epoch 25/30: Batch 3111/3111 (100.00%) (took 3:13) 
+Train loss: 0.508
+Epoch 25/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.418
+Training loss: previous epoch: 0.508135 current epoch:0.508246
+Decaying lr, based on schedule 3
+Learning rate epoch 25: 0.000000
+Epoch 26/30: Batch 3111/3111 (100.00%) (took 3:13) 
+Train loss: 0.508
+Epoch 26/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.431
+Training loss: previous epoch: 0.508246 current epoch:0.508337
+Decaying lr, based on schedule 3
+Learning rate epoch 26: 0.000000
+Epoch 27/30: Batch 3111/3111 (100.00%) (took 3:13) 
+Train loss: 0.508
+Epoch 27/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.436
+Training loss: previous epoch: 0.508337 current epoch:0.508255
+Decaying lr, based on schedule 3
+Learning rate epoch 27: 0.000000
+Epoch 28/30: Batch 3111/3111 (100.00%) (took 3:13) 
+Train loss: 0.508
+Epoch 28/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.431
+Training loss: previous epoch: 0.508255 current epoch:0.508319
+Decaying lr, based on schedule 3
+Learning rate epoch 28: 0.000000
+Epoch 29/30: Batch 3111/3111 (100.00%) (took 3:13) 
+Train loss: 0.508
+Epoch 29/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.433
+Training loss: previous epoch: 0.508319 current epoch:0.508305
+Decaying lr, based on schedule 3
+Learning rate epoch 29: 0.000000
+Epoch 30/30: Batch 3111/3111 (100.00%) (took 3:13) 
+Train loss: 0.508
+Epoch 30/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.421
+Training loss: previous epoch: 0.508305 current epoch:0.508235
+Decaying lr, based on schedule 3
 Saving final model
+
 ====training ends====
 ====training inversion model====
-Using gpu device 0: Tesla K80 (CNMeM is enabled with initial size: 50.0% of memory, cuDNN 5105)
+
+Number of filters: 32
+Number of convolutional layers: 3
+Using gpu device 0: TITAN X (Pascal) (CNMeM is enabled with initial size: 50.0% of memory, cuDNN 5105)
 Computing spectra...
 ====Training Files====
-File 61/61 (100.00%) (took 1:19) 
+File 61/61 (100.00%) (took 0:54) 
 ====Validation Files====
-File 16/16 (100.00%) (took 0:19) 
+File 16/16 (100.00%) (took 0:13) 
 Loading labels...
 Preparing training data feed...
 Preparing prediction and generator functions...
-/import/linux/DEEP_LEARNING/cuda-8-0/c4dm-theano/lib/python2.7/site-packages/lasagne/layers/pool.py:266: UserWarning: DEPRECATION: the 'ds' parameter is not going to exist anymore as it is going to be replaced by the parameter 'ws'.
-  mode=self.mode,
-/import/linux/DEEP_LEARNING/cuda-8-0/c4dm-theano/lib/python2.7/site-packages/lasagne/layers/pool.py:266: UserWarning: DEPRECATION: the 'st' parameter is not going to exist anymore as it is going to be replaced by the parameter 'stride'.
-  mode=self.mode,
-/import/linux/DEEP_LEARNING/cuda-8-0/c4dm-theano/lib/python2.7/site-packages/lasagne/layers/pool.py:266: UserWarning: DEPRECATION: the 'padding' parameter is not going to exist anymore as it is going to be replaced by the parameter 'pad'.
-  mode=self.mode,
 Compiling prediction function...
+(None, 64, 113, 78)
+Layer output shapes
+(32, 64, 113, 78)
+Conv layer index: 1
+(32, 32, 113, 78)
+Conv layer index: 2
+(32, 32, 113, 78)
+Conv layer index: 3
+(32, 32, 113, 78)
+(32, 1, 226, 156)
+(32, 1, 115, 156)
+(32, 1, 115, 80)
+Number of parameter to be learned: 37764
 Compiling training function...
 Compiling validation function...
 Training the inversion network:
 Learning rate epoch 0: 0.001000
-Epoch 1/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.654
-Epoch 1/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.541
-Training loss: previous epoch: 0.000000 current epoch:0.654027
+Epoch 1/30: Batch 3111/3111 (100.00%) (took 4:03) 
+Train loss: 0.535
+Epoch 1/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.439
+Training loss: previous epoch: 0.000000 current epoch:0.534885
 Learning rate epoch 1: 0.001000
-Epoch 2/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.604
-Epoch 2/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.534
-Training loss: previous epoch: 0.654027 current epoch:0.603738
+Epoch 2/30: Batch 3111/3111 (100.00%) (took 4:04) 
+Train loss: 0.518
+Epoch 2/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.424
+Training loss: previous epoch: 0.534885 current epoch:0.517984
 Learning rate epoch 2: 0.001000
-Epoch 3/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.597
-Epoch 3/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.543
-Training loss: previous epoch: 0.603738 current epoch:0.596677
+Epoch 3/30: Batch 3111/3111 (100.00%) (took 4:04) 
+Train loss: 0.513
+Epoch 3/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.425
+Training loss: previous epoch: 0.517984 current epoch:0.513089
+Decaying lr, based on schedule 3
+Learning rate epoch 3: 0.000500
+Epoch 4/30: Batch 3111/3111 (100.00%) (took 4:03) 
+Train loss: 0.507
+Epoch 4/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.430
+Training loss: previous epoch: 0.513089 current epoch:0.507167
+Learning rate epoch 4: 0.000500
+Epoch 5/30: Batch 3111/3111 (100.00%) (took 4:03) 
+Train loss: 0.505
+Epoch 5/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.431
+Training loss: previous epoch: 0.507167 current epoch:0.505077
+Decaying lr, based on schedule 3
+Learning rate epoch 5: 0.000250
+Epoch 6/30: Batch 3111/3111 (100.00%) (took 4:03) 
+Train loss: 0.502
+Epoch 6/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.431
+Training loss: previous epoch: 0.505077 current epoch:0.501923
+Decaying lr, based on schedule 3
+Learning rate epoch 6: 0.000125
+Epoch 7/30: Batch 3111/3111 (100.00%) (took 4:03) 
+Train loss: 0.500
+Epoch 7/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.414
+Training loss: previous epoch: 0.501923 current epoch:0.500125
+Decaying lr, based on schedule 3
+Learning rate epoch 7: 0.000063
+Epoch 8/30: Batch 3111/3111 (100.00%) (took 4:03) 
+Train loss: 0.499
+Epoch 8/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.436
+Training loss: previous epoch: 0.500125 current epoch:0.498947
+Learning rate epoch 8: 0.000063
+Epoch 9/30: Batch 3111/3111 (100.00%) (took 4:03) 
+Train loss: 0.499
+Epoch 9/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.420
+Training loss: previous epoch: 0.498947 current epoch:0.498621
+Decaying lr, based on schedule 3
+Learning rate epoch 9: 0.000031
+Epoch 10/30: Batch 3111/3111 (100.00%) (took 4:03) 
+Train loss: 0.498
+Epoch 10/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.428
+Training loss: previous epoch: 0.498621 current epoch:0.498014
+Decaying lr, based on schedule 3
+Learning rate epoch 10: 0.000016
+Epoch 11/30: Batch 3111/3111 (100.00%) (took 4:03) 
+Train loss: 0.498
+Epoch 11/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.422
+Training loss: previous epoch: 0.498014 current epoch:0.497781
+Decaying lr, based on schedule 3
+Learning rate epoch 11: 0.000008
+Epoch 12/30: Batch 3111/3111 (100.00%) (took 4:03) 
+Train loss: 0.498
+Epoch 12/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.422
+Training loss: previous epoch: 0.497781 current epoch:0.497667
+Decaying lr, based on schedule 3
+Learning rate epoch 12: 0.000004
+Epoch 13/30: Batch 3111/3111 (100.00%) (took 4:03) 
+Train loss: 0.498
+Epoch 13/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.426
+Training loss: previous epoch: 0.497667 current epoch:0.497545
+Decaying lr, based on schedule 3
+Learning rate epoch 13: 0.000002
+Epoch 14/30: Batch 3111/3111 (100.00%) (took 4:04) 
+Train loss: 0.498
+Epoch 14/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.418
+Training loss: previous epoch: 0.497545 current epoch:0.497534
+Decaying lr, based on schedule 3
+Learning rate epoch 14: 0.000001
+Epoch 15/30: Batch 3111/3111 (100.00%) (took 4:04) 
+Train loss: 0.498
+Epoch 15/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.437
+Training loss: previous epoch: 0.497534 current epoch:0.497520
+Decaying lr, based on schedule 3
+Learning rate epoch 15: 0.000000
+Epoch 16/30: Batch 3111/3111 (100.00%) (took 4:04) 
+Train loss: 0.498
+Epoch 16/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.423
+Training loss: previous epoch: 0.497520 current epoch:0.497528
+Decaying lr, based on schedule 3
+Learning rate epoch 16: 0.000000
+Epoch 17/30: Batch 3111/3111 (100.00%) (took 4:04) 
+Train loss: 0.498
+Epoch 17/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.423
+Training loss: previous epoch: 0.497528 current epoch:0.497518
+Decaying lr, based on schedule 3
+Learning rate epoch 17: 0.000000
+Epoch 18/30: Batch 3111/3111 (100.00%) (took 4:04) 
+Train loss: 0.497
+Epoch 18/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.423
+Training loss: previous epoch: 0.497518 current epoch:0.497391
+Decaying lr, based on schedule 3
+Learning rate epoch 18: 0.000000
+Epoch 19/30: Batch 3111/3111 (100.00%) (took 4:04) 
+Train loss: 0.497
+Epoch 19/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.426
+Training loss: previous epoch: 0.497391 current epoch:0.497491
+Decaying lr, based on schedule 3
+Learning rate epoch 19: 0.000000
+Epoch 20/30: Batch 3111/3111 (100.00%) (took 4:03) 
+Train loss: 0.497
+Epoch 20/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.434
+Training loss: previous epoch: 0.497491 current epoch:0.497480
+Decaying lr, based on schedule 3
+Learning rate epoch 20: 0.000000
+Epoch 21/30: Batch 3111/3111 (100.00%) (took 4:03) 
+Train loss: 0.498
+Epoch 21/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.406
+Training loss: previous epoch: 0.497480 current epoch:0.497547
+Decaying lr, based on schedule 3
+Learning rate epoch 21: 0.000000
+Epoch 22/30: Batch 3111/3111 (100.00%) (took 4:03) 
+Train loss: 0.497
+Epoch 22/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.443
+Training loss: previous epoch: 0.497547 current epoch:0.497462
+Decaying lr, based on schedule 3
+Learning rate epoch 22: 0.000000
+Epoch 23/30: Batch 3111/3111 (100.00%) (took 4:04) 
+Train loss: 0.497
+Epoch 23/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.423
+Training loss: previous epoch: 0.497462 current epoch:0.497454
+Decaying lr, based on schedule 3
+Learning rate epoch 23: 0.000000
+Epoch 24/30: Batch 3111/3111 (100.00%) (took 4:03) 
+Train loss: 0.498
+Epoch 24/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.420
+Training loss: previous epoch: 0.497454 current epoch:0.497549
+Decaying lr, based on schedule 3
+Learning rate epoch 24: 0.000000
+Epoch 25/30: Batch 3111/3111 (100.00%) (took 4:03) 
+Train loss: 0.498
+Epoch 25/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.420
+Training loss: previous epoch: 0.497549 current epoch:0.497510
+Decaying lr, based on schedule 3
+Learning rate epoch 25: 0.000000
+Epoch 26/30: Batch 3111/3111 (100.00%) (took 4:03) 
+Train loss: 0.497
+Epoch 26/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.426
+Training loss: previous epoch: 0.497510 current epoch:0.497425
+Decaying lr, based on schedule 3
+Learning rate epoch 26: 0.000000
+Epoch 27/30: Batch 3111/3111 (100.00%) (took 4:04) 
+Train loss: 0.498
+Epoch 27/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.420
+Training loss: previous epoch: 0.497425 current epoch:0.497544
+Decaying lr, based on schedule 3
+Learning rate epoch 27: 0.000000
+Epoch 28/30: Batch 3111/3111 (100.00%) (took 4:04) 
+Train loss: 0.498
+Epoch 28/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.428
+Training loss: previous epoch: 0.497544 current epoch:0.497528
+Decaying lr, based on schedule 3
+Learning rate epoch 28: 0.000000
+Epoch 29/30: Batch 3111/3111 (100.00%) (took 4:04) 
+Train loss: 0.498
+Epoch 29/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.419
+Training loss: previous epoch: 0.497528 current epoch:0.497546
+Decaying lr, based on schedule 3
+Learning rate epoch 29: 0.000000
+Epoch 30/30: Batch 3111/3111 (100.00%) (took 4:03) 
+Train loss: 0.497
+Epoch 30/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.432
+Training loss: previous epoch: 0.497546 current epoch:0.497438
+Decaying lr, based on schedule 3
+Saving final model
+
+====training ends====
+====training inversion model====
+
+Number of filters: 32
+Number of convolutional layers: 4
+Using gpu device 0: TITAN X (Pascal) (CNMeM is enabled with initial size: 50.0% of memory, cuDNN 5105)
+Computing spectra...
+====Training Files====
+File 61/61 (100.00%) (took 0:54) 
+====Validation Files====
+File 16/16 (100.00%) (took 0:13) 
+Loading labels...
+Preparing training data feed...
+Preparing prediction and generator functions...
+Compiling prediction function...
+(None, 64, 113, 78)
+Layer output shapes
+(32, 64, 113, 78)
+Conv layer index: 1
+(32, 32, 113, 78)
+Conv layer index: 2
+(32, 32, 113, 78)
+Conv layer index: 3
+(32, 32, 113, 78)
+Conv layer index: 4
+(32, 32, 113, 78)
+(32, 1, 226, 156)
+(32, 1, 115, 156)
+(32, 1, 115, 80)
+Number of parameter to be learned: 47108
+Compiling training function...
+Compiling validation function...
+Training the inversion network:
+Learning rate epoch 0: 0.001000
+Epoch 1/30: Batch 3111/3111 (100.00%) (took 4:51) 
+Train loss: 0.532
+Epoch 1/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.431
+Training loss: previous epoch: 0.000000 current epoch:0.531846
+Learning rate epoch 1: 0.001000
+Epoch 2/30: Batch 3111/3111 (100.00%) (took 4:52) 
+Train loss: 0.512
+Epoch 2/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.423
+Training loss: previous epoch: 0.531846 current epoch:0.511783
+Learning rate epoch 2: 0.001000
+Epoch 3/30: Batch 3111/3111 (100.00%) (took 4:51) 
+Train loss: 0.506
+Epoch 3/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.420
+Training loss: previous epoch: 0.511783 current epoch:0.505612
 Learning rate epoch 3: 0.001000
-Epoch 4/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.592
-Epoch 4/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.504
-Training loss: previous epoch: 0.596677 current epoch:0.591809
+Epoch 4/30: Batch 3111/3111 (100.00%) (took 4:52) 
+Train loss: 0.503
+Epoch 4/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.437
+Training loss: previous epoch: 0.505612 current epoch:0.502696
 Decaying lr, based on schedule 3
 Learning rate epoch 4: 0.000500
-Epoch 5/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.585
-Epoch 5/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.528
-Training loss: previous epoch: 0.591809 current epoch:0.584902
+Epoch 5/30: Batch 3111/3111 (100.00%) (took 4:53) 
+Train loss: 0.498
+Epoch 5/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.427
+Training loss: previous epoch: 0.502696 current epoch:0.497712
 Learning rate epoch 5: 0.000500
-Epoch 6/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.583
-Epoch 6/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.523
-Training loss: previous epoch: 0.584902 current epoch:0.582905
+Epoch 6/30: Batch 3111/3111 (100.00%) (took 4:53) 
+Train loss: 0.496
+Epoch 6/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.409
+Training loss: previous epoch: 0.497712 current epoch:0.496106
 Decaying lr, based on schedule 3
 Learning rate epoch 6: 0.000250
-Epoch 7/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.579
-Epoch 7/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.518
-Training loss: previous epoch: 0.582905 current epoch:0.578986
-Learning rate epoch 7: 0.000250
-Epoch 8/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.578
-Epoch 8/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.510
-Training loss: previous epoch: 0.578986 current epoch:0.577826
+Epoch 7/30: Batch 3111/3111 (100.00%) (took 4:53) 
+Train loss: 0.494
+Epoch 7/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.429
+Training loss: previous epoch: 0.496106 current epoch:0.493512
 Decaying lr, based on schedule 3
-Learning rate epoch 8: 0.000125
-Epoch 9/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.575
-Epoch 9/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.519
-Training loss: previous epoch: 0.577826 current epoch:0.575046
+Learning rate epoch 7: 0.000125
+Epoch 8/30: Batch 3111/3111 (100.00%) (took 4:53) 
+Train loss: 0.492
+Epoch 8/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.423
+Training loss: previous epoch: 0.493512 current epoch:0.491903
 Decaying lr, based on schedule 3
-Learning rate epoch 9: 0.000063
-Epoch 10/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.575
-Epoch 10/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.509
-Training loss: previous epoch: 0.575046 current epoch:0.574795
+Learning rate epoch 8: 0.000063
+Epoch 9/30: Batch 3111/3111 (100.00%) (took 4:53) 
+Train loss: 0.491
+Epoch 9/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.419
+Training loss: previous epoch: 0.491903 current epoch:0.491016
 Decaying lr, based on schedule 3
-Learning rate epoch 10: 0.000031
-Epoch 11/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.574
-Epoch 11/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.517
-Training loss: previous epoch: 0.574795 current epoch:0.574367
+Learning rate epoch 9: 0.000031
+Epoch 10/30: Batch 3111/3111 (100.00%) (took 4:53) 
+Train loss: 0.491
+Epoch 10/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.416
+Training loss: previous epoch: 0.491016 current epoch:0.490520
 Decaying lr, based on schedule 3
-Learning rate epoch 11: 0.000016
-Epoch 12/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.573
-Epoch 12/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.516
-Training loss: previous epoch: 0.574367 current epoch:0.573442
+Learning rate epoch 10: 0.000016
+Epoch 11/30: Batch 3111/3111 (100.00%) (took 4:53) 
+Train loss: 0.490
+Epoch 11/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.416
+Training loss: previous epoch: 0.490520 current epoch:0.490217
 Decaying lr, based on schedule 3
+Learning rate epoch 11: 0.000008
+Epoch 12/30: Batch 3111/3111 (100.00%) (took 4:53) 
+Train loss: 0.490
+Epoch 12/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.417
+Training loss: previous epoch: 0.490217 current epoch:0.489990
 Learning rate epoch 12: 0.000008
-Epoch 13/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.574
-Epoch 13/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.512
-Training loss: previous epoch: 0.573442 current epoch:0.573538
+Epoch 13/30: Batch 3111/3111 (100.00%) (took 4:53) 
+Train loss: 0.490
+Epoch 13/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.425
+Training loss: previous epoch: 0.489990 current epoch:0.490008
+Learning rate epoch 13: 0.000008
+Epoch 14/30: Batch 3111/3111 (100.00%) (took 4:53) 
+Train loss: 0.490
+Epoch 14/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.411
+Training loss: previous epoch: 0.490008 current epoch:0.489882
+Learning rate epoch 14: 0.000008
+Epoch 15/30: Batch 3111/3111 (100.00%) (took 4:52) 
+Train loss: 0.490
+Epoch 15/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.430
+Training loss: previous epoch: 0.489882 current epoch:0.489899
 Decaying lr, based on schedule 3
-Learning rate epoch 13: 0.000004
-Epoch 14/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.574
-Epoch 14/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.508
-Training loss: previous epoch: 0.573538 current epoch:0.573754
+Learning rate epoch 15: 0.000004
+Epoch 16/30: Batch 3111/3111 (100.00%) (took 4:52) 
+Train loss: 0.490
+Epoch 16/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.413
+Training loss: previous epoch: 0.489899 current epoch:0.489778
 Decaying lr, based on schedule 3
-Learning rate epoch 14: 0.000002
-Epoch 15/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.574
-Epoch 15/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.507
-Training loss: previous epoch: 0.573754 current epoch:0.573668
+Learning rate epoch 16: 0.000002
+Epoch 17/30: Batch 3111/3111 (100.00%) (took 4:53) 
+Train loss: 0.490
+Epoch 17/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.421
+Training loss: previous epoch: 0.489778 current epoch:0.489809
 Decaying lr, based on schedule 3
-Learning rate epoch 15: 0.000001
-Epoch 16/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.574
-Epoch 16/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.533
-Training loss: previous epoch: 0.573668 current epoch:0.573781
-Decaying lr, based on schedule 3
-Learning rate epoch 16: 0.000000
-Epoch 17/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.573
-Epoch 17/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.509
-Training loss: previous epoch: 0.573781 current epoch:0.573344
-Decaying lr, based on schedule 3
-Learning rate epoch 17: 0.000000
-Epoch 18/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.573
-Epoch 18/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.515
-Training loss: previous epoch: 0.573344 current epoch:0.573469
+Learning rate epoch 17: 0.000001
+Epoch 18/30: Batch 3111/3111 (100.00%) (took 4:53) 
+Train loss: 0.490
+Epoch 18/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.417
+Training loss: previous epoch: 0.489809 current epoch:0.489785
 Decaying lr, based on schedule 3
 Learning rate epoch 18: 0.000000
-Epoch 19/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.574
-Epoch 19/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.512
-Training loss: previous epoch: 0.573469 current epoch:0.573670
+Epoch 19/30: Batch 3111/3111 (100.00%) (took 4:53) 
+Train loss: 0.490
+Epoch 19/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.425
+Training loss: previous epoch: 0.489785 current epoch:0.489723
 Decaying lr, based on schedule 3
 Learning rate epoch 19: 0.000000
-Epoch 20/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.574
-Epoch 20/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.508
-Training loss: previous epoch: 0.573670 current epoch:0.573609
+Epoch 20/30: Batch 3111/3111 (100.00%) (took 4:52) 
+Train loss: 0.490
+Epoch 20/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.412
+Training loss: previous epoch: 0.489723 current epoch:0.489711
 Decaying lr, based on schedule 3
 Learning rate epoch 20: 0.000000
-Epoch 21/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.574
-Epoch 21/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.526
-Training loss: previous epoch: 0.573609 current epoch:0.573679
+Epoch 21/30: Batch 3111/3111 (100.00%) (took 4:53) 
+Train loss: 0.490
+Epoch 21/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.417
+Training loss: previous epoch: 0.489711 current epoch:0.489808
 Decaying lr, based on schedule 3
 Learning rate epoch 21: 0.000000
-Epoch 22/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.573
-Epoch 22/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.506
-Training loss: previous epoch: 0.573679 current epoch:0.573116
+Epoch 22/30: Batch 3111/3111 (100.00%) (took 4:53) 
+Train loss: 0.490
+Epoch 22/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.416
+Training loss: previous epoch: 0.489808 current epoch:0.489754
 Decaying lr, based on schedule 3
 Learning rate epoch 22: 0.000000
-Epoch 23/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.573
-Epoch 23/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.523
-Training loss: previous epoch: 0.573116 current epoch:0.573450
+Epoch 23/30: Batch 3111/3111 (100.00%) (took 4:53) 
+Train loss: 0.490
+Epoch 23/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.421
+Training loss: previous epoch: 0.489754 current epoch:0.489814
 Decaying lr, based on schedule 3
 Learning rate epoch 23: 0.000000
-Epoch 24/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.574
-Epoch 24/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.513
-Training loss: previous epoch: 0.573450 current epoch:0.573620
+Epoch 24/30: Batch 3111/3111 (100.00%) (took 4:53) 
+Train loss: 0.490
+Epoch 24/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.411
+Training loss: previous epoch: 0.489814 current epoch:0.489761
 Decaying lr, based on schedule 3
 Learning rate epoch 24: 0.000000
-Epoch 25/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.574
-Epoch 25/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.504
-Training loss: previous epoch: 0.573620 current epoch:0.573520
+Epoch 25/30: Batch 3111/3111 (100.00%) (took 4:52) 
+Train loss: 0.490
+Epoch 25/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.422
+Training loss: previous epoch: 0.489761 current epoch:0.489704
 Decaying lr, based on schedule 3
 Learning rate epoch 25: 0.000000
-Epoch 26/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.573
-Epoch 26/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.532
-Training loss: previous epoch: 0.573520 current epoch:0.573425
+Epoch 26/30: Batch 3111/3111 (100.00%) (took 4:53) 
+Train loss: 0.490
+Epoch 26/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.424
+Training loss: previous epoch: 0.489704 current epoch:0.489731
 Decaying lr, based on schedule 3
 Learning rate epoch 26: 0.000000
-Epoch 27/30: Batch 3111/3111 (100.00%) (took 1:31) 
-Train loss: 0.574
-Epoch 27/30: Batch 792/792 (100.00%) (took 0:17) 
-Validation loss: 0.503
-Training loss: previous epoch: 0.573425 current epoch:0.573707
+Epoch 27/30: Batch 3111/3111 (100.00%) (took 4:53) 
+Train loss: 0.490
+Epoch 27/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.421
+Training loss: previous epoch: 0.489731 current epoch:0.489771
 Decaying lr, based on schedule 3
 Learning rate epoch 27: 0.000000
-Epoch 28/30: Batch 3111/3111 (100.00%) (took 1:30) 
-Train loss: 0.573
-Epoch 28/30: Batch 792/792 (100.00%) (took 0:18) 
-Validation loss: 0.511
-Training loss: previous epoch: 0.573707 current epoch:0.573289
+Epoch 28/30: Batch 3111/3111 (100.00%) (took 4:53) 
+Train loss: 0.490
+Epoch 28/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.416
+Training loss: previous epoch: 0.489771 current epoch:0.489735
 Decaying lr, based on schedule 3
 Learning rate epoch 28: 0.000000
-Epoch 29/30: Batch 3111/3111 (100.00%) (took 1:30) 
-Train loss: 0.573
-Epoch 29/30: Batch 792/792 (100.00%) (took 0:17) 
-Validation loss: 0.509
-Training loss: previous epoch: 0.573289 current epoch:0.573451
+Epoch 29/30: Batch 3111/3111 (100.00%) (took 4:53) 
+Train loss: 0.490
+Epoch 29/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.424
+Training loss: previous epoch: 0.489735 current epoch:0.489749
 Decaying lr, based on schedule 3
 Learning rate epoch 29: 0.000000
-Epoch 30/30: Batch 3111/3111 (100.00%) (took 1:30) 
-Train loss: 0.574
-Epoch 30/30: Batch 792/792 (100.00%) (took 0:17) 
-Validation loss: 0.518
-Training loss: previous epoch: 0.573451 current epoch:0.573742
+Epoch 30/30: Batch 3111/3111 (100.00%) (took 4:53) 
+Train loss: 0.490
+Epoch 30/30: Batch 792/792 (100.00%) (took 0:25) 
+Validation loss: 0.410
+Training loss: previous epoch: 0.489749 current epoch:0.489794
 Decaying lr, based on schedule 3
 Saving final model
+
 ====training ends====
-(c4dm-theano)bash-4.2$ 
+====training inversion model====
+
+Number of filters: 64
+Number of convolutional layers: 1
+Using gpu device 0: TITAN X (Pascal) (CNMeM is enabled with initial size: 50.0% of memory, cuDNN 5105)
+Computing spectra...
+====Training Files====
+File 61/61 (100.00%) (took 0:54) 
+====Validation Files====
+File 16/16 (100.00%) (took 0:13) 
+Loading labels...
+Preparing training data feed...
+Preparing prediction and generator functions...
+Compiling prediction function...
+(None, 64, 113, 78)
+Layer output shapes
+(32, 64, 113, 78)
+Conv layer index: 1
+(32, 64, 113, 78)
+(32, 1, 226, 156)
+(32, 1, 115, 156)
+(32, 1, 115, 80)
+Number of parameter to be learned: 38148
+Compiling training function...
+Compiling validation function...
+Training the inversion network:
+Learning rate epoch 0: 0.001000
+Epoch 1/30: Batch 3111/3111 (100.00%) (took 3:00) 
+Train loss: 0.551
+Epoch 1/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.470
+Training loss: previous epoch: 0.000000 current epoch:0.551195
+Learning rate epoch 1: 0.001000
+Epoch 2/30: Batch 3111/3111 (100.00%) (took 3:01) 
+Train loss: 0.537
+Epoch 2/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.450
+Training loss: previous epoch: 0.551195 current epoch:0.537279
+Learning rate epoch 2: 0.001000
+Epoch 3/30: Batch 3111/3111 (100.00%) (took 3:01) 
+Train loss: 0.533
+Epoch 3/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.445
+Training loss: previous epoch: 0.537279 current epoch:0.532876
+Decaying lr, based on schedule 3
+Learning rate epoch 3: 0.000500
+Epoch 4/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.530
+Epoch 4/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.443
+Training loss: previous epoch: 0.532876 current epoch:0.530355
+Decaying lr, based on schedule 3
+Learning rate epoch 4: 0.000250
+Epoch 5/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.528
+Epoch 5/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.440
+Training loss: previous epoch: 0.530355 current epoch:0.528196
+Learning rate epoch 5: 0.000250
+Epoch 6/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.527
+Epoch 6/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.446
+Training loss: previous epoch: 0.528196 current epoch:0.527358
+Decaying lr, based on schedule 3
+Learning rate epoch 6: 0.000125
+Epoch 7/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.527
+Epoch 7/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.445
+Training loss: previous epoch: 0.527358 current epoch:0.526617
+Decaying lr, based on schedule 3
+Learning rate epoch 7: 0.000063
+Epoch 8/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.526
+Epoch 8/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.442
+Training loss: previous epoch: 0.526617 current epoch:0.526132
+Decaying lr, based on schedule 3
+Learning rate epoch 8: 0.000031
+Epoch 9/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.525
+Epoch 9/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.441
+Training loss: previous epoch: 0.526132 current epoch:0.525255
+Decaying lr, based on schedule 3
+Learning rate epoch 9: 0.000016
+Epoch 10/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.525
+Epoch 10/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.448
+Training loss: previous epoch: 0.525255 current epoch:0.524974
+Decaying lr, based on schedule 3
+Learning rate epoch 10: 0.000008
+Epoch 11/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.525
+Epoch 11/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.444
+Training loss: previous epoch: 0.524974 current epoch:0.525265
+Decaying lr, based on schedule 3
+Learning rate epoch 11: 0.000004
+Epoch 12/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.525
+Epoch 12/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.423
+Training loss: previous epoch: 0.525265 current epoch:0.524800
+Decaying lr, based on schedule 3
+Learning rate epoch 12: 0.000002
+Epoch 13/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.525
+Epoch 13/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.454
+Training loss: previous epoch: 0.524800 current epoch:0.524615
+Decaying lr, based on schedule 3
+Learning rate epoch 13: 0.000001
+Epoch 14/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.525
+Epoch 14/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.435
+Training loss: previous epoch: 0.524615 current epoch:0.524842
+Decaying lr, based on schedule 3
+Learning rate epoch 14: 0.000000
+Epoch 15/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.525
+Epoch 15/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.442
+Training loss: previous epoch: 0.524842 current epoch:0.524670
+Decaying lr, based on schedule 3
+Learning rate epoch 15: 0.000000
+Epoch 16/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.525
+Epoch 16/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.434
+Training loss: previous epoch: 0.524670 current epoch:0.524808
+Decaying lr, based on schedule 3
+Learning rate epoch 16: 0.000000
+Epoch 17/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.525
+Epoch 17/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.454
+Training loss: previous epoch: 0.524808 current epoch:0.524729
+Decaying lr, based on schedule 3
+Learning rate epoch 17: 0.000000
+Epoch 18/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.525
+Epoch 18/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.442
+Training loss: previous epoch: 0.524729 current epoch:0.524812
+Decaying lr, based on schedule 3
+Learning rate epoch 18: 0.000000
+Epoch 19/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.525
+Epoch 19/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.437
+Training loss: previous epoch: 0.524812 current epoch:0.524551
+Decaying lr, based on schedule 3
+Learning rate epoch 19: 0.000000
+Epoch 20/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.525
+Epoch 20/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.438
+Training loss: previous epoch: 0.524551 current epoch:0.524851
+Decaying lr, based on schedule 3
+Learning rate epoch 20: 0.000000
+Epoch 21/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.525
+Epoch 21/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.442
+Training loss: previous epoch: 0.524851 current epoch:0.524755
+Decaying lr, based on schedule 3
+Learning rate epoch 21: 0.000000
+Epoch 22/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.525
+Epoch 22/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.444
+Training loss: previous epoch: 0.524755 current epoch:0.524814
+Decaying lr, based on schedule 3
+Learning rate epoch 22: 0.000000
+Epoch 23/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.525
+Epoch 23/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.445
+Training loss: previous epoch: 0.524814 current epoch:0.524850
+Decaying lr, based on schedule 3
+Learning rate epoch 23: 0.000000
+Epoch 24/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.524
+Epoch 24/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.431
+Training loss: previous epoch: 0.524850 current epoch:0.524385
+Decaying lr, based on schedule 3
+Learning rate epoch 24: 0.000000
+Epoch 25/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.524
+Epoch 25/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.453
+Training loss: previous epoch: 0.524385 current epoch:0.524432
+Decaying lr, based on schedule 3
+Learning rate epoch 25: 0.000000
+Epoch 26/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.525
+Epoch 26/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.438
+Training loss: previous epoch: 0.524432 current epoch:0.524744
+Decaying lr, based on schedule 3
+Learning rate epoch 26: 0.000000
+Epoch 27/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.525
+Epoch 27/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.445
+Training loss: previous epoch: 0.524744 current epoch:0.524672
+Decaying lr, based on schedule 3
+Learning rate epoch 27: 0.000000
+Epoch 28/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.525
+Epoch 28/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.444
+Training loss: previous epoch: 0.524672 current epoch:0.524773
+Decaying lr, based on schedule 3
+Learning rate epoch 28: 0.000000
+Epoch 29/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.525
+Epoch 29/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.442
+Training loss: previous epoch: 0.524773 current epoch:0.524731
+Decaying lr, based on schedule 3
+Learning rate epoch 29: 0.000000
+Epoch 30/30: Batch 3111/3111 (100.00%) (took 3:02) 
+Train loss: 0.525
+Epoch 30/30: Batch 792/792 (100.00%) (took 0:21) 
+Validation loss: 0.430
+Training loss: previous epoch: 0.524731 current epoch:0.524621
+Decaying lr, based on schedule 3
+Saving final model
+
+====training ends====
+====training inversion model====
+
+Number of filters: 64
+Number of convolutional layers: 2
+Using gpu device 0: TITAN X (Pascal) (CNMeM is enabled with initial size: 50.0% of memory, cuDNN 5105)
+Computing spectra...
+====Training Files====
+File 61/61 (100.00%) (took 0:54) 
+====Validation Files====
+File 16/16 (100.00%) (took 0:13) 
+Loading labels...
+Preparing training data feed...
+Preparing prediction and generator functions...
+Compiling prediction function...
+(None, 64, 113, 78)
+Layer output shapes
+(32, 64, 113, 78)
+Conv layer index: 1
+(32, 64, 113, 78)
+Conv layer index: 2
+(32, 64, 113, 78)
+(32, 1, 226, 156)
+(32, 1, 115, 156)
+(32, 1, 115, 80)
+Number of parameter to be learned: 75268
+Compiling training function...
+Compiling validation function...
+Training the inversion network:
+Learning rate epoch 0: 0.001000
+Epoch 1/30: Batch 3111/3111 (100.00%) (took 4:41) 
+Train loss: 0.544
+Epoch 1/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.464
+Training loss: previous epoch: 0.000000 current epoch:0.543520
+Learning rate epoch 1: 0.001000
+Epoch 2/30: Batch 3111/3111 (100.00%) (took 4:41) 
+Train loss: 0.524
+Epoch 2/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.435
+Training loss: previous epoch: 0.543520 current epoch:0.524246
+Learning rate epoch 2: 0.001000
+Epoch 3/30: Batch 3111/3111 (100.00%) (took 4:40) 
+Train loss: 0.520
+Epoch 3/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.447
+Training loss: previous epoch: 0.524246 current epoch:0.520026
+Decaying lr, based on schedule 3
+Learning rate epoch 3: 0.000500
+Epoch 4/30: Batch 3111/3111 (100.00%) (took 4:41) 
+Train loss: 0.516
+Epoch 4/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.431
+Training loss: previous epoch: 0.520026 current epoch:0.515989
+Learning rate epoch 4: 0.000500
+Epoch 5/30: Batch 3111/3111 (100.00%) (took 4:41) 
+Train loss: 0.515
+Epoch 5/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.452
+Training loss: previous epoch: 0.515989 current epoch:0.514544
+Decaying lr, based on schedule 3
+Learning rate epoch 5: 0.000250
+Epoch 6/30: Batch 3111/3111 (100.00%) (took 4:43) 
+Train loss: 0.512
+Epoch 6/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.427
+Training loss: previous epoch: 0.514544 current epoch:0.512287
+Decaying lr, based on schedule 3
+Learning rate epoch 6: 0.000125
+Epoch 7/30: Batch 3111/3111 (100.00%) (took 4:43) 
+Train loss: 0.510
+Epoch 7/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.434
+Training loss: previous epoch: 0.512287 current epoch:0.510472
+Decaying lr, based on schedule 3
+Learning rate epoch 7: 0.000063
+Epoch 8/30: Batch 3111/3111 (100.00%) (took 4:42) 
+Train loss: 0.509
+Epoch 8/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.432
+Training loss: previous epoch: 0.510472 current epoch:0.509405
+Learning rate epoch 8: 0.000063
+Epoch 9/30: Batch 3111/3111 (100.00%) (took 4:44) 
+Train loss: 0.509
+Epoch 9/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.432
+Training loss: previous epoch: 0.509405 current epoch:0.509133
+Decaying lr, based on schedule 3
+Learning rate epoch 9: 0.000031
+Epoch 10/30: Batch 3111/3111 (100.00%) (took 4:42) 
+Train loss: 0.509
+Epoch 10/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.427
+Training loss: previous epoch: 0.509133 current epoch:0.508541
+Decaying lr, based on schedule 3
+Learning rate epoch 10: 0.000016
+Epoch 11/30: Batch 3111/3111 (100.00%) (took 4:42) 
+Train loss: 0.508
+Epoch 11/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.433
+Training loss: previous epoch: 0.508541 current epoch:0.508263
+Decaying lr, based on schedule 3
+Learning rate epoch 11: 0.000008
+Epoch 12/30: Batch 3111/3111 (100.00%) (took 4:41) 
+Train loss: 0.508
+Epoch 12/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.427
+Training loss: previous epoch: 0.508263 current epoch:0.508127
+Decaying lr, based on schedule 3
+Learning rate epoch 12: 0.000004
+Epoch 13/30: Batch 3111/3111 (100.00%) (took 4:42) 
+Train loss: 0.508
+Epoch 13/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.426
+Training loss: previous epoch: 0.508127 current epoch:0.507977
+Decaying lr, based on schedule 3
+Learning rate epoch 13: 0.000002
+Epoch 14/30: Batch 3111/3111 (100.00%) (took 4:43) 
+Train loss: 0.508
+Epoch 14/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.446
+Training loss: previous epoch: 0.507977 current epoch:0.507967
+Decaying lr, based on schedule 3
+Learning rate epoch 14: 0.000001
+Epoch 15/30: Batch 3111/3111 (100.00%) (took 4:43) 
+Train loss: 0.508
+Epoch 15/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.436
+Training loss: previous epoch: 0.507967 current epoch:0.507839
+Decaying lr, based on schedule 3
+Learning rate epoch 15: 0.000000
+Epoch 16/30: Batch 3111/3111 (100.00%) (took 4:41) 
+Train loss: 0.508
+Epoch 16/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.434
+Training loss: previous epoch: 0.507839 current epoch:0.507805
+Decaying lr, based on schedule 3
+Learning rate epoch 16: 0.000000
+Epoch 17/30: Batch 3111/3111 (100.00%) (took 4:41) 
+Train loss: 0.508
+Epoch 17/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.423
+Training loss: previous epoch: 0.507805 current epoch:0.507784
+Decaying lr, based on schedule 3
+Learning rate epoch 17: 0.000000
+Epoch 18/30: Batch 3111/3111 (100.00%) (took 4:41) 
+Train loss: 0.508
+Epoch 18/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.433
+Training loss: previous epoch: 0.507784 current epoch:0.507830
+Decaying lr, based on schedule 3
+Learning rate epoch 18: 0.000000
+Epoch 19/30: Batch 3111/3111 (100.00%) (took 4:43) 
+Train loss: 0.508
+Epoch 19/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.428
+Training loss: previous epoch: 0.507830 current epoch:0.507815
+Decaying lr, based on schedule 3
+Learning rate epoch 19: 0.000000
+Epoch 20/30: Batch 3111/3111 (100.00%) (took 4:43) 
+Train loss: 0.508
+Epoch 20/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.440
+Training loss: previous epoch: 0.507815 current epoch:0.507742
+Decaying lr, based on schedule 3
+Learning rate epoch 20: 0.000000
+Epoch 21/30: Batch 3111/3111 (100.00%) (took 4:41) 
+Train loss: 0.508
+Epoch 21/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.420
+Training loss: previous epoch: 0.507742 current epoch:0.507916
+Decaying lr, based on schedule 3
+Learning rate epoch 21: 0.000000
+Epoch 22/30: Batch 3111/3111 (100.00%) (took 4:41) 
+Train loss: 0.508
+Epoch 22/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.440
+Training loss: previous epoch: 0.507916 current epoch:0.507878
+Decaying lr, based on schedule 3
+Learning rate epoch 22: 0.000000
+Epoch 23/30: Batch 3111/3111 (100.00%) (took 4:41) 
+Train loss: 0.508
+Epoch 23/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.423
+Training loss: previous epoch: 0.507878 current epoch:0.507781
+Decaying lr, based on schedule 3
+Learning rate epoch 23: 0.000000
+Epoch 24/30: Batch 3111/3111 (100.00%) (took 4:42) 
+Train loss: 0.508
+Epoch 24/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.432
+Training loss: previous epoch: 0.507781 current epoch:0.507952
+Decaying lr, based on schedule 3
+Learning rate epoch 24: 0.000000
+Epoch 25/30: Batch 3111/3111 (100.00%) (took 4:43) 
+Train loss: 0.508
+Epoch 25/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.433
+Training loss: previous epoch: 0.507952 current epoch:0.507858
+Decaying lr, based on schedule 3
+Learning rate epoch 25: 0.000000
+Epoch 26/30: Batch 3111/3111 (100.00%) (took 4:41) 
+Train loss: 0.508
+Epoch 26/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.432
+Training loss: previous epoch: 0.507858 current epoch:0.507783
+Decaying lr, based on schedule 3
+Learning rate epoch 26: 0.000000
+Epoch 27/30: Batch 3111/3111 (100.00%) (took 4:41) 
+Train loss: 0.508
+Epoch 27/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.430
+Training loss: previous epoch: 0.507783 current epoch:0.507933
+Decaying lr, based on schedule 3
+Learning rate epoch 27: 0.000000
+Epoch 28/30: Batch 3111/3111 (100.00%) (took 4:41) 
+Train loss: 0.508
+Epoch 28/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.431
+Training loss: previous epoch: 0.507933 current epoch:0.507869
+Decaying lr, based on schedule 3
+Learning rate epoch 28: 0.000000
+Epoch 29/30: Batch 3111/3111 (100.00%) (took 4:43) 
+Train loss: 0.508
+Epoch 29/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.427
+Training loss: previous epoch: 0.507869 current epoch:0.507873
+Decaying lr, based on schedule 3
+Learning rate epoch 29: 0.000000
+Epoch 30/30: Batch 3111/3111 (100.00%) (took 4:43) 
+Train loss: 0.508
+Epoch 30/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.446
+Training loss: previous epoch: 0.507873 current epoch:0.507838
+Decaying lr, based on schedule 3
+Saving final model
+
+====training ends====
+====training inversion model====
+
+Number of filters: 64
+Number of convolutional layers: 3
+Using gpu device 0: TITAN X (Pascal) (CNMeM is enabled with initial size: 50.0% of memory, cuDNN 5105)
+Computing spectra...
+====Training Files====
+File 61/61 (100.00%) (took 0:55) 
+====Validation Files====
+File 16/16 (100.00%) (took 0:13) 
+Loading labels...
+Preparing training data feed...
+Preparing prediction and generator functions...
+Compiling prediction function...
+(None, 64, 113, 78)
+Layer output shapes
+(32, 64, 113, 78)
+Conv layer index: 1
+(32, 64, 113, 78)
+Conv layer index: 2
+(32, 64, 113, 78)
+Conv layer index: 3
+(32, 64, 113, 78)
+(32, 1, 226, 156)
+(32, 1, 115, 156)
+(32, 1, 115, 80)
+Number of parameter to be learned: 112388
+Compiling training function...
+Compiling validation function...
+Training the inversion network:
+Learning rate epoch 0: 0.001000
+Epoch 1/30: Batch 3111/3111 (100.00%) (took 6:21) 
+Train loss: 0.538
+Epoch 1/30: Batch 792/792 (100.00%) (took 0:31) 
+Validation loss: 0.431
+Training loss: previous epoch: 0.000000 current epoch:0.538422
+Learning rate epoch 1: 0.001000
+Epoch 2/30: Batch 3111/3111 (100.00%) (took 6:24) 
+Train loss: 0.517
+Epoch 2/30: Batch 792/792 (100.00%) (took 0:31) 
+Validation loss: 0.421
+Training loss: previous epoch: 0.538422 current epoch:0.516774
+Learning rate epoch 2: 0.001000
+Epoch 3/30: Batch 3111/3111 (100.00%) (took 6:28) 
+Train loss: 0.511
+Epoch 3/30: Batch 792/792 (100.00%) (took 0:31) 
+Validation loss: 0.462
+Training loss: previous epoch: 0.516774 current epoch:0.511329
+Decaying lr, based on schedule 3
+Learning rate epoch 3: 0.000500
+Epoch 4/30: Batch 3111/3111 (100.00%) (took 6:26) 
+Train loss: 0.506
+Epoch 4/30: Batch 792/792 (100.00%) (took 0:31) 
+Validation loss: 0.427
+Training loss: previous epoch: 0.511329 current epoch:0.505872
+Learning rate epoch 4: 0.000500
+Epoch 5/30: Batch 3111/3111 (100.00%) (took 6:30) 
+Train loss: 0.504
+Epoch 5/30: Batch 792/792 (100.00%) (took 0:31) 
+Validation loss: 0.428
+Training loss: previous epoch: 0.505872 current epoch:0.503952
+Decaying lr, based on schedule 3
+Learning rate epoch 5: 0.000250
+Epoch 6/30: Batch 3111/3111 (100.00%) (took 6:29) 
+Train loss: 0.501
+Epoch 6/30: Batch 792/792 (100.00%) (took 0:31) 
+Validation loss: 0.438
+Training loss: previous epoch: 0.503952 current epoch:0.501031
+Decaying lr, based on schedule 3
+Learning rate epoch 6: 0.000125
+Epoch 7/30: Batch 3111/3111 (100.00%) (took 6:26) 
+Train loss: 0.499
+Epoch 7/30: Batch 792/792 (100.00%) (took 0:31) 
+Validation loss: 0.420
+Training loss: previous epoch: 0.501031 current epoch:0.499433
+Learning rate epoch 7: 0.000125
+Epoch 8/30: Batch 3111/3111 (100.00%) (took 6:25) 
+Train loss: 0.499
+Epoch 8/30: Batch 792/792 (100.00%) (took 0:31) 
+Validation loss: 0.429
+Training loss: previous epoch: 0.499433 current epoch:0.498972
+Decaying lr, based on schedule 3
+Learning rate epoch 8: 0.000063
+Epoch 9/30: Batch 3111/3111 (100.00%) (took 6:31) 
+Train loss: 0.498
+Epoch 9/30: Batch 792/792 (100.00%) (took 0:31) 
+Validation loss: 0.429
+Training loss: previous epoch: 0.498972 current epoch:0.497961
+Decaying lr, based on schedule 3
+Learning rate epoch 9: 0.000031
+Epoch 10/30: Batch 3111/3111 (100.00%) (took 6:28) 
+Train loss: 0.497
+Epoch 10/30: Batch 792/792 (100.00%) (took 0:31) 
+Validation loss: 0.419
+Training loss: previous epoch: 0.497961 current epoch:0.497437
+Decaying lr, based on schedule 3
+Learning rate epoch 10: 0.000016
+Epoch 11/30: Batch 3111/3111 (100.00%) (took 6:26) 
+Train loss: 0.497
+Epoch 11/30: Batch 792/792 (100.00%) (took 0:31) 
+Validation loss: 0.425
+Training loss: previous epoch: 0.497437 current epoch:0.497326
+Decaying lr, based on schedule 3
+Learning rate epoch 11: 0.000008
+Epoch 12/30: Batch 3111/3111 (100.00%) (took 6:29) 
+Train loss: 0.497
+Epoch 12/30: Batch 792/792 (100.00%) (took 0:31) 
+Validation loss: 0.422
+Training loss: previous epoch: 0.497326 current epoch:0.497044
+Decaying lr, based on schedule 3
+Learning rate epoch 12: 0.000004
+Epoch 13/30: Batch 3111/3111 (100.00%) (took 6:28) 
+Train loss: 0.497
+Epoch 13/30: Batch 792/792 (100.00%) (took 0:31) 
+Validation loss: 0.439
+Training loss: previous epoch: 0.497044 current epoch:0.497037
+Decaying lr, based on schedule 3
+Learning rate epoch 13: 0.000002
+Epoch 14/30: Batch 3111/3111 (100.00%) (took 6:29) 
+Train loss: 0.497
+Epoch 14/30: Batch 792/792 (100.00%) (took 0:31) 
+Validation loss: 0.415
+Training loss: previous epoch: 0.497037 current epoch:0.496963
+Decaying lr, based on schedule 3
+Learning rate epoch 14: 0.000001
+Epoch 15/30: Batch 3111/3111 (100.00%) (took 6:28) 
+Train loss: 0.497
+Epoch 15/30: Batch 792/792 (100.00%) (took 0:30) 
+Validation loss: 0.427
+Training loss: previous epoch: 0.496963 current epoch:0.496982
+Decaying lr, based on schedule 3
+Learning rate epoch 15: 0.000000
+Epoch 16/30: Batch 3111/3111 (100.00%) (took 6:28) 
+Train loss: 0.497
+Epoch 16/30: Batch 792/792 (100.00%) (took 0:31) 
+Validation loss: 0.430
+Training loss: previous epoch: 0.496982 current epoch:0.496991
+Decaying lr, based on schedule 3
+Learning rate epoch 16: 0.000000
+Epoch 17/30: Batch 3111/3111 (100.00%) (took 6:28) 
+Train loss: 0.497
+Epoch 17/30: Batch 792/792 (100.00%) (took 0:31) 
+Validation loss: 0.417
+Training loss: previous epoch: 0.496991 current epoch:0.496958
+Decaying lr, based on schedule 3
+Learning rate epoch 17: 0.000000
+Epoch 18/30: Batch 3111/3111 (100.00%) (took 6:23) 
+Train loss: 0.497
+Epoch 18/30: Batch 792/792 (100.00%) (took 0:30) 
+Validation loss: 0.430
+Training loss: previous epoch: 0.496958 current epoch:0.496970
+Decaying lr, based on schedule 3
+Learning rate epoch 18: 0.000000
+Epoch 19/30: Batch 3111/3111 (100.00%) (took 6:23) 
+Train loss: 0.497
+Epoch 19/30: Batch 792/792 (100.00%) (took 0:30) 
+Validation loss: 0.422
+Training loss: previous epoch: 0.496970 current epoch:0.496929
+Decaying lr, based on schedule 3
+Learning rate epoch 19: 0.000000
+Epoch 20/30: Batch 3111/3111 (100.00%) (took 6:23) 
+Train loss: 0.497
+Epoch 20/30: Batch 792/792 (100.00%) (took 0:30) 
+Validation loss: 0.423
+Training loss: previous epoch: 0.496929 current epoch:0.497001
+Decaying lr, based on schedule 3
+Learning rate epoch 20: 0.000000
+Epoch 21/30: Batch 3111/3111 (100.00%) (took 6:23) 
+Train loss: 0.497
+Epoch 21/30: Batch 792/792 (100.00%) (took 0:30) 
+Validation loss: 0.429
+Training loss: previous epoch: 0.497001 current epoch:0.496869
+Decaying lr, based on schedule 3
+Learning rate epoch 21: 0.000000
+Epoch 22/30: Batch 3111/3111 (100.00%) (took 6:23) 
+Train loss: 0.497
+Epoch 22/30: Batch 792/792 (100.00%) (took 0:30) 
+Validation loss: 0.420
+Training loss: previous epoch: 0.496869 current epoch:0.496976
+Decaying lr, based on schedule 3
+Learning rate epoch 22: 0.000000
+Epoch 23/30: Batch 3111/3111 (100.00%) (took 6:23) 
+Train loss: 0.497
+Epoch 23/30: Batch 792/792 (100.00%) (took 0:30) 
+Validation loss: 0.433
+Training loss: previous epoch: 0.496976 current epoch:0.497075
+Decaying lr, based on schedule 3
+Learning rate epoch 23: 0.000000
+Epoch 24/30: Batch 3111/3111 (100.00%) (took 6:22) 
+Train loss: 0.497
+Epoch 24/30: Batch 792/792 (100.00%) (took 0:30) 
+Validation loss: 0.430
+Training loss: previous epoch: 0.497075 current epoch:0.497049
+Decaying lr, based on schedule 3
+Learning rate epoch 24: 0.000000
+Epoch 25/30: Batch 3111/3111 (100.00%) (took 6:23) 
+Train loss: 0.497
+Epoch 25/30: Batch 792/792 (100.00%) (took 0:30) 
+Validation loss: 0.417
+Training loss: previous epoch: 0.497049 current epoch:0.496977
+Decaying lr, based on schedule 3
+Learning rate epoch 25: 0.000000
+Epoch 26/30: Batch 3111/3111 (100.00%) (took 6:22) 
+Train loss: 0.497
+Epoch 26/30: Batch 792/792 (100.00%) (took 0:30) 
+Validation loss: 0.426
+Training loss: previous epoch: 0.496977 current epoch:0.496993
+Decaying lr, based on schedule 3
+Learning rate epoch 26: 0.000000
+Epoch 27/30: Batch 3111/3111 (100.00%) (took 6:22) 
+Train loss: 0.497
+Epoch 27/30: Batch 792/792 (100.00%) (took 0:30) 
+Validation loss: 0.424
+Training loss: previous epoch: 0.496993 current epoch:0.497010
+Decaying lr, based on schedule 3
+Learning rate epoch 27: 0.000000
+Epoch 28/30: Batch 3111/3111 (100.00%) (took 6:23) 
+Train loss: 0.497
+Epoch 28/30: Batch 792/792 (100.00%) (took 0:31) 
+Validation loss: 0.423
+Training loss: previous epoch: 0.497010 current epoch:0.497020
+Decaying lr, based on schedule 3
+Learning rate epoch 28: 0.000000
+Epoch 29/30: Batch 3111/3111 (100.00%) (took 6:26) 
+Train loss: 0.497
+Epoch 29/30: Batch 792/792 (100.00%) (took 0:30) 
+Validation loss: 0.418
+Training loss: previous epoch: 0.497020 current epoch:0.496905
+Decaying lr, based on schedule 3
+Learning rate epoch 29: 0.000000
+Epoch 30/30: Batch 3111/3111 (100.00%) (took 6:26) 
+Train loss: 0.497
+Epoch 30/30: Batch 792/792 (100.00%) (took 0:31) 
+Validation loss: 0.437
+Training loss: previous epoch: 0.496905 current epoch:0.496958
+Decaying lr, based on schedule 3
+Saving final model
+
+====training ends====
+====training inversion model====
+
+Number of filters: 64
+Number of convolutional layers: 4
+Using gpu device 0: TITAN X (Pascal) (CNMeM is enabled with initial size: 50.0% of memory, cuDNN 5105)
+Computing spectra...
+====Training Files====
+File 61/61 (100.00%) (took 0:54) 
+====Validation Files====
+File 16/16 (100.00%) (took 0:13) 
+Loading labels...
+Preparing training data feed...
+Preparing prediction and generator functions...
+Compiling prediction function...
+(None, 64, 113, 78)
+Layer output shapes
+(32, 64, 113, 78)
+Conv layer index: 1
+(32, 64, 113, 78)
+Conv layer index: 2
+(32, 64, 113, 78)
+Conv layer index: 3
+(32, 64, 113, 78)
+Conv layer index: 4
+(32, 64, 113, 78)
+(32, 1, 226, 156)
+(32, 1, 115, 156)
+(32, 1, 115, 80)
+Number of parameter to be learned: 149508
+Compiling training function...
+Compiling validation function...
+Training the inversion network:
+Learning rate epoch 0: 0.001000
+Epoch 1/30: Batch 3111/3111 (100.00%) (took 7:58) 
+Train loss: 0.539
+Epoch 1/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.434
+Training loss: previous epoch: 0.000000 current epoch:0.539318
+Learning rate epoch 1: 0.001000
+Epoch 2/30: Batch 3111/3111 (100.00%) (took 7:58) 
+Train loss: 0.510
+Epoch 2/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.425
+Training loss: previous epoch: 0.539318 current epoch:0.510084
+Learning rate epoch 2: 0.001000
+Epoch 3/30: Batch 3111/3111 (100.00%) (took 8:00) 
+Train loss: 0.504
+Epoch 3/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.419
+Training loss: previous epoch: 0.510084 current epoch:0.504348
+Learning rate epoch 3: 0.001000
+Epoch 4/30: Batch 3111/3111 (100.00%) (took 8:02) 
+Train loss: 0.501
+Epoch 4/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.473
+Training loss: previous epoch: 0.504348 current epoch:0.500853
+Decaying lr, based on schedule 3
+Learning rate epoch 4: 0.000500
+Epoch 5/30: Batch 3111/3111 (100.00%) (took 8:01) 
+Train loss: 0.496
+Epoch 5/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.422
+Training loss: previous epoch: 0.500853 current epoch:0.496265
+Learning rate epoch 5: 0.000500
+Epoch 6/30: Batch 3111/3111 (100.00%) (took 8:04) 
+Train loss: 0.495
+Epoch 6/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.438
+Training loss: previous epoch: 0.496265 current epoch:0.494661
+Decaying lr, based on schedule 3
+Learning rate epoch 6: 0.000250
+Epoch 7/30: Batch 3111/3111 (100.00%) (took 8:03) 
+Train loss: 0.492
+Epoch 7/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.435
+Training loss: previous epoch: 0.494661 current epoch:0.492363
+Decaying lr, based on schedule 3
+Learning rate epoch 7: 0.000125
+Epoch 8/30: Batch 3111/3111 (100.00%) (took 8:05) 
+Train loss: 0.491
+Epoch 8/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.410
+Training loss: previous epoch: 0.492363 current epoch:0.491045
+Decaying lr, based on schedule 3
+Learning rate epoch 8: 0.000063
+Epoch 9/30: Batch 3111/3111 (100.00%) (took 8:02) 
+Train loss: 0.490
+Epoch 9/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.412
+Training loss: previous epoch: 0.491045 current epoch:0.490348
+Decaying lr, based on schedule 3
+Learning rate epoch 9: 0.000031
+Epoch 10/30: Batch 3111/3111 (100.00%) (took 8:03) 
+Train loss: 0.490
+Epoch 10/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.418
+Training loss: previous epoch: 0.490348 current epoch:0.489903
+Learning rate epoch 10: 0.000031
+Epoch 11/30: Batch 3111/3111 (100.00%) (took 8:05) 
+Train loss: 0.490
+Epoch 11/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.414
+Training loss: previous epoch: 0.489903 current epoch:0.489720
+Decaying lr, based on schedule 3
+Learning rate epoch 11: 0.000016
+Epoch 12/30: Batch 3111/3111 (100.00%) (took 8:01) 
+Train loss: 0.490
+Epoch 12/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.429
+Training loss: previous epoch: 0.489720 current epoch:0.489550
+Decaying lr, based on schedule 3
+Learning rate epoch 12: 0.000008
+Epoch 13/30: Batch 3111/3111 (100.00%) (took 8:01) 
+Train loss: 0.489
+Epoch 13/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.407
+Training loss: previous epoch: 0.489550 current epoch:0.489393
+Decaying lr, based on schedule 3
+Learning rate epoch 13: 0.000004
+Epoch 14/30: Batch 3111/3111 (100.00%) (took 8:02) 
+Train loss: 0.489
+Epoch 14/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.432
+Training loss: previous epoch: 0.489393 current epoch:0.489326
+Decaying lr, based on schedule 3
+Learning rate epoch 14: 0.000002
+Epoch 15/30: Batch 3111/3111 (100.00%) (took 8:00) 
+Train loss: 0.489
+Epoch 15/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.410
+Training loss: previous epoch: 0.489326 current epoch:0.489247
+Decaying lr, based on schedule 3
+Learning rate epoch 15: 0.000001
+Epoch 16/30: Batch 3111/3111 (100.00%) (took 8:04) 
+Train loss: 0.489
+Epoch 16/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.417
+Training loss: previous epoch: 0.489247 current epoch:0.489274
+Decaying lr, based on schedule 3
+Learning rate epoch 16: 0.000000
+Epoch 17/30: Batch 3111/3111 (100.00%) (took 8:00) 
+Train loss: 0.489
+Epoch 17/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.416
+Training loss: previous epoch: 0.489274 current epoch:0.489308
+Decaying lr, based on schedule 3
+Learning rate epoch 17: 0.000000
+Epoch 18/30: Batch 3111/3111 (100.00%) (took 8:01) 
+Train loss: 0.489
+Epoch 18/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.425
+Training loss: previous epoch: 0.489308 current epoch:0.489269
+Decaying lr, based on schedule 3
+Learning rate epoch 18: 0.000000
+Epoch 19/30: Batch 3111/3111 (100.00%) (took 8:00) 
+Train loss: 0.489
+Epoch 19/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.417
+Training loss: previous epoch: 0.489269 current epoch:0.489275
+Decaying lr, based on schedule 3
+Learning rate epoch 19: 0.000000
+Epoch 20/30: Batch 3111/3111 (100.00%) (took 8:01) 
+Train loss: 0.489
+Epoch 20/30: Batch 792/792 (100.00%) (took 0:33) 
+Validation loss: 0.417
+Training loss: previous epoch: 0.489275 current epoch:0.489286
+Decaying lr, based on schedule 3
+Learning rate epoch 20: 0.000000
+Epoch 21/30: Batch 3111/3111 (100.00%) (took 8:00) 
+Train loss: 0.489
+Epoch 21/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.418
+Training loss: previous epoch: 0.489286 current epoch:0.489292
+Decaying lr, based on schedule 3
+Learning rate epoch 21: 0.000000
+Epoch 22/30: Batch 3111/3111 (100.00%) (took 8:01) 
+Train loss: 0.489
+Epoch 22/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.411
+Training loss: previous epoch: 0.489292 current epoch:0.489279
+Decaying lr, based on schedule 3
+Learning rate epoch 22: 0.000000
+Epoch 23/30: Batch 3111/3111 (100.00%) (took 8:00) 
+Train loss: 0.489
+Epoch 23/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.436
+Training loss: previous epoch: 0.489279 current epoch:0.489277
+Decaying lr, based on schedule 3
+Learning rate epoch 23: 0.000000
+Epoch 24/30: Batch 3111/3111 (100.00%) (took 7:59) 
+Train loss: 0.489
+Epoch 24/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.397
+Training loss: previous epoch: 0.489277 current epoch:0.489236
+Decaying lr, based on schedule 3
+Learning rate epoch 24: 0.000000
+Epoch 25/30: Batch 3111/3111 (100.00%) (took 8:01) 
+Train loss: 0.489
+Epoch 25/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.440
+Training loss: previous epoch: 0.489236 current epoch:0.489297
+Decaying lr, based on schedule 3
+Learning rate epoch 25: 0.000000
+Epoch 26/30: Batch 3111/3111 (100.00%) (took 8:00) 
+Train loss: 0.489
+Epoch 26/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.411
+Training loss: previous epoch: 0.489297 current epoch:0.489208
+Decaying lr, based on schedule 3
+Learning rate epoch 26: 0.000000
+Epoch 27/30: Batch 3111/3111 (100.00%) (took 8:02) 
+Train loss: 0.489
+Epoch 27/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.418
+Training loss: previous epoch: 0.489208 current epoch:0.489212
+Decaying lr, based on schedule 3
+Learning rate epoch 27: 0.000000
+Epoch 28/30: Batch 3111/3111 (100.00%) (took 7:59) 
+Train loss: 0.489
+Epoch 28/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.416
+Training loss: previous epoch: 0.489212 current epoch:0.489232
+Decaying lr, based on schedule 3
+Learning rate epoch 28: 0.000000
+Epoch 29/30: Batch 3111/3111 (100.00%) (took 7:58) 
+Train loss: 0.489
+Epoch 29/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.421
+Training loss: previous epoch: 0.489232 current epoch:0.489263
+Decaying lr, based on schedule 3
+Learning rate epoch 29: 0.000000
+Epoch 30/30: Batch 3111/3111 (100.00%) (took 8:01) 
+Train loss: 0.489
+Epoch 30/30: Batch 792/792 (100.00%) (took 0:32) 
+Validation loss: 0.413
+Training loss: previous epoch: 0.489263 current epoch:0.489267
+Decaying lr, based on schedule 3
+Saving final model
+
+====training ends====
+====training inversion model====
+
+Number of filters: 128
+Number of convolutional layers: 1
+Using gpu device 0: TITAN X (Pascal) (CNMeM is enabled with initial size: 50.0% of memory, cuDNN 5105)
+Computing spectra...
+====Training Files====
+File 61/61 (100.00%) (took 0:56) 
+====Validation Files====
+File 16/16 (100.00%) (took 0:13) 
+Loading labels...
+Preparing training data feed...
+Preparing prediction and generator functions...
+Compiling prediction function...
+(None, 64, 113, 78)
+Layer output shapes
+(32, 64, 113, 78)
+Conv layer index: 1
+(32, 128, 113, 78)
+(32, 1, 226, 156)
+(32, 1, 115, 156)
+(32, 1, 115, 80)
+Number of parameter to be learned: 76292
+Compiling training function...
+Compiling validation function...
+Training the inversion network:
+Learning rate epoch 0: 0.001000
+Epoch 1/30: Batch 3111/3111 (100.00%) (took 3:59) 
+Train loss: 0.554
+Epoch 1/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.455
+Training loss: previous epoch: 0.000000 current epoch:0.553971
+Learning rate epoch 1: 0.001000
+Epoch 2/30: Batch 3111/3111 (100.00%) (took 4:00) 
+Train loss: 0.536
+Epoch 2/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.452
+Training loss: previous epoch: 0.553971 current epoch:0.536259
+Learning rate epoch 2: 0.001000
+Epoch 3/30: Batch 3111/3111 (100.00%) (took 4:02) 
+Train loss: 0.533
+Epoch 3/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.457
+Training loss: previous epoch: 0.536259 current epoch:0.533079
+Decaying lr, based on schedule 3
+Learning rate epoch 3: 0.000500
+Epoch 4/30: Batch 3111/3111 (100.00%) (took 4:01) 
+Train loss: 0.530
+Epoch 4/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.454
+Training loss: previous epoch: 0.533079 current epoch:0.529982
+Learning rate epoch 4: 0.000500
+Epoch 5/30: Batch 3111/3111 (100.00%) (took 4:01) 
+Train loss: 0.529
+Epoch 5/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.451
+Training loss: previous epoch: 0.529982 current epoch:0.528687
+Decaying lr, based on schedule 3
+Learning rate epoch 5: 0.000250
+Epoch 6/30: Batch 3111/3111 (100.00%) (took 4:01) 
+Train loss: 0.527
+Epoch 6/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.445
+Training loss: previous epoch: 0.528687 current epoch:0.527073
+Decaying lr, based on schedule 3
+Learning rate epoch 6: 0.000125
+Epoch 7/30: Batch 3111/3111 (100.00%) (took 4:01) 
+Train loss: 0.526
+Epoch 7/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.430
+Training loss: previous epoch: 0.527073 current epoch:0.525512
+Decaying lr, based on schedule 3
+Learning rate epoch 7: 0.000063
+Epoch 8/30: Batch 3111/3111 (100.00%) (took 4:02) 
+Train loss: 0.525
+Epoch 8/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.444
+Training loss: previous epoch: 0.525512 current epoch:0.525342
+Decaying lr, based on schedule 3
+Learning rate epoch 8: 0.000031
+Epoch 9/30: Batch 3111/3111 (100.00%) (took 4:01) 
+Train loss: 0.525
+Epoch 9/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.438
+Training loss: previous epoch: 0.525342 current epoch:0.524852
+Decaying lr, based on schedule 3
+Learning rate epoch 9: 0.000016
+Epoch 10/30: Batch 3111/3111 (100.00%) (took 4:01) 
+Train loss: 0.524
+Epoch 10/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.444
+Training loss: previous epoch: 0.524852 current epoch:0.524385
+Decaying lr, based on schedule 3
+Learning rate epoch 10: 0.000008
+Epoch 11/30: Batch 3111/3111 (100.00%) (took 4:01) 
+Train loss: 0.524
+Epoch 11/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.446
+Training loss: previous epoch: 0.524385 current epoch:0.524173
+Decaying lr, based on schedule 3
+Learning rate epoch 11: 0.000004
+Epoch 12/30: Batch 3111/3111 (100.00%) (took 4:00) 
+Train loss: 0.524
+Epoch 12/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.432
+Training loss: previous epoch: 0.524173 current epoch:0.524023
+Decaying lr, based on schedule 3
+Learning rate epoch 12: 0.000002
+Epoch 13/30: Batch 3111/3111 (100.00%) (took 4:01) 
+Train loss: 0.524
+Epoch 13/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.442
+Training loss: previous epoch: 0.524023 current epoch:0.524049
+Decaying lr, based on schedule 3
+Learning rate epoch 13: 0.000001
+Epoch 14/30: Batch 3111/3111 (100.00%) (took 4:00) 
+Train loss: 0.524
+Epoch 14/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.452
+Training loss: previous epoch: 0.524049 current epoch:0.524406
+Decaying lr, based on schedule 3
+Learning rate epoch 14: 0.000000
+Epoch 15/30: Batch 3111/3111 (100.00%) (took 4:01) 
+Train loss: 0.524
+Epoch 15/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.428
+Training loss: previous epoch: 0.524406 current epoch:0.524291
+Decaying lr, based on schedule 3
+Learning rate epoch 15: 0.000000
+Epoch 16/30: Batch 3111/3111 (100.00%) (took 4:01) 
+Train loss: 0.524
+Epoch 16/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.447
+Training loss: previous epoch: 0.524291 current epoch:0.524401
+Decaying lr, based on schedule 3
+Learning rate epoch 16: 0.000000
+Epoch 17/30: Batch 3111/3111 (100.00%) (took 4:01) 
+Train loss: 0.525
+Epoch 17/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.443
+Training loss: previous epoch: 0.524401 current epoch:0.524541
+Decaying lr, based on schedule 3
+Learning rate epoch 17: 0.000000
+Epoch 18/30: Batch 3111/3111 (100.00%) (took 4:01) 
+Train loss: 0.524
+Epoch 18/30: Batch 792/792 (100.00%) (took 0:26) 
+Validation loss: 0.443
+Training loss: previous epoch: 0.524541 current epoch:0.524118
+Decaying lr, based on schedule 3
+Learning rate epoch 18: 0.000000
+Epoch 19/30: Batch 3111/3111 (100.00%) (took 4:02) 
+Train loss: 0.524
+Epoch 19/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.439
+Training loss: previous epoch: 0.524118 current epoch:0.524016
+Decaying lr, based on schedule 3
+Learning rate epoch 19: 0.000000
+Epoch 20/30: Batch 3111/3111 (100.00%) (took 4:02) 
+Train loss: 0.524
+Epoch 20/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.439
+Training loss: previous epoch: 0.524016 current epoch:0.524216
+Decaying lr, based on schedule 3
+Learning rate epoch 20: 0.000000
+Epoch 21/30: Batch 3111/3111 (100.00%) (took 4:01) 
+Train loss: 0.524
+Epoch 21/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.437
+Training loss: previous epoch: 0.524216 current epoch:0.524389
+Decaying lr, based on schedule 3
+Learning rate epoch 21: 0.000000
+Epoch 22/30: Batch 3111/3111 (100.00%) (took 4:02) 
+Train loss: 0.524
+Epoch 22/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.458
+Training loss: previous epoch: 0.524389 current epoch:0.524329
+Decaying lr, based on schedule 3
+Learning rate epoch 22: 0.000000
+Epoch 23/30: Batch 3111/3111 (100.00%) (took 4:01) 
+Train loss: 0.524
+Epoch 23/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.434
+Training loss: previous epoch: 0.524329 current epoch:0.523910
+Decaying lr, based on schedule 3
+Learning rate epoch 23: 0.000000
+Epoch 24/30: Batch 3111/3111 (100.00%) (took 4:02) 
+Train loss: 0.524
+Epoch 24/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.435
+Training loss: previous epoch: 0.523910 current epoch:0.523982
+Decaying lr, based on schedule 3
+Learning rate epoch 24: 0.000000
+Epoch 25/30: Batch 3111/3111 (100.00%) (took 4:02) 
+Train loss: 0.524
+Epoch 25/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.450
+Training loss: previous epoch: 0.523982 current epoch:0.524355
+Decaying lr, based on schedule 3
+Learning rate epoch 25: 0.000000
+Epoch 26/30: Batch 3111/3111 (100.00%) (took 4:02) 
+Train loss: 0.524
+Epoch 26/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.432
+Training loss: previous epoch: 0.524355 current epoch:0.524258
+Decaying lr, based on schedule 3
+Learning rate epoch 26: 0.000000
+Epoch 27/30: Batch 3111/3111 (100.00%) (took 4:02) 
+Train loss: 0.524
+Epoch 27/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.445
+Training loss: previous epoch: 0.524258 current epoch:0.524382
+Decaying lr, based on schedule 3
+Learning rate epoch 27: 0.000000
+Epoch 28/30: Batch 3111/3111 (100.00%) (took 4:02) 
+Train loss: 0.524
+Epoch 28/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.444
+Training loss: previous epoch: 0.524382 current epoch:0.524079
+Decaying lr, based on schedule 3
+Learning rate epoch 28: 0.000000
+Epoch 29/30: Batch 3111/3111 (100.00%) (took 4:01) 
+Train loss: 0.524
+Epoch 29/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.445
+Training loss: previous epoch: 0.524079 current epoch:0.524143
+Decaying lr, based on schedule 3
+Learning rate epoch 29: 0.000000
+Epoch 30/30: Batch 3111/3111 (100.00%) (took 4:01) 
+Train loss: 0.524
+Epoch 30/30: Batch 792/792 (100.00%) (took 0:23) 
+Validation loss: 0.441
+Training loss: previous epoch: 0.524143 current epoch:0.523936
+Decaying lr, based on schedule 3
+Saving final model
+
+====training ends====
+====training inversion model====
+
+Number of filters: 128
+Number of convolutional layers: 2
+Using gpu device 0: TITAN X (Pascal) (CNMeM is enabled with initial size: 50.0% of memory, cuDNN 5105)
+Computing spectra...
+====Training Files====
+File 61/61 (100.00%) (took 0:56) 
+====Validation Files====
+File 16/16 (100.00%) (took 0:13) 
+Loading labels...
+Preparing training data feed...
+Preparing prediction and generator functions...
+Compiling prediction function...
+(None, 64, 113, 78)
+Layer output shapes
+(32, 64, 113, 78)
+Conv layer index: 1
+(32, 128, 113, 78)
+Conv layer index: 2
+(32, 128, 113, 78)
+(32, 1, 226, 156)
+(32, 1, 115, 156)
+(32, 1, 115, 80)
+Number of parameter to be learned: 224260
+Compiling training function...
+Compiling validation function...
+Training the inversion network:
+Learning rate epoch 0: 0.001000
+Epoch 1/30: Batch 3111/3111 (100.00%) (took 7:57) 
+Train loss: 0.551
+Epoch 1/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.448
+Training loss: previous epoch: 0.000000 current epoch:0.550528
+Learning rate epoch 1: 0.001000
+Epoch 2/30: Batch 3111/3111 (100.00%) (took 7:58) 
+Train loss: 0.525
+Epoch 2/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.442
+Training loss: previous epoch: 0.550528 current epoch:0.524624
+Learning rate epoch 2: 0.001000
+Epoch 3/30: Batch 3111/3111 (100.00%) (took 8:07) 
+Train loss: 0.520
+Epoch 3/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.435
+Training loss: previous epoch: 0.524624 current epoch:0.520412
+Decaying lr, based on schedule 3
+Learning rate epoch 3: 0.000500
+Epoch 4/30: Batch 3111/3111 (100.00%) (took 8:04) 
+Train loss: 0.516
+Epoch 4/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.445
+Training loss: previous epoch: 0.520412 current epoch:0.516298
+Learning rate epoch 4: 0.000500
+Epoch 5/30: Batch 3111/3111 (100.00%) (took 8:08) 
+Train loss: 0.515
+Epoch 5/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.438
+Training loss: previous epoch: 0.516298 current epoch:0.514714
+Decaying lr, based on schedule 3
+Learning rate epoch 5: 0.000250
+Epoch 6/30: Batch 3111/3111 (100.00%) (took 8:07) 
+Train loss: 0.512
+Epoch 6/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.446
+Training loss: previous epoch: 0.514714 current epoch:0.512170
+Decaying lr, based on schedule 3
+Learning rate epoch 6: 0.000125
+Epoch 7/30: Batch 3111/3111 (100.00%) (took 8:06) 
+Train loss: 0.510
+Epoch 7/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.432
+Training loss: previous epoch: 0.512170 current epoch:0.510398
+Decaying lr, based on schedule 3
+Learning rate epoch 7: 0.000063
+Epoch 8/30: Batch 3111/3111 (100.00%) (took 8:12) 
+Train loss: 0.509
+Epoch 8/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.419
+Training loss: previous epoch: 0.510398 current epoch:0.509432
+Learning rate epoch 8: 0.000063
+Epoch 9/30: Batch 3111/3111 (100.00%) (took 8:09) 
+Train loss: 0.509
+Epoch 9/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.446
+Training loss: previous epoch: 0.509432 current epoch:0.508835
+Decaying lr, based on schedule 3
+Learning rate epoch 9: 0.000031
+Epoch 10/30: Batch 3111/3111 (100.00%) (took 8:13) 
+Train loss: 0.508
+Epoch 10/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.428
+Training loss: previous epoch: 0.508835 current epoch:0.508474
+Decaying lr, based on schedule 3
+Learning rate epoch 10: 0.000016
+Epoch 11/30: Batch 3111/3111 (100.00%) (took 8:09) 
+Train loss: 0.508
+Epoch 11/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.433
+Training loss: previous epoch: 0.508474 current epoch:0.508279
+Decaying lr, based on schedule 3
+Learning rate epoch 11: 0.000008
+Epoch 12/30: Batch 3111/3111 (100.00%) (took 8:07) 
+Train loss: 0.508
+Epoch 12/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.432
+Training loss: previous epoch: 0.508279 current epoch:0.507975
+Decaying lr, based on schedule 3
+Learning rate epoch 12: 0.000004
+Epoch 13/30: Batch 3111/3111 (100.00%) (took 8:08) 
+Train loss: 0.508
+Epoch 13/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.423
+Training loss: previous epoch: 0.507975 current epoch:0.507874
+Decaying lr, based on schedule 3
+Learning rate epoch 13: 0.000002
+Epoch 14/30: Batch 3111/3111 (100.00%) (took 8:10) 
+Train loss: 0.508
+Epoch 14/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.450
+Training loss: previous epoch: 0.507874 current epoch:0.507727
+Decaying lr, based on schedule 3
+Learning rate epoch 14: 0.000001
+Epoch 15/30: Batch 3111/3111 (100.00%) (took 8:09) 
+Train loss: 0.508
+Epoch 15/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.422
+Training loss: previous epoch: 0.507727 current epoch:0.507817
+Decaying lr, based on schedule 3
+Learning rate epoch 15: 0.000000
+Epoch 16/30: Batch 3111/3111 (100.00%) (took 8:06) 
+Train loss: 0.508
+Epoch 16/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.426
+Training loss: previous epoch: 0.507817 current epoch:0.507898
+Decaying lr, based on schedule 3
+Learning rate epoch 16: 0.000000
+Epoch 17/30: Batch 3111/3111 (100.00%) (took 8:06) 
+Train loss: 0.508
+Epoch 17/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.434
+Training loss: previous epoch: 0.507898 current epoch:0.507803
+Decaying lr, based on schedule 3
+Learning rate epoch 17: 0.000000
+Epoch 18/30: Batch 3111/3111 (100.00%) (took 8:04) 
+Train loss: 0.508
+Epoch 18/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.440
+Training loss: previous epoch: 0.507803 current epoch:0.507819
+Decaying lr, based on schedule 3
+Learning rate epoch 18: 0.000000
+Epoch 19/30: Batch 3111/3111 (100.00%) (took 8:07) 
+Train loss: 0.508
+Epoch 19/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.424
+Training loss: previous epoch: 0.507819 current epoch:0.507880
+Decaying lr, based on schedule 3
+Learning rate epoch 19: 0.000000
+Epoch 20/30: Batch 3111/3111 (100.00%) (took 8:07) 
+Train loss: 0.508
+Epoch 20/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.437
+Training loss: previous epoch: 0.507880 current epoch:0.507848
+Decaying lr, based on schedule 3
+Learning rate epoch 20: 0.000000
+Epoch 21/30: Batch 3111/3111 (100.00%) (took 8:07) 
+Train loss: 0.508
+Epoch 21/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.424
+Training loss: previous epoch: 0.507848 current epoch:0.507774
+Decaying lr, based on schedule 3
+Learning rate epoch 21: 0.000000
+Epoch 22/30: Batch 3111/3111 (100.00%) (took 8:06) 
+Train loss: 0.508
+Epoch 22/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.435
+Training loss: previous epoch: 0.507774 current epoch:0.507706
+Decaying lr, based on schedule 3
+Learning rate epoch 22: 0.000000
+Epoch 23/30: Batch 3111/3111 (100.00%) (took 8:05) 
+Train loss: 0.508
+Epoch 23/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.430
+Training loss: previous epoch: 0.507706 current epoch:0.507835
+Decaying lr, based on schedule 3
+Learning rate epoch 23: 0.000000
+Epoch 24/30: Batch 3111/3111 (100.00%) (took 8:08) 
+Train loss: 0.508
+Epoch 24/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.447
+Training loss: previous epoch: 0.507835 current epoch:0.507786
+Decaying lr, based on schedule 3
+Learning rate epoch 24: 0.000000
+Epoch 25/30: Batch 3111/3111 (100.00%) (took 8:07) 
+Train loss: 0.508
+Epoch 25/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.408
+Training loss: previous epoch: 0.507786 current epoch:0.507912
+Decaying lr, based on schedule 3
+Learning rate epoch 25: 0.000000
+Epoch 26/30: Batch 3111/3111 (100.00%) (took 8:07) 
+Train loss: 0.508
+Epoch 26/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.447
+Training loss: previous epoch: 0.507912 current epoch:0.507823
+Decaying lr, based on schedule 3
+Learning rate epoch 26: 0.000000
+Epoch 27/30: Batch 3111/3111 (100.00%) (took 8:07) 
+Train loss: 0.508
+Epoch 27/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.432
+Training loss: previous epoch: 0.507823 current epoch:0.507787
+Decaying lr, based on schedule 3
+Learning rate epoch 27: 0.000000
+Epoch 28/30: Batch 3111/3111 (100.00%) (took 8:06) 
+Train loss: 0.508
+Epoch 28/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.432
+Training loss: previous epoch: 0.507787 current epoch:0.507876
+Decaying lr, based on schedule 3
+Learning rate epoch 28: 0.000000
+Epoch 29/30: Batch 3111/3111 (100.00%) (took 8:06) 
+Train loss: 0.508
+Epoch 29/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.429
+Training loss: previous epoch: 0.507876 current epoch:0.507748
+Decaying lr, based on schedule 3
+Learning rate epoch 29: 0.000000
+Epoch 30/30: Batch 3111/3111 (100.00%) (took 8:09) 
+Train loss: 0.508
+Epoch 30/30: Batch 792/792 (100.00%) (took 0:35) 
+Validation loss: 0.442
+Training loss: previous epoch: 0.507748 current epoch:0.507836
+Decaying lr, based on schedule 3
+Saving final model
+
+====training ends====
+====training inversion model====
+
+Number of filters: 128
+Number of convolutional layers: 3
+Using gpu device 0: TITAN X (Pascal) (CNMeM is enabled with initial size: 50.0% of memory, cuDNN 5105)
+Computing spectra...
+====Training Files====
+File 61/61 (100.00%) (took 0:56) 
+====Validation Files====
+File 16/16 (100.00%) (took 0:14) 
+Loading labels...
+Preparing training data feed...
+Preparing prediction and generator functions...
+Compiling prediction function...
+(None, 64, 113, 78)
+Layer output shapes
+(32, 64, 113, 78)
+Conv layer index: 1
+(32, 128, 113, 78)
+Conv layer index: 2
+(32, 128, 113, 78)
+Conv layer index: 3
+(32, 128, 113, 78)
+(32, 1, 226, 156)
+(32, 1, 115, 156)
+(32, 1, 115, 80)
+Number of parameter to be learned: 372228
+Compiling training function...
+Compiling validation function...
+Training the inversion network:
+Learning rate epoch 0: 0.001000
+Epoch 1/30: Batch 3111/3111 (100.00%) (took 12:28)
+Train loss: 0.565
+Epoch 1/30: Batch 792/792 (100.00%) (took 0:49) 
+Validation loss: 0.443
+Training loss: previous epoch: 0.000000 current epoch:0.565496
+Learning rate epoch 1: 0.001000
+Epoch 2/30: Batch 3111/3111 (100.00%) (took 12:28)
+Train loss: 0.522
+Epoch 2/30: Batch 792/792 (100.00%) (took 0:49) 
+Validation loss: 0.460
+Training loss: previous epoch: 0.565496 current epoch:0.521720
+Learning rate epoch 2: 0.001000
+Epoch 3/30: Batch 3111/3111 (100.00%) (took 12:28)
+Train loss: 0.513
+Epoch 3/30: Batch 792/792 (100.00%) (took 0:50) 
+Validation loss: 0.431
+Training loss: previous epoch: 0.521720 current epoch:0.513037
+Learning rate epoch 3: 0.001000
+Epoch 4/30: Batch 3111/3111 (100.00%) (took 12:38)
+Train loss: 0.509
+Epoch 4/30: Batch 792/792 (100.00%) (took 0:49) 
+Validation loss: 0.461
+Training loss: previous epoch: 0.513037 current epoch:0.509362
+Learning rate epoch 4: 0.001000
+Epoch 5/30: Batch 3111/3111 (100.00%) (took 12:38)
+Train loss: 0.507
+Epoch 5/30: Batch 792/792 (100.00%) (took 0:49) 
+Validation loss: 0.419
+Training loss: previous epoch: 0.509362 current epoch:0.507480
+Decaying lr, based on schedule 3
+Learning rate epoch 5: 0.000500
+Epoch 6/30: Batch 3111/3111 (100.00%) (took 12:30)
+Train loss: 0.503
+Epoch 6/30: Batch 792/792 (100.00%) (took 0:49) 
+Validation loss: 0.439
+Training loss: previous epoch: 0.507480 current epoch:0.503464
+Decaying lr, based on schedule 3
+Learning rate epoch 6: 0.000250
+Epoch 7/30: Batch 3111/3111 (100.00%) (took 12:39)
+Train loss: 0.501
+Epoch 7/30: Batch 792/792 (100.00%) (took 0:50) 
+Validation loss: 0.428
+Training loss: previous epoch: 0.503464 current epoch:0.500665
+Decaying lr, based on schedule 3
+Learning rate epoch 7: 0.000125
+Epoch 8/30: Batch 3111/3111 (100.00%) (took 12:43)
+Train loss: 0.499
+Epoch 8/30: Batch 792/792 (100.00%) (took 0:50) 
+Validation loss: 0.433
+Training loss: previous epoch: 0.500665 current epoch:0.499263
+Learning rate epoch 8: 0.000125
+Epoch 9/30: Batch 3111/3111 (100.00%) (took 12:33)
+Train loss: 0.499
+Epoch 9/30: Batch 792/792 (100.00%) (took 0:49) 
+Validation loss: 0.423
+Training loss: previous epoch: 0.499263 current epoch:0.498760
+Decaying lr, based on schedule 3
+Learning rate epoch 9: 0.000063
+Epoch 10/30: Batch 3111/3111 (100.00%) (took 12:37)
+Train loss: 0.498
+Epoch 10/30: Batch 792/792 (100.00%) (took 0:50) 
+Validation loss: 0.428
+Training loss: previous epoch: 0.498760 current epoch:0.497915
+Decaying lr, based on schedule 3
+Learning rate epoch 10: 0.000031
+Epoch 11/30: Batch 3111/3111 (100.00%) (took 12:32)
+Train loss: 0.497
+Epoch 11/30: Batch 792/792 (100.00%) (took 0:49) 
+Validation loss: 0.432
+Training loss: previous epoch: 0.497915 current epoch:0.497490
+Decaying lr, based on schedule 3
+Learning rate epoch 11: 0.000016
+Epoch 12/30: Batch 3111/3111 (100.00%) (took 12:35)
+Train loss: 0.497
+Epoch 12/30: Batch 792/792 (100.00%) (took 0:49) 
+Validation loss: 0.418
+Training loss: previous epoch: 0.497490 current epoch:0.497305
+Decaying lr, based on schedule 3
+Learning rate epoch 12: 0.000008
+Epoch 13/30: Batch 3111/3111 (100.00%) (took 12:22)
+Train loss: 0.497
+Epoch 13/30: Batch 792/792 (100.00%) (took 0:49) 
+Validation loss: 0.419
+Training loss: previous epoch: 0.497305 current epoch:0.497166
+Decaying lr, based on schedule 3
+Learning rate epoch 13: 0.000004
+Epoch 14/30: Batch 3111/3111 (100.00%) (took 12:33)
+Train loss: 0.497
+Epoch 14/30: Batch 792/792 (100.00%) (took 0:49) 
+Validation loss: 0.417
+Training loss: previous epoch: 0.497166 current epoch:0.497057
+Decaying lr, based on schedule 3
+Learning rate epoch 14: 0.000002
+Epoch 15/30: Batch 3111/3111 (100.00%) (took 12:30)
+Train loss: 0.497
+Epoch 15/30: Batch 792/792 (100.00%) (took 0:49) 
+Validation loss: 0.438
+Training loss: previous epoch: 0.497057 current epoch:0.497043
+Decaying lr, based on schedule 3
+Learning rate epoch 15: 0.000001
+Epoch 16/30: Batch 3111/3111 (100.00%) (took 12:17)
+Train loss: 0.497
+Epoch 16/30: Batch 792/792 (100.00%) (took 0:48) 
+Validation loss: 0.421
+Training loss: previous epoch: 0.497043 current epoch:0.496922
+Decaying lr, based on schedule 3
+Learning rate epoch 16: 0.000000
+Epoch 17/30: Batch 3111/3111 (100.00%) (took 12:09)
+Train loss: 0.497
+Epoch 17/30: Batch 792/792 (100.00%) (took 0:48) 
+Validation loss: 0.427
+Training loss: previous epoch: 0.496922 current epoch:0.497037
+Decaying lr, based on schedule 3
+Learning rate epoch 17: 0.000000
+Epoch 18/30: Batch 3111/3111 (100.00%) (took 12:08)
+Train loss: 0.497
+Epoch 18/30: Batch 792/792 (100.00%) (took 0:48) 
+Validation loss: 0.421
+Training loss: previous epoch: 0.497037 current epoch:0.496967
+Decaying lr, based on schedule 3
+Learning rate epoch 18: 0.000000
+Epoch 19/30: Batch 3111/3111 (100.00%) (took 12:06)
+Train loss: 0.497
+Epoch 19/30: Batch 792/792 (100.00%) (took 0:49) 
+Validation loss: 0.425
+Training loss: previous epoch: 0.496967 current epoch:0.496980
+Decaying lr, based on schedule 3
+Learning rate epoch 19: 0.000000
+Epoch 20/30: Batch 3111/3111 (100.00%) (took 12:04)
+Train loss: 0.497
+Epoch 20/30: Batch 792/792 (100.00%) (took 0:48) 
+Validation loss: 0.422
+Training loss: previous epoch: 0.496980 current epoch:0.497031
+Decaying lr, based on schedule 3
+Learning rate epoch 20: 0.000000
+Epoch 21/30: Batch 3111/3111 (100.00%) (took 12:06)
+Train loss: 0.497
+Epoch 21/30: Batch 792/792 (100.00%) (took 0:48) 
+Validation loss: 0.430
+Training loss: previous epoch: 0.497031 current epoch:0.496999
+Decaying lr, based on schedule 3
+Learning rate epoch 21: 0.000000
+Epoch 22/30: Batch 3111/3111 (100.00%) (took 12:23)
+Train loss: 0.497
+Epoch 22/30: Batch 792/792 (100.00%) (took 0:49) 
+Validation loss: 0.440
+Training loss: previous epoch: 0.496999 current epoch:0.497072
+Decaying lr, based on schedule 3
+Learning rate epoch 22: 0.000000
+Epoch 23/30: Batch 3111/3111 (100.00%) (took 12:17)
+Train loss: 0.497
+Epoch 23/30: Batch 792/792 (100.00%) (took 0:48) 
+Validation loss: 0.406
+Training loss: previous epoch: 0.497072 current epoch:0.497010
+Decaying lr, based on schedule 3
+Learning rate epoch 23: 0.000000
+Epoch 24/30: Batch 3111/3111 (100.00%) (took 12:14)
+Train loss: 0.497
+Epoch 24/30: Batch 792/792 (100.00%) (took 0:49) 
+Validation loss: 0.418
+Training loss: previous epoch: 0.497010 current epoch:0.496974
+Decaying lr, based on schedule 3
+Learning rate epoch 24: 0.000000
+Epoch 25/30: Batch 3111/3111 (100.00%) (took 12:22)
+Train loss: 0.497
+Epoch 25/30: Batch 792/792 (100.00%) (took 0:49) 
+Validation loss: 0.443
+Training loss: previous epoch: 0.496974 current epoch:0.497022
+Decaying lr, based on schedule 3
+Learning rate epoch 25: 0.000000
+Epoch 26/30: Batch 3111/3111 (100.00%) (took 12:26)
+Train loss: 0.497
+Epoch 26/30: Batch 792/792 (100.00%) (took 0:49) 
+Validation loss: 0.412
+Training loss: previous epoch: 0.497022 current epoch:0.496950
+Decaying lr, based on schedule 3
+Learning rate epoch 26: 0.000000
+Epoch 27/30: Batch 3111/3111 (100.00%) (took 12:13)
+Train loss: 0.497
+Epoch 27/30: Batch 792/792 (100.00%) (took 0:48) 
+Validation loss: 0.420
+Training loss: previous epoch: 0.496950 current epoch:0.496980
+Decaying lr, based on schedule 3
+Learning rate epoch 27: 0.000000
+Epoch 28/30: Batch 3111/3111 (100.00%) (took 12:21)
+Train loss: 0.497
+Epoch 28/30: Batch 792/792 (100.00%) (took 0:49) 
+Validation loss: 0.432
+Training loss: previous epoch: 0.496980 current epoch:0.497030
+Decaying lr, based on schedule 3
+Learning rate epoch 28: 0.000000
+Epoch 29/30: Batch 3111/3111 (100.00%) (took 12:24)
+Train loss: 0.497
+Epoch 29/30: Batch 792/792 (100.00%) (took 0:49) 
+Validation loss: 0.430
+Training loss: previous epoch: 0.497030 current epoch:0.496951
+Decaying lr, based on schedule 3
+Learning rate epoch 29: 0.000000
+Epoch 30/30: Batch 3111/3111 (100.00%) (took 12:20)
+Train loss: 0.497
+Epoch 30/30: Batch 792/792 (100.00%) (took 0:48) 
+Validation loss: 0.426
+Training loss: previous epoch: 0.496951 current epoch:0.496961
+Decaying lr, based on schedule 3
+Saving final model
+
+====training ends====
+====training inversion model====
+
+Number of filters: 128
+Number of convolutional layers: 4
+Using gpu device 0: TITAN X (Pascal) (CNMeM is enabled with initial size: 50.0% of memory, cuDNN 5105)
+Computing spectra...
+====Training Files====
+File 61/61 (100.00%) (took 1:17) 
+====Validation Files====
+File 16/16 (100.00%) (took 0:19) 
+Loading labels...
+Preparing training data feed...
+Preparing prediction and generator functions...
+Compiling prediction function...
+(None, 64, 113, 78)
+Layer output shapes
+(32, 64, 113, 78)
+Conv layer index: 1
+(32, 128, 113, 78)
+Conv layer index: 2
+(32, 128, 113, 78)
+Conv layer index: 3
+(32, 128, 113, 78)
+Conv layer index: 4
+(32, 128, 113, 78)
+(32, 1, 226, 156)
+(32, 1, 115, 156)
+(32, 1, 115, 80)
+Number of parameter to be learned: 520196
+Compiling training function...
+Compiling validation function...
+Training the inversion network:
+Learning rate epoch 0: 0.001000
+Epoch 1/30: Batch 3111/3111 (100.00%) (took 16:21) 
+Train loss: 0.550
+Epoch 1/30: Batch 792/792 (100.00%) (took 1:02) 
+Validation loss: 0.428
+Training loss: previous epoch: 0.000000 current epoch:0.549953
+Learning rate epoch 1: 0.001000
+Epoch 2/30: Batch 3111/3111 (100.00%) (took 16:23) 
+Train loss: 0.511
+Epoch 2/30: Batch 792/792 (100.00%) (took 1:01) 
+Validation loss: 0.426
+Training loss: previous epoch: 0.549953 current epoch:0.510703
+Learning rate epoch 2: 0.001000
+Epoch 3/30: Batch 3111/3111 (100.00%) (took 16:31) 
+Train loss: 0.504
+Epoch 3/30: Batch 792/792 (100.00%) (took 1:06) 
+Validation loss: 0.412
+Training loss: previous epoch: 0.510703 current epoch:0.504439
+Learning rate epoch 3: 0.001000
+Epoch 4/30: Batch 3111/3111 (100.00%) (took 16:31) 
+Train loss: 0.502
+Epoch 4/30: Batch 792/792 (100.00%) (took 1:02) 
+Validation loss: 0.431
+Training loss: previous epoch: 0.504439 current epoch:0.501708
+Decaying lr, based on schedule 3
+Learning rate epoch 4: 0.000500
+Epoch 5/30: Batch 3111/3111 (100.00%) (took 16:38) 
+Train loss: 0.497
+Epoch 5/30: Batch 792/792 (100.00%) (took 1:02) 
+Validation loss: 0.421
+Training loss: previous epoch: 0.501708 current epoch:0.496762
+Learning rate epoch 5: 0.000500
+Epoch 6/30: Batch 3111/3111 (100.00%) (took 16:30) 
+Train loss: 0.495
+Epoch 6/30: Batch 792/792 (100.00%) (took 1:02) 
+Validation loss: 0.414
+Training loss: previous epoch: 0.496762 current epoch:0.495183
+Decaying lr, based on schedule 3
+Learning rate epoch 6: 0.000250
+Epoch 7/30: Batch 3111/3111 (100.00%) (took 16:42) 
+Train loss: 0.493
+Epoch 7/30: Batch 792/792 (100.00%) (took 1:02) 
+Validation loss: 0.430
+Training loss: previous epoch: 0.495183 current epoch:0.492832
+Decaying lr, based on schedule 3
+Learning rate epoch 7: 0.000125
+Epoch 8/30: Batch 3111/3111 (100.00%) (took 16:43) 
+Train loss: 0.491
+Epoch 8/30: Batch 792/792 (100.00%) (took 1:01) 
+Validation loss: 0.419
+Training loss: previous epoch: 0.492832 current epoch:0.491403
+Decaying lr, based on schedule 3
+Learning rate epoch 8: 0.000063
+Epoch 9/30: Batch 3111/3111 (100.00%) (took 16:38) 
+Train loss: 0.491
+Epoch 9/30: Batch 792/792 (100.00%) (took 1:02) 
+Validation loss: 0.423
+Training loss: previous epoch: 0.491403 current epoch:0.490640
+Decaying lr, based on schedule 3
+Learning rate epoch 9: 0.000031
+Epoch 10/30: Batch 3111/3111 (100.00%) (took 16:43) 
+Train loss: 0.490
+Epoch 10/30: Batch 792/792 (100.00%) (took 1:02) 
+Validation loss: 0.418
+Training loss: previous epoch: 0.490640 current epoch:0.490167
+Decaying lr, based on schedule 3
+Learning rate epoch 10: 0.000016
+Epoch 11/30: Batch 3111/3111 (100.00%) (took 16:33) 
+Train loss: 0.490
+Epoch 11/30: Batch 792/792 (100.00%) (took 1:01) 
+Validation loss: 0.424
+Training loss: previous epoch: 0.490167 current epoch:0.489872
+Learning rate epoch 11: 0.000016
+Epoch 12/30: Batch 3111/3111 (100.00%) (took 16:40) 
+Train loss: 0.490
+Epoch 12/30: Batch 792/792 (100.00%) (took 1:01) 
+Validation loss: 0.411
+Training loss: previous epoch: 0.489872 current epoch:0.489826
+Decaying lr, based on schedule 3
+Learning rate epoch 12: 0.000008
+Epoch 13/30: Batch 3111/3111 (100.00%) (took 16:33) 
+Train loss: 0.490
+Epoch 13/30: Batch 792/792 (100.00%) (took 1:02) 
+Validation loss: 0.416
+Training loss: previous epoch: 0.489826 current epoch:0.489689
+Decaying lr, based on schedule 3
+Learning rate epoch 13: 0.000004
+Epoch 14/30: Batch 3111/3111 (100.00%) (took 16:37) 
+Train loss: 0.490
+Epoch 14/30: Batch 792/792 (100.00%) (took 1:00) 
+Validation loss: 0.422
+Training loss: previous epoch: 0.489689 current epoch:0.489593
+Decaying lr, based on schedule 3
+Learning rate epoch 14: 0.000002
+Epoch 15/30: Batch 3111/3111 (100.00%) (took 16:16) 
+Train loss: 0.490
+Epoch 15/30: Batch 792/792 (100.00%) (took 1:00) 
+Validation loss: 0.424
+Training loss: previous epoch: 0.489593 current epoch:0.489608
+Decaying lr, based on schedule 3
+Learning rate epoch 15: 0.000001
+Epoch 16/30: Batch 3111/3111 (100.00%) (took 16:14) 
+Train loss: 0.490
+Epoch 16/30: Batch 792/792 (100.00%) (took 1:00) 
+Validation loss: 0.411
+Training loss: previous epoch: 0.489608 current epoch:0.489548
+Decaying lr, based on schedule 3
+Learning rate epoch 16: 0.000000
+Epoch 17/30: Batch 3111/3111 (100.00%) (took 16:13) 
+Train loss: 0.490
+Epoch 17/30: Batch 792/792 (100.00%) (took 1:00) 
+Validation loss: 0.417
+Training loss: previous epoch: 0.489548 current epoch:0.489669
+Decaying lr, based on schedule 3
+Learning rate epoch 17: 0.000000
+Epoch 18/30: Batch 3111/3111 (100.00%) (took 16:06) 
+Train loss: 0.490
+Epoch 18/30: Batch 792/792 (100.00%) (took 1:00) 
+Validation loss: 0.425
+Training loss: previous epoch: 0.489669 current epoch:0.489569
+Decaying lr, based on schedule 3
+Learning rate epoch 18: 0.000000
+Epoch 19/30: Batch 3111/3111 (100.00%) (took 16:17) 
+Train loss: 0.490
+Epoch 19/30: Batch 792/792 (100.00%) (took 1:01) 
+Validation loss: 0.417
+Training loss: previous epoch: 0.489569 current epoch:0.489607
+Decaying lr, based on schedule 3
+Learning rate epoch 19: 0.000000
+Epoch 20/30: Batch 3111/3111 (100.00%) (took 16:24) 
+Train loss: 0.490
+Epoch 20/30: Batch 792/792 (100.00%) (took 1:02) 
+Validation loss: 0.418
+Training loss: previous epoch: 0.489607 current epoch:0.489547
+Decaying lr, based on schedule 3
+Learning rate epoch 20: 0.000000
+Epoch 21/30: Batch 3111/3111 (100.00%) (took 16:27) 
+Train loss: 0.490
+Epoch 21/30: Batch 792/792 (100.00%) (took 1:02) 
+Validation loss: 0.410
+Training loss: previous epoch: 0.489547 current epoch:0.489574
+Decaying lr, based on schedule 3
+Learning rate epoch 21: 0.000000
+Epoch 22/30: Batch 3111/3111 (100.00%) (took 16:24) 
+Train loss: 0.490
+Epoch 22/30: Batch 792/792 (100.00%) (took 1:02) 
+Validation loss: 0.420
+Training loss: previous epoch: 0.489574 current epoch:0.489560
+Decaying lr, based on schedule 3
+Learning rate epoch 22: 0.000000
+Epoch 23/30: Batch 3111/3111 (100.00%) (took 16:23) 
+Train loss: 0.490
+Epoch 23/30: Batch 792/792 (100.00%) (took 1:01) 
+Validation loss: 0.427
+Training loss: previous epoch: 0.489560 current epoch:0.489557
+Decaying lr, based on schedule 3
+Learning rate epoch 23: 0.000000
+Epoch 24/30: Batch 3111/3111 (100.00%) (took 16:23) 
+Train loss: 0.490
+Epoch 24/30: Batch 792/792 (100.00%) (took 1:01) 
+Validation loss: 0.408
+Training loss: previous epoch: 0.489557 current epoch:0.489579
+Decaying lr, based on schedule 3
+Learning rate epoch 24: 0.000000
+Epoch 25/30: Batch 3111/3111 (100.00%) (took 16:16) 
+Train loss: 0.490
+Epoch 25/30: Batch 792/792 (100.00%) (took 1:02) 
+Validation loss: 0.424
+Training loss: previous epoch: 0.489579 current epoch:0.489546
+Decaying lr, based on schedule 3
+Learning rate epoch 25: 0.000000
+Epoch 26/30: Batch 3111/3111 (100.00%) (took 16:21) 
+Train loss: 0.490
+Epoch 26/30: Batch 792/792 (100.00%) (took 1:01) 
+Validation loss: 0.424
+Training loss: previous epoch: 0.489546 current epoch:0.489505
+Decaying lr, based on schedule 3
+Learning rate epoch 26: 0.000000
+Epoch 27/30: Batch 3111/3111 (100.00%) (took 16:17) 
+Train loss: 0.490
+Epoch 27/30: Batch 792/792 (100.00%) (took 1:00) 
+Validation loss: 0.420
+Training loss: previous epoch: 0.489505 current epoch:0.489501
+Decaying lr, based on schedule 3
+Learning rate epoch 27: 0.000000
+Epoch 28/30: Batch 3111/3111 (100.00%) (took 16:14) 
+Train loss: 0.490
+Epoch 28/30: Batch 792/792 (100.00%) (took 1:00) 
+Validation loss: 0.418
+Training loss: previous epoch: 0.489501 current epoch:0.489522
+Decaying lr, based on schedule 3
+Learning rate epoch 28: 0.000000
+Epoch 29/30: Batch 3111/3111 (100.00%) (took 16:13) 
+Train loss: 0.490
+Epoch 29/30: Batch 792/792 (100.00%) (took 1:00) 
+Validation loss: 0.410
+Training loss: previous epoch: 0.489522 current epoch:0.489534
+Decaying lr, based on schedule 3
+Learning rate epoch 29: 0.000000
+Epoch 30/30: Batch 3111/3111 (100.00%) (took 16:13) 
+Train loss: 0.490
+Epoch 30/30: Batch 792/792 (100.00%) (took 1:00) 
+Validation loss: 0.436
+Training loss: previous epoch: 0.489534 current epoch:0.489537
+Decaying lr, based on schedule 3
+Saving final model
+
+====training ends====
+-bash-4.2$ nvidia-smi
+Wed Nov  8 10:49:48 2017       
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 375.51                 Driver Version: 375.51                    |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|===============================+======================+======================|
+|   0  TITAN X (Pascal)    Off  | 0000:02:00.0     Off |                  N/A |
+| 26%   46C    P0    59W / 250W |      0MiB / 12189MiB |      0%      Default |
++-------------------------------+----------------------+----------------------+
+|   1  GeForce GTX 1080    Off  | 0000:04:00.0     Off |                  N/A |
+| 27%   39C    P0    37W / 180W |      0MiB /  8114MiB |      0%      Default |
++-------------------------------+----------------------+----------------------+
+|   2  Tesla K40c          Off  | 0000:83:00.0     Off |                    0 |
+| 23%   37C    P0    71W / 235W |      0MiB / 11439MiB |     94%      Default |
++-------------------------------+----------------------+----------------------+
+                                                                               
++-----------------------------------------------------------------------------+
+| Processes:                                                       GPU Memory |
+|  GPU       PID  Type  Process name                               Usage      |
+|=============================================================================|
+|  No running processes found                                                 |
++-----------------------------------------------------------------------------+
+-bash-4.2$ nvidia-smi
+Thu Nov  9 10:01:02 2017       
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 375.51                 Driver Version: 375.51                    |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|===============================+======================+======================|
+|   0  TITAN X (Pascal)    Off  | 0000:02:00.0     Off |                  N/A |
+| 36%   63C    P2    81W / 250W |  11707MiB / 12189MiB |      0%      Default |
++-------------------------------+----------------------+----------------------+
+|   1  GeForce GTX 1080    Off  | 0000:04:00.0     Off |                  N/A |
+| 29%   43C    P0    40W / 180W |      0MiB /  8114MiB |      0%      Default |
++-------------------------------+----------------------+----------------------+
+|   2  Tesla K40c          Off  | 0000:83:00.0     Off |                    0 |
+| 23%   39C    P0    71W / 235W |      0MiB / 11439MiB |     88%      Default |
++-------------------------------+----------------------+----------------------+
+                                                                               
++-----------------------------------------------------------------------------+
 
