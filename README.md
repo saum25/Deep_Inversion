@@ -1,10 +1,10 @@
-title: AES Workshop on Intelligent Music Production
+title: C4DM at ISMIR 2017 Conference
 
 -------------------
 
-Author: Dave Moffat
+Author: Saumitra Mishra
 
-The 8th September 2015 sees the Audio Engineering Society UK Midlands Section presenting a workshop on Intelligent Music Production at Birmingham City University.
+The <b>[18th International Society for Music Information Retrieval (ISMIR 2017) Conference](https://ismir2017.smcnus.org)</b> took place from 23 - 27 October in Suzhou, China. ISMIR is a world-leading research conference that focuses on the processing, search, synthesis and modelling of musical data. In this highly-interdisciplinary annual conference researchers from academia and industry present their latest research, demos and ideas around the central theme of ‘music’.
 
 As ever, C4DM have a strong presence at this workshop, as two of the six presented talks are by current C4DM members. Ryan Stables, the event organiser, and others at the Digital Media Technology (DMT) Lab in Birmingham City University are currently collaborating with C4DM on the Semantic Audio Feature Extraction (SAFE) project. ,<b>[More information on this project can be found here](http://www.terasoft.com.tw/conf/ismir2014/LBD/LBD15.pdf)</b>
 
