@@ -1,8 +1,6 @@
-title: C4DM at ISMIR 2017 Conference
+title: C4DM at the ISMIR 2017 Conference
 
 -------------------
-
-Author: Saumitra Mishra
 
 The <b>[18th International Society for Music Information Retrieval (ISMIR 2017) Conference](https://ismir2017.smcnus.org)</b> took place from 23 - 27 October in Suzhou, China. ISMIR is a world-leading research conference that focuses on the processing, search, synthesis and modelling of musical data. In this highly-interdisciplinary annual conference researchers from academia and industry present their latest research, demos and ideas around the central theme of ‘music’.
 
@@ -35,5 +33,7 @@ A <b>Late-breaking/demo session</b> was scheduled on the last day of the confere
 In ISMIR 2017, the award for the <b>“Best Paper”</b> was presented to the research work lead by C4DM researchers. The work by Keunwoo Choi et.al. titled “Transfer Learning for Music Classification and Regression Tasks” employed the technique of transfer learning to use a neural network trained for music-auto tagging for other MIR tasks.
 
 On the organisational side, two members of C4DM were part of the organising committee. Professor Simon Dixon, deputy director of C4DM, was on the advisory board and Jiajie Dai, a third-year PhD student at C4DM, was local-organising co-chair.
+
+<i>(Author: Saumitra Mishra - 14 November 2017)</i>
 
 
