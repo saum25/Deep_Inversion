@@ -24,3 +24,16 @@ During the week C4DM researchers presented (oral or poster) the following <b>ful
 * [Confidence Measures and Their Applications in Music Labelling Systems Based on Hidden Markov Models](https://ismir2017.smcnus.org/wp-content/uploads/2017/10/195_Paper.pdf) (Johan Pauwels, Ken O’Hanlon, György Fazekas, Mark B. Sandler)
 * [Automatic Interpretation of Music Structure Analyses: A Validated Technique for Post-Hoc Estimation of the Rationale for an Annotation](https://ismir2017.smcnus.org/wp-content/uploads/2017/10/130_Paper.pdf) (Jordan B. L. Smith, Elaine Chew)
 
+A <b>Late-breaking/demo session</b> was scheduled on the last day of the conference. This session encourages researchers to present their work in progress, in the form of an extended abstract. C4DM had the following works accepted for the session:
+
+* [Towards the Detection of Piano Pedalling Techniques from Audio Signal](https://ismir2017.smcnus.org/lbds/Liang2017.pdf) (Beici Liang, György Fazekas and Mark Sandler)
+* [Dynamic Change Points in Music Audio Capture Dynamic Markings in Score](https://ismir2017.smcnus.org/lbds/Kosta2017.pdf) (Katerina Kosta, Rebecca Killick, Oscar F. Bandtlow and Elaine Chew)
+* [Tipping Points, Pulse Elasticity and Tonal Tension: An Empirical Study on What Generates Tipping Points](https://ismir2017.smcnus.org/lbds/Naik2017.pdf) (Canishk Naik and Elaine Chew)
+* [Multi-Scale Analysis of Agreement Levels in Perceived Emotion Ratings During Live Performance](https://ismir2017.smcnus.org/lbds/Yang2017.pdf) (Simin Yang, Mathieu Barthet and Elaine Chew)
+* [Guitar-Set Preview: A Dataset For Guitar Transcription And More](https://ismir2017.smcnus.org/lbds/Xi2017.pdf) (Qingyang Xi, Rachel M. Bittner, Johan Pauwels, Sebastian Ewert and Juan P. Bello)
+
+In ISMIR 2017, the award for the <b>“Best Paper”</b> was presented to the research work lead by C4DM researchers. The work by Keunwoo Choi et.al. titled “Transfer Learning for Music Classification and Regression Tasks” employed the technique of transfer learning to use a neural network trained for music-auto tagging for other MIR tasks.
+
+On the organisational side, two members of C4DM were part of the organising committee. Professor Simon Dixon, deputy director of C4DM, was on the advisory board and Jiajie Dai, a third-year PhD student at C4DM, was local-organising co-chair.
+
+
