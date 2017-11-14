@@ -32,7 +32,7 @@ A <b>[Late-breaking/demo session](https://ismir2017.smcnus.org/accepted-lbds/)</
 
 In ISMIR 2017, the award for the <b>[“Best Paper”](https://ismir2017.smcnus.org/awards/)</b> was presented to the research work lead by C4DM researchers. The work by Keunwoo Choi et.al. titled “Transfer Learning for Music Classification and Regression Tasks” employed the technique of transfer learning to use a neural network trained for music-auto tagging for other MIR tasks.
 
-On the organisational side, two members of C4DM were part of the organising committee. Professor Simon Dixon, deputy director of C4DM, was on the advisory board and Jiajie Dai, a third-year PhD student at C4DM, was local-organising co-chair.
+On the organisational side, two members of C4DM were part of the <b>organising committee</b>. Professor Simon Dixon, deputy director of C4DM, was on the advisory board and Jiajie Dai, a third-year PhD student at C4DM, was local-organising co-chair.
 
 <i>(Author: Saumitra Mishra - 14 November 2017)</i>
 
