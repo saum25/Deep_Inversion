@@ -15,4 +15,5 @@ On day two of the conference Prof. Elaine Chew, professor of Digital Media at QM
 During the week C4DM researchers presented (oral or poster) the following <b>full length papers</b>:
 
 * [Transfer Learning for Music Classification and Regression Tasks](https://ismir2017.smcnus.org/wp-content/uploads/2017/10/12_Paper.pdf) (Keunwoo Choi, György Fazekas, Mark Sandler, Kyunghyun Cho)
+* [Analysis of Interactive Intonation in Unaccompanied SATB Ensembles](https://ismir2017.smcnus.org/wp-content/uploads/2017/10/24_Paper.pdf) (Jiajie Dai, Simon Dixon)
 
