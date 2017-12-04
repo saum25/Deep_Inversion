@@ -10,6 +10,7 @@ Author: Jan Schlüter
 import sys
 import os
 import subprocess
+import librosa
 
 import numpy as np
 try:
@@ -63,6 +64,51 @@ def spectrogram(samples, sample_rate, frame_len, fps, batch=50):
         spect = np.vstack(spect)
     return spect
 
+def spectrogram_generator(samples, sample_rate, frame_len, fps, batch=50):
+    """
+    Computes a magnitude spectrogram for a given vector of samples at a given
+    sample rate (in Hz), frame length (in samples) and frame rate (in Hz).
+    Allows to transform multiple frames at once for improved performance (with
+    a default value of 50, more is not always better). Returns a numpy array.
+    """
+    if len(samples) < frame_len:
+        return np.empty((0, frame_len // 2 + 1), dtype=samples.dtype)
+    win = np.hanning(frame_len)
+    hopsize = sample_rate // fps
+    num_frames = max(0, (len(samples) - frame_len) // hopsize + 1)
+    batch = min(batch, num_frames)
+    if batch <= 1 or not samples.flags.c_contiguous:
+        rfft = rfft_builder(samples[:frame_len], n=frame_len)
+        spect = np.vstack((rfft(samples[pos:pos + frame_len] * win))
+                          for pos in range(0, len(samples) - frame_len + 1,
+                                           int(hopsize)))
+    else:
+        rfft = rfft_builder(np.empty((batch, frame_len), samples.dtype),
+                            n=frame_len, threads=1)
+        frames = np.lib.stride_tricks.as_strided(
+                samples, shape=(num_frames, frame_len),
+                strides=(samples.strides[0] * hopsize, samples.strides[0]))
+        spect = [(rfft(frames[pos:pos + batch] * win))
+                 for pos in range(0, num_frames - batch + 1, batch)]
+        if num_frames % batch:
+            spect.extend(spectrogram(
+                    samples[(num_frames // batch * batch) * hopsize:],
+                    sample_rate, frame_len, fps, batch=1))
+        spect = np.vstack(spect)    # final place where the code comes before return statement.
+        
+        # extract magnitude and phase from the input audio.
+        # returns magnitude and phase arrays in polar form. so, spect = magnitudes * phases. to find phase just use np.exp(np.angle(D) * j * 1)
+        magnitudes, phases = librosa.core.magphase(spect.T)
+        # phases.shape: (d, t)
+        # done this as due to the previous code datatype mismatch happens while returning from function call.
+        #np.savez(os.path.join(dump_path, 'amp'), **{'amp': magnitudes.T})
+        #np.savez(os.path.join(dump_path, 'phases'), **{'phases': phases.T})       
+        mag = magnitudes.T
+        phase = phases.T
+            
+    # comes here two times.   
+    return (mag, phase)
+
 
 def extract_spect(filename, sample_rate=22050, frame_len=1024, fps=70):
     """
@@ -74,7 +120,7 @@ def extract_spect(filename, sample_rate=22050, frame_len=1024, fps=70):
         samples = read_ffmpeg(filename, sample_rate)
     except Exception:
         samples = read_ffmpeg(filename, sample_rate, cmd='avconv')
-    return spectrogram(samples, sample_rate, frame_len, fps)
+    return spectrogram_generator(samples, sample_rate, frame_len, fps)
 
 
 def create_mel_filterbank(sample_rate, frame_len, num_bands, min_freq,

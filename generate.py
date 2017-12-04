@@ -28,6 +28,8 @@ import model
 import upconv
 import matplotlib.pyplot as plt
 import librosa.display as disp
+import numpy.linalg as linalg
+import librosa
 
 def dist_euclidean(x, y):
     '''t1 = (x - y)
@@ -35,6 +37,15 @@ def dist_euclidean(x, y):
     t3 = np.sum(t2)
     t4 = np.sqrt(t3)'''
     return np.sqrt(np.sum((x-y)**2))
+
+def dist_euclidean_matrix(x, y):
+    return ((x-y)**2)
+
+def normalise(x):
+    """
+    Normalise a vector/ matrix, in range 0 - 1
+    """
+    return((x-x.min())/(x.max()-x.min()))
 
 
 def argument_parser():
@@ -49,6 +60,42 @@ def argument_parser():
     parser.add_argument('--n_conv_filters', default=32, type=int, help='number of filters per conv layer in the upconvolutonal architecture for Conv layer inversion')
 
     return parser
+
+def preprocess_recon(masked_mel, filtbank_pinv, spect_mag, istd, mean):
+    """
+    converts the Mel-spectrogram magnitude matrix to spectrogram matrix
+    """
+    masked_spect = np.dot(np.exp((masked_mel/istd)+mean), filtbank_pinv) # blocklen * bin_mel_max(372 in this case)
+    masked_spect = np.concatenate((masked_spect, spect_mag), axis =1)
+    return masked_spect    
+
+def recon_audio(spect_mag, spect_phase, pathname, filetag, n_fft, hop_len, sampling_rate):
+    """
+    takes in magnitude and phase components, and recreates the temporal signal
+    """
+    # complex valued array
+    spect_recon = spect_mag * spect_phase
+    
+    # inverting    
+    win_len = n_fft
+    ifft_window = np.hanning(win_len)
+    
+    n_frames = spect_recon.T.shape[1]
+    expected_signal_len = n_fft + hop_len * (n_frames - 1)   # How? but important
+    audio_recon = np.zeros(expected_signal_len)
+        
+    for i in range(n_frames):
+        sample = i * hop_len
+        spec = spect_recon.T[:, i].flatten()
+        spec = np.concatenate((spec.conj(), spec[-2:0:-1]), 0)  # not clear? but expands the 513 input to 1024 as DFT is symmetric
+        ytmp = ifft_window * np.fft.irfft(spec, n = n_fft)
+
+        audio_recon[sample:(sample + n_fft)] = audio_recon[sample:(sample + n_fft)] + ytmp
+    
+    # not sure why the librosa recon is not working. Should work??
+    #audio_recon = librosa.core.istft( spect_recon.T, hop_length = 315, win_length = 1024, center = False, window = np.hanning)
+    librosa.output.write_wav(os.path.join(pathname, filetag +'recon_excerpt.wav'), audio_recon, sampling_rate, norm = True)
+
 
 
 def main():
@@ -78,37 +125,28 @@ def main():
     # compute spectra
     print("Computing%s spectra..." %
           (" or loading" if args.cache_spectra else ""))
-    spects = []
+    
+    spects = [] # list of tuple, where each tuple has magnitude and phase information for one audio file
     for fn in progress(filelist, 'File '):
         cache_fn = (args.cache_spectra and os.path.join(args.cache_spectra, fn + '.npy'))
         spects.append(cached(cache_fn, audio.extract_spect, os.path.join(datadir, 'audio', fn),sample_rate, frame_len, fps))
     
-    '''# load and convert corresponding labels
-    print("Loading labels...")
-
-    labels = []
-    for fn, spect in zip(filelist, spects):
-        fn = os.path.join(datadir, 'labels', fn.rsplit('.', 1)[0] + '.lab')
-        with io.open(fn) as f:
-            segments = [l.rstrip().split() for l in f if l.rstrip()]
-        segments = [(float(start), float(end), label == 'sing')
-                    for start, end, label in segments]
-        timestamps = np.arange(len(spect)) / float(fps)
-        labels.append(create_aligned_targets(segments, timestamps, np.bool))'''
+    spects_mag = [ spect[0] for spect in spects]    # magnitude per audio file
+    spects_phase = [ spect[1] for spect in spects]  # phase per audio file
+    
         
     # prepare mel filterbank
     filterbank = audio.create_mel_filterbank(sample_rate, frame_len, mel_bands,
                                              mel_min, mel_max)
-    filterbank = filterbank[:bin_mel_max].astype(floatX)    
+    filterbank = filterbank[:bin_mel_max].astype(floatX)
+    
+    # pseudo-inverse: used for inverting Mel=spectrogram back to audio.
+    filterbank_pinv = linalg.pinv(filterbank)
     
     # precompute mel spectra, if needed, otherwise just define a generator
-    mel_spects = (np.log(np.maximum(np.dot(spect[:, :bin_mel_max], filterbank),1e-7)) for spect in spects) # it is not clear why is Jan using natural log in place of log 10.
-    
-    '''if not args.augment:
-        mel_spects = list(mel_spects)
-        del spects'''
-        
-    # - load mean/std or compute it, if not computed yet
+    mel_spects = (np.log(np.maximum(np.dot(spect[:, :bin_mel_max], filterbank),1e-7)) for spect in spects_mag) # it is not clear why is Jan using natural log in place of log 10.
+            
+    # load mean/std or compute it, if not computed yet
     meanstd_file = os.path.join(os.path.dirname(__file__), '%s_meanstd.npz' % args.dataset)
     with np.load(meanstd_file) as f:
             mean = f['mean']
@@ -116,77 +154,14 @@ def main():
     mean = mean.astype(floatX)
     istd = np.reciprocal(std).astype(floatX)
     
-    # - prepare training data generator
+    # prepare training data generator
     print("Preparing training data feed...")
-    #if not args.augment:
-        # Without augmentation, we just precompute the normalized mel spectra
-        # and create a generator that returns mini-batches of random excerpts
+    # Without augmentation, we just precompute the normalized mel spectra
+    # and create a generator that returns mini-batches of random excerpts
     mel_spects = [(spect - mean) * istd for spect in mel_spects]
 
-    '''else:
-        # For time stretching and pitch shifting, it pays off to preapply the
-        # spline filter to each input spectrogram, so it does not need to be
-        # applied to each mini-batch later.
-        spline_order = 2
-        if spline_order > 1:
-            from scipy.ndimage import spline_filter
-            spects = [spline_filter(spect, spline_order).astype(floatX) for spect in spects]
-        
-        # We define a function to create the mini-batch generator. This allows
-        # us to easily create multiple generators for multithreading if needed.
-        def create_datafeed(spects, labels):
-            # With augmentation, as we want to apply random time-stretching,
-            # we request longer excerpts than we finally need to return.
-            max_stretch = .3
-            batches = augment.grab_random_excerpts(
-                    spects, labels, batchsize=batchsize,
-                    frames=int(blocklen / (1 - max_stretch)))
-
-            # We wrap the generator in another one that applies random time
-            # stretching and pitch shifting, keeping a given number of frames
-            # and bins only.
-            max_shift = .3
-
-            batches = augment.apply_random_stretch_shift(
-                                                         batches, max_stretch, max_shift,
-                                                         keep_frames=blocklen, keep_bins= bin_mel_max,
-                                                         order=spline_order, prefiltered=True)
-
-            # We transform the excerpts to mel frequency and log magnitude.
-            batches = augment.apply_filterbank(batches, filterbank)
-            batches = augment.apply_logarithm(batches)
-            # We apply random frequency filters
-            batches = augment.apply_random_filters(batches, filterbank,
-                                               mel_max, max_db=10)
-
-                
-            # We apply normalization
-            batches = augment.apply_znorm(batches, mean, istd)
-
-            return batches
-        
-        # We start the mini-batch generator and augmenter in one or more
-        # background threads or processes (unless disabled).
-        bg_threads = 3
-        bg_processes = 0
-        if not bg_threads and not bg_processes:
-            # no background processing: just create a single generator
-            batches = create_datafeed(spects, labels)
-        elif bg_threads:
-            # multithreading: create a separate generator per thread
-            batches = augment.generate_in_background(
-                    [create_datafeed(spects, labels)
-                     for _ in range(bg_threads)],
-                    num_cached=bg_threads * 5)
-        elif bg_processes:
-            # multiprocessing: single generator is forked along with processes
-            batches = augment.generate_in_background(
-                    [create_datafeed(spects, labels)] * bg_processes,
-                    num_cached=bg_processes * 25,
-                    in_processes=True)'''
-    
     print("Preparing training functions...")
-    # we create two functions by using two network architectures. One uses the pre-trained network
+    # we create two functions by using two network architectures. One uses the pre-trained discriminator network
     # the other trains an upconvolutional network.
     
     # Prediction Network - Network 1
@@ -200,57 +175,53 @@ def main():
     with np.load(args.modelfile) as f:
         lasagne.layers.set_all_param_values(
                 network['fc9'], [f['param%d' % i] for i in range(len(f.files))])
-
+        
     # create output expression
-    outputs_score = lasagne.layers.get_output(network['conv1'], deterministic=True)
+    outputs_score = lasagne.layers.get_output(network['fc8'], deterministic=True)
+    outputs_pred = lasagne.layers.get_output(network['fc9'], deterministic=True)
 
     # prepare and compile prediction function
     print("Compiling prediction function...")
-    pred_fn = theano.function([input_var], outputs_score)
+    pred_fn_score = theano.function([input_var], outputs_score)
+    pred_fn = theano.function([input_var], outputs_pred)
     
-    # training the Upconvolutional network - Network 2
-    
-    #input_var_deconv = T.matrix('input_var_deconv')
-    input_var_deconv = T.tensor4('input_var_deconv')
-    #inputs_deconv = input_var_deconv.dimshuffle(0, 1, 'x', 'x') # 32x 1 x 1 x 1. Adding the width and depth dimensions
-    #gen_network = upconv.architecture_upconv_fc8(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['fc8'])[1]))
-    gen_network = upconv.architecture_upconv_c1(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['conv1'])[1], lasagne.layers.get_output_shape(network['conv1'])[2], lasagne.layers.get_output_shape(network['conv1'])[3]), args.n_conv_layers, args.n_conv_filters)
+    # training the Upconvolutional network - Network 2    
+    input_var_deconv = T.matrix('input_var_deconv')
+    #input_var_deconv = T.tensor4('input_var_deconv')
+    gen_network = upconv.architecture_upconv_fc8(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['fc8'])[1]))
+    #gen_network = upconv.architecture_upconv_c1(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['conv1'])[1], lasagne.layers.get_output_shape(network['conv1'])[2], lasagne.layers.get_output_shape(network['conv1'])[3]), args.n_conv_layers, args.n_conv_filters)
     
     # load saved weights
     with np.load(args.generatorfile) as f:
         lasagne.layers.set_all_param_values(
                 gen_network, [f['param%d' % i] for i in range(len(f.files))])
-
     
     # create cost expression
     outputs = lasagne.layers.get_output(gen_network, deterministic=True)
     print("Compiling training function...")
-    test_fn = theano.function([input_var_deconv], outputs)
-        
+    test_fn = theano.function([input_var_deconv], outputs)        
     
     # run prediction loop
     print("Predicting:")
     # we select n_excerpts per input audio file sequentially after randomly shuffling the indices of excerpts
     n_excerpts = 32
     # array of n_excerpts randomly chosen excerpts
-    sampled_excerpts = np.zeros((len(filelist) * n_excerpts, blocklen, spect.shape[1]))
-    # list of n_excerpts (randomly chosen) per file 
-    #input_melspects = []
-    counter = 0
-    
-    # we calculate the reconstruction error for five random draws and the final value is average of it.
-    iterations = 10
+    sampled_excerpts = np.zeros((len(filelist) * n_excerpts, blocklen, mel_bands))
+      
+    # we calculate the reconstruction error for 'iterations' random draws and the final value is average of it.
+    iterations = 1
     n_count = 0
     avg_error_n = 0
+    counter = 0
 
     while (iterations):
         counter = 0
         print("========")
         print("Interation number:%d"%(n_count+1))
         for spect in progress(mel_spects, total=len(filelist), desc='File '):
-            # Step 1: From each mel spectrogram we create excerpts of length 115 frames
+            # Step 1: From each mel spectrogram we create excerpts of length blocklen frames
             num_excerpts = len(spect) - blocklen + 1
-            # excerpts is a numpy array of shape num_excerpts x blocklen x spect.shape[1]
+            # excerpts is a numpy array of shape num_excerpts x blocklen x spect.shape[1]: not sure what spect.strides capture??
             excerpts = np.lib.stride_tricks.as_strided(spect, shape=(num_excerpts, blocklen, spect.shape[1]), strides=(spect.strides[0], spect.strides[0], spect.strides[1]))
     
             # Step 2: Select n_excerpts randomly from all the excerpts
@@ -261,7 +232,10 @@ def main():
             #input_melspects.append(sampled_excerpts)
             counter +=1
             
-        # evaluating the normalising constant (N), which is given by the average pairwise euclidean distance between the randomly chosen samples in the test/validation set
+        #print('Shape of the randomly sampled 3-d excerpt array')
+        #print(sampled_excerpts.shape)    
+        
+        # evaluating the normalising constant (N), which is given by the average pairwise euclidean distance between the randomly chosen samples in the test set
         dist_matrix = np.zeros((len(filelist) * n_excerpts, len(filelist) * n_excerpts))
         
         for i in range(len(sampled_excerpts)):
@@ -279,14 +253,12 @@ def main():
         
         # generating spectrums from feature representations
         
-        # Step 1: first generate a feature representation from input, i.e. randomly selected spectrogram
+        # Step 1: first generate a feature representation for the input, i.e. randomly selected spectrogram using the pre-trained network
         # each iteration returns a matrix of shape: 32 x 64
-        # preds shape: len(filelist) x n_excerpts, where each row correspond to features per spectrogram randomly sampled
+        # in preds each element is a matrix of shape batch_size x 64, where each row correspond to features per spectrogram randomly sampled
         preds = []
         for pos in range(0, len(filelist) * n_excerpts, batchsize):
-            preds.append((pred_fn(sampled_excerpts[pos:pos + batchsize])))
-        #preds = np.vstack(preds)
-        #print(preds)
+            preds.append((pred_fn_score(sampled_excerpts[pos:pos + batchsize])))
     
         # Step 2 : passing all features per file to generate spectrogram
         # Theano function returns a 4d array, mini_batch_size x 1 x blocklen x mel_dimensions
@@ -294,7 +266,6 @@ def main():
         mel_predictions = []
         for pos in range(len(preds)):
             mel_predictions.append(np.squeeze((test_fn(preds[pos])), axis = 1))
-        #print(mel_predictions[0].shape)
         mel_predictions_array = np.concatenate(mel_predictions, axis=0)
         #print(mel_predictions_array.shape)
         
@@ -314,50 +285,202 @@ def main():
     print('======')    
     print("Average normalised reconstruction error:%f after %d iteration" %(avg_error_n/n_count, n_count))
     
-    # plotting a fixed selected input excerpt and its reconstruction after inversion from the uponv network
-    print("Plotting the excerpt's reconstruction")
-    num_excerpts = len(mel_spects[0]) - blocklen + 1
-    # excerpts is a numpy array of shape num_excerpts x blocklen x spect.shape[1]
-    excerpts = np.lib.stride_tricks.as_strided(mel_spects[0], shape=(num_excerpts, blocklen, mel_spects[0].shape[1]), strides=(mel_spects[0].strides[0], mel_spects[0].strides[0], mel_spects[0].strides[1]))
+    #------------------------------------------------------------------------# 
+    # code for instance-based feature inversion and analysis
+    # (1) Pick a file from dataset (dataset: Jamendo test) (2) Select an time index to read from
     
-    preds = []
-    pos = 100
-    preds.append((pred_fn(excerpts[pos:pos + batchsize])))
+    print('\r ===Instance based analysis==== \r')
     
-    mel_predictions = []
-    mel_predictions.append(np.squeeze((test_fn(preds[0])), axis = 1))
-    #print(mel_predictions[0].shape)
-
-    excerpt_index = pos
-    '''fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
-    ax1.imshow(sampled_excerpts[excerpt_index].T, vmin=-3, cmap='jet', aspect='auto',
-               interpolation='nearest')
-    ax1.set_title('Input Mel-spectrogram')
-    print(sampled_excerpts[excerpt_index])
-    print(mel_predictions_array[excerpt_index])
-    ax2.imshow(mel_predictions_array[excerpt_index].T, vmin=-3, cmap='jet', aspect='auto',
-               interpolation='nearest')
-    ax2.set_title('Re-generated Mel-spectrogram')
-    plt.xlabel('Time')
-    plt.ylabel('Frequency')
-    fig.suptitle('Plots for excerpt index: %d' %(excerpt_index), fontsize=16)'''
+    file_idx = np.arange(0, 16)
+    time_idx = 20# secs # tells given the offset, what frame_idx should it match? 
+    hop_size= sample_rate/fps # samples
+    dump_path = './audio'   # path to save reconstructed audio
+    pred_before = []
+    pred_after = []
+    for file_instance in file_idx:
+        print("Analysis for file idx: %d" %file_instance)
+        time_idx = 20
+        while(time_idx< 50):
+            # convert time_idx to excerpt index for reconstruction
+            excerpt_idx = int(np.round((time_idx * sample_rate)/(hop_size)))
+            print("excerpt_idx: %d, time_idx: %f secs" %(excerpt_idx, time_idx))
+            
+            # reconstructing the selected spectrogram segment, that starts at time_idx and is of length blocklen
+            # done to make sure the reconstruction works fine, and the time and frame indices are mapped correctly.
+            sub_matrix_mag = spects_mag[file_instance][excerpt_idx:excerpt_idx+blocklen]
+            sub_matrix_phase = spects_phase[file_instance][excerpt_idx:excerpt_idx+blocklen]
+            recon_audio(sub_matrix_mag, sub_matrix_phase, dump_path,'spect_', frame_len, sample_rate/fps, sample_rate)  
+            
+            # re-generating all the excerpts for the selected file_idx
+            # excerpts is a 3-d array of shape: num_excerpts x blocklen x mel_spects_dimensions   
+            print("Plotting the excerpt's reconstruction")
+            num_excerpts = len(mel_spects[file_instance]) - blocklen + 1
+            print(num_excerpts)
+            excerpts = np.lib.stride_tricks.as_strided(mel_spects[file_instance], shape=(num_excerpts, blocklen, mel_spects[file_instance].shape[1]), strides=(mel_spects[file_instance].strides[0], mel_spects[file_instance].strides[0], mel_spects[file_instance].strides[1]))
+            
+            # generating feature representations for the chosen excerpt.
+            # CAUTION: Need to feed mini-batch to pre-trained model, so (mini_batch-1) following excerpts are also fed.
+            scores = pred_fn_score(excerpts[excerpt_idx:excerpt_idx + batchsize])
+            print("Feature representation")
+            #print(scores[file_idx])
+            predictions = pred_fn(excerpts[excerpt_idx:excerpt_idx + batchsize])
+            print("Predictions score for the excerpt is:%f %f %f" %(predictions[0], predictions[1], predictions[2]))
+            pred_before.append(predictions[0][0])
+            
+            # binarisation
+            '''n_nz = np.count_nonzero(scores[0])
+            norm_pred = linalg.norm(scores[0])
+            replace = norm_pred/(np.sqrt(n_nz))
+            print("Non zero values: %d, L2-Norm:%f replacement: %f" %(n_nz, norm_pred, replace))
+            binarised_scores = np.empty(len(scores[0]))
+            for i in range(len(scores[0])):    # write efficient code TBC
+                if scores[0][i]>0:
+                    binarised_scores[i] = replace
+                elif scores[0][i]<0:
+                    binarised_scores[i] = -replace
+                else:
+                    pass
+            print("Binarized feature representation")
+            scores[0]=binarised_scores
+            print(scores[0])'''
+                    
+            mel_predictions = np.squeeze(test_fn(scores), axis = 1) # mel_predictions is a 3-d array of shape batch_size x blocklen x n_mels
+            
+            print("Error in generating the instance: %f" %(dist_euclidean(excerpts[excerpt_idx], mel_predictions[0])))
+                
+            # Input (Unnormalised Mel spectrogram)
+            '''plt.figure(1)
+            plt.subplot(2, 3, 1)
+            disp.specshow(excerpts[excerpt_idx].T, y_axis='mel', hop_length= 315, x_axis='time', fmin=27.5, fmax=8000, cmap = 'coolwarm')
+            plt.title('Input Mel-spectrogram')
+            plt.xlabel('Time')
+            plt.ylabel('Hz')
+            plt.colorbar()
+            
+            # Input, normalised and thresholded mel-spectrogram (top25%)
+            plt.subplot(2, 3, 2)
+            disp.specshow(((normalise(excerpts[excerpt_idx]))>0.75).T, y_axis='mel', hop_length= 315, x_axis='time', fmin=27.5, fmax=8000, cmap = 'gray_r')
+            plt.title('Input Mel-spectrogram (N_T_top25%)')
+            plt.xlabel('Time')
+            plt.ylabel('Hz')
+            plt.colorbar()
+            
+            # Input, normalised and thresholded mel-spectrogram (top35%)
+            plt.subplot(2, 3, 3)
+            disp.specshow(((normalise(excerpts[excerpt_idx]))>0.65).T, y_axis='mel', hop_length= 315, x_axis='time', fmin=27.5, fmax=8000, cmap = 'gray_r')
+            plt.title('Input Mel-spectrogram (N_T_top35%)')
+            plt.xlabel('Time')
+            plt.ylabel('Hz')
+            plt.colorbar()
+            
+            # Inverted feature representation
+            plt.subplot(2, 3, 4)
+            plt.title('Inversion from FC8')
+            disp.specshow(mel_predictions[0].T, y_axis='mel', hop_length= 315, x_axis='time', fmin=27.5, fmax=8000, cmap='coolwarm')
+            plt.xlabel('Time')
+            plt.ylabel('Hz')
+            plt.colorbar()
+            
+            # Normalised and thresholded inverted feature representation (top 25%)
+            plt.subplot(2, 3, 5)
+            plt.title('Inversion from FC8((N_T_top25%))')
+            disp.specshow(((normalise(mel_predictions[0]))>0.75).T, y_axis='mel', hop_length= 315, x_axis='time', fmin=27.5, fmax=8000, cmap='gray_r')
+            plt.xlabel('Time')
+            plt.ylabel('Hz')
+            plt.colorbar()
     
-    print("Error in generating the displayed instance: %f" %(dist_euclidean(excerpts[excerpt_index], mel_predictions[0][0])))
+            # Input, normalised and thresholded mel-spectrogram (top 35%)        
+            plt.subplot(2, 3, 6)
+            plt.title('Inversion from FC8((N_T_top35%))')
+            disp.specshow(((normalise(mel_predictions[0]))>0.65).T, y_axis='mel', hop_length= 315, x_axis='time', fmin=27.5, fmax=8000, cmap='gray_r')
+            plt.xlabel('Time')
+            plt.ylabel('Hz')
+            plt.colorbar()
+            plt.suptitle('Plots for excerpt index: %d' %(excerpt_idx))'''
+          
+            # normalising the inverted mel, to create a map, and use the map to cut the section in the input mel
+            # thresholded at 75%
+            norm_inv = normalise(mel_predictions[0])
+            norm_inv[norm_inv<0.50] = 0 # Binary mask----- 
+            norm_inv[norm_inv>=0.50] = 1
+            # reversing the mask to keep the portions that seem not useful for the current instance prediction
+            '''for i in range(norm_inv.shape[0]):
+                for j in range(norm_inv.shape[1]):
+                    if norm_inv[i][j]==1e-7:
+                        norm_inv[i][j]=1
+                    else:
+                        norm_inv[i][j]=1e-7'''
     
-    plt.subplot(2, 1, 1)
-    disp.specshow(excerpts[excerpt_index].T, y_axis='mel', hop_length= 315, x_axis='time', fmin=27.5, fmax=8000)
-    plt.colorbar()
-    plt.subplot(2, 1, 2)
-    disp.specshow(mel_predictions[0][0].T, y_axis='mel', hop_length= 315, x_axis='time', fmin=27.5, fmax=8000)
-    plt.colorbar()
-    plt.suptitle('Plots for excerpt index: %d' %(excerpt_index), fontsize=16)
-    #print(sampled_excerpts[excerpt_index])
-    #print(mel_predictions_array[excerpt_index])   
+            '''plt.figure(2)
+            plt.subplot(3, 1, 1)
+            disp.specshow(excerpts[excerpt_idx].T, y_axis='mel', hop_length= 315, x_axis='time', fmin=27.5, fmax=8000, cmap = 'coolwarm')
+            plt.title('Input Mel-spectrogram')
+            plt.xlabel('Time')
+            plt.ylabel('Hz')
+            plt.colorbar()
+            
+            plt.subplot(3, 1, 2)
+            disp.specshow(norm_inv.T, y_axis='mel', hop_length= 315, x_axis='time', fmin=27.5, fmax=8000, cmap = 'gray_r')
+            plt.title('Mask based on normalised and thresholded inverted mel')
+            plt.colorbar()
+            #figure_name = args.generatorfile.rsplit('/', 2)
+            #plt.savefig(figure_name[0]+'/'+figure_name[1]+'/'+figure_name[1]+'_ii100.pdf', dpi = 300)'''
     
-    #plt.show()
-    figure_name = args.generatorfile.rsplit('/', 2)
-    plt.savefig(figure_name[0]+'/'+figure_name[1]+'/'+figure_name[1]+'_ii100.pdf', dpi = 300)
-
+            # masking out the input based on the mask created above
+            masked_input = np.zeros((batchsize, blocklen, mel_bands))
+            unnorm_excerpt = (excerpts[excerpt_idx]/istd) + mean    # removing mean scaling as we want to renormalise latter
+            masked_input[0] = norm_inv * unnorm_excerpt # only fill the instance thats being analysed
+            masked_input = (masked_input - mean)*istd
+    
+            '''plt.subplot(3, 1, 3)
+            disp.specshow((masked_input[0]).T, y_axis='mel', hop_length= 315, x_axis='time', fmin=27.5, fmax=8000, cmap = 'coolwarm')
+            plt.colorbar()
+            plt.title('Masked input Mel spectrogram')
+            plt.suptitle('Plots for excerpt index: %d' %(excerpt_idx))
+            plt.show()'''
+            
+            # reconstructing the input mel-spectrogram excerpt
+            masked_spect = preprocess_recon(excerpts[excerpt_idx], filterbank_pinv, spects_mag [file_instance] [excerpt_idx:excerpt_idx+blocklen, bin_mel_max:bin_nyquist], istd, mean)
+            recon_audio(masked_spect, spects_phase[file_instance][excerpt_idx:blocklen+excerpt_idx], dump_path,'mel_',frame_len, sample_rate/fps, sample_rate)
+            
+            # reconstructing masked out version of input mel spectrogram
+            masked_spect = preprocess_recon(masked_input[0], filterbank_pinv, spects_mag [file_instance] [excerpt_idx:excerpt_idx+blocklen, bin_mel_max:bin_nyquist], istd, mean)
+            recon_audio(masked_spect, spects_phase[file_instance][excerpt_idx:blocklen+excerpt_idx], dump_path,'mask_inv_',frame_len, sample_rate/fps, sample_rate)
+            
+            time_idx +=0.5
+            
+            # create input data after masking the previous input and feed it to the network.
+            # just changing the first input.
+            predictions = pred_fn(masked_input)
+            print("Predictions score for the excerpt is:%f %f %f" %(predictions[0], predictions[1], predictions[2]))
+            pred_after.append(predictions[0][0])
+            '''scores = pred_fn_score(masked_input)
+            mel_predictions = np.squeeze(test_fn(scores), axis = 1)
+            plt.figure(3)
+            disp.specshow(mel_predictions[0].T, cmap = 'coolwarm')
+            plt.colorbar()
+            plt.show()'''
+        '''plt.figure(3)
+        plt.plot(np.abs(np.asarray(pred_before)-np.asarray(pred_after)), 'b', marker= 'o', label='orig')
+        #plt.plot(pred_after, 'r', marker= 'o', label='masked')
+        plt.legend()
+        plt.ylim(0, 1)
+        plt.grid()
+        plt.show()'''
+    ground = (np.asarray(pred_before))>0.66         # threshold comes from Jan's code
+    ground_masked = (np.asarray(pred_after))>0.66
+    count_pass = 0
+    count_fail = 0
+    for i in range(len(ground)):
+        print(pred_before[i], pred_after[i])
+        print(ground[i], ground_masked[i])
+        if ground[i]==ground_masked[i]:
+            count_pass +=1
+        else:
+            count_fail +=1
+    print("Total instances:%d"%(count_pass+ count_fail))
+    print("Number of fails:%d" %(count_fail))
+    
 
 if __name__ == '__main__':
     main()
