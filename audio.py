@@ -46,7 +46,7 @@ def spectrogram(samples, sample_rate, frame_len, fps, batch=50):
     batch = min(batch, num_frames)
     if batch <= 1 or not samples.flags.c_contiguous:
         rfft = rfft_builder(samples[:frame_len], n=frame_len)
-        spect = np.vstack(np.abs(rfft(samples[pos:pos + frame_len] * win))
+        spect = np.vstack((rfft(samples[pos:pos + frame_len] * win))
                           for pos in range(0, len(samples) - frame_len + 1,
                                            int(hopsize)))
     else:
@@ -55,13 +55,14 @@ def spectrogram(samples, sample_rate, frame_len, fps, batch=50):
         frames = np.lib.stride_tricks.as_strided(
                 samples, shape=(num_frames, frame_len),
                 strides=(samples.strides[0] * hopsize, samples.strides[0]))
-        spect = [np.abs(rfft(frames[pos:pos + batch] * win))
+        spect = [(rfft(frames[pos:pos + batch] * win))
                  for pos in range(0, num_frames - batch + 1, batch)]
         if num_frames % batch:
             spect.extend(spectrogram(
                     samples[(num_frames // batch * batch) * hopsize:],
                     sample_rate, frame_len, fps, batch=1))
         spect = np.vstack(spect)
+        print(spect[0,: 10])
     return spect
 
 def spectrogram_generator(samples, sample_rate, frame_len, fps, batch=50):
@@ -105,6 +106,8 @@ def spectrogram_generator(samples, sample_rate, frame_len, fps, batch=50):
         #np.savez(os.path.join(dump_path, 'phases'), **{'phases': phases.T})       
         mag = magnitudes.T
         phase = phases.T
+        print(spect.shape)
+        print(spect[0,:10])
             
     # comes here two times.   
     return (mag, phase)
@@ -120,7 +123,12 @@ def extract_spect(filename, sample_rate=22050, frame_len=1024, fps=70):
         samples = read_ffmpeg(filename, sample_rate)
     except Exception:
         samples = read_ffmpeg(filename, sample_rate, cmd='avconv')
-    return spectrogram_generator(samples, sample_rate, frame_len, fps)
+    print(samples[:20])
+    spect = spectrogram(samples, sample_rate, frame_len, fps)
+    magnitudes, phases = librosa.core.magphase(spect.T)
+    mag = magnitudes.T
+    phase = phases.T
+    return (mag, phase)
 
 
 def create_mel_filterbank(sample_rate, frame_len, num_bands, min_freq,
