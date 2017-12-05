@@ -133,6 +133,7 @@ def main():
     
     spects_mag = [ spect[0] for spect in spects]    # magnitude per audio file
     spects_phase = [ spect[1] for spect in spects]  # phase per audio file
+    print(spects_mag[0][0])
     
         
     # prepare mel filterbank
@@ -159,6 +160,7 @@ def main():
     # Without augmentation, we just precompute the normalized mel spectra
     # and create a generator that returns mini-batches of random excerpts
     mel_spects = [(spect - mean) * istd for spect in mel_spects]
+    print(mel_spects[0].shape)
 
     print("Preparing training functions...")
     # we create two functions by using two network architectures. One uses the pre-trained discriminator network
@@ -182,8 +184,8 @@ def main():
 
     # prepare and compile prediction function
     print("Compiling prediction function...")
-    pred_fn_score = theano.function([input_var], outputs_score)
-    pred_fn = theano.function([input_var], outputs_pred)
+    pred_fn_score = theano.function([input_var], outputs_score, allow_input_downcast = True)
+    pred_fn = theano.function([input_var], outputs_pred, allow_input_downcast = True)
     
     # training the Upconvolutional network - Network 2    
     input_var_deconv = T.matrix('input_var_deconv')
@@ -199,7 +201,7 @@ def main():
     # create cost expression
     outputs = lasagne.layers.get_output(gen_network, deterministic=True)
     print("Compiling training function...")
-    test_fn = theano.function([input_var_deconv], outputs)        
+    test_fn = theano.function([input_var_deconv], outputs, allow_input_downcast=True)        
     
     # run prediction loop
     print("Predicting:")
@@ -209,10 +211,11 @@ def main():
     sampled_excerpts = np.zeros((len(filelist) * n_excerpts, blocklen, mel_bands))
       
     # we calculate the reconstruction error for 'iterations' random draws and the final value is average of it.
-    iterations = 1
+    iterations = 4
     n_count = 0
     avg_error_n = 0
     counter = 0
+    print(mel_spects[0][0])
 
     while (iterations):
         counter = 0
@@ -249,6 +252,7 @@ def main():
         # n*n - n is the number in the denominator
         d = len(sampled_excerpts)
         N = (np.sum(dist_matrix))/(d * (d-1))
+	print(np.sum(dist_matrix))
         print("Normalization constant: %f" %(N))
         
         # generating spectrums from feature representations
@@ -298,12 +302,12 @@ def main():
     pred_before = []
     pred_after = []
     for file_instance in file_idx:
-        print("Analysis for file idx: %d" %file_instance)
+        print("\r Analysis for file idx: %d" %file_instance)
         time_idx = 20
-        while(time_idx< 50):
+        while(time_idx<24):
             # convert time_idx to excerpt index for reconstruction
             excerpt_idx = int(np.round((time_idx * sample_rate)/(hop_size)))
-            print("excerpt_idx: %d, time_idx: %f secs" %(excerpt_idx, time_idx))
+            print("\r Excerpt_idx: %d, Time_idx: %f secs" %(excerpt_idx, time_idx))
             
             # reconstructing the selected spectrogram segment, that starts at time_idx and is of length blocklen
             # done to make sure the reconstruction works fine, and the time and frame indices are mapped correctly.
@@ -313,18 +317,18 @@ def main():
             
             # re-generating all the excerpts for the selected file_idx
             # excerpts is a 3-d array of shape: num_excerpts x blocklen x mel_spects_dimensions   
-            print("Plotting the excerpt's reconstruction")
+            # print("Plotting the excerpt's reconstruction")
             num_excerpts = len(mel_spects[file_instance]) - blocklen + 1
-            print(num_excerpts)
+            print("Number of excerpts in the file :%d" %num_excerpts)
             excerpts = np.lib.stride_tricks.as_strided(mel_spects[file_instance], shape=(num_excerpts, blocklen, mel_spects[file_instance].shape[1]), strides=(mel_spects[file_instance].strides[0], mel_spects[file_instance].strides[0], mel_spects[file_instance].strides[1]))
             
             # generating feature representations for the chosen excerpt.
             # CAUTION: Need to feed mini-batch to pre-trained model, so (mini_batch-1) following excerpts are also fed.
             scores = pred_fn_score(excerpts[excerpt_idx:excerpt_idx + batchsize])
-            print("Feature representation")
+            #print("Feature representation")
             #print(scores[file_idx])
             predictions = pred_fn(excerpts[excerpt_idx:excerpt_idx + batchsize])
-            print("Predictions score for the excerpt is:%f %f %f" %(predictions[0], predictions[1], predictions[2]))
+            print("Predictions score for the excerpt is:%f" %(predictions[0]))
             pred_before.append(predictions[0][0])
             
             # binarisation

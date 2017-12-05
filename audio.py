@@ -20,7 +20,7 @@ except ImportError:
         return np.fft.rfft
 
 
-def read_ffmpeg(infile, sample_rate, cmd='/usr/local/bin/ffmpeg'):
+def read_ffmpeg(infile, sample_rate, cmd='/homes/sm322/Software/ffmpeg/bin/ffmpeg'):
     """
     Decodes a given audio file using ffmpeg, resampled to a given sample rate,
     downmixed to mono, and converted to float32 samples. Returns a numpy array.
@@ -91,6 +91,7 @@ def spectrogram_generator(samples, sample_rate, frame_len, fps, batch=50):
                 strides=(samples.strides[0] * hopsize, samples.strides[0]))
         spect = [(rfft(frames[pos:pos + batch] * win))
                  for pos in range(0, num_frames - batch + 1, batch)]
+        print(win[:10])
         if num_frames % batch:
             spect.extend(spectrogram(
                     samples[(num_frames // batch * batch) * hopsize:],
@@ -129,7 +130,6 @@ def extract_spect(filename, sample_rate=22050, frame_len=1024, fps=70):
     mag = magnitudes.T
     phase = phases.T
     return (mag, phase)
-
 
 def create_mel_filterbank(sample_rate, frame_len, num_bands, min_freq,
                           max_freq):
