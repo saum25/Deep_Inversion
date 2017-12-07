@@ -250,6 +250,7 @@ def main():
         # n*n - n is the number in the denominator
         d = len(sampled_excerpts)
         N = (np.sum(dist_matrix))/(d * (d-1))
+        print(np.sum(dist_matrix))
         print("Normalization constant: %f" %(N))
         
         # generating spectrums from feature representations
@@ -299,12 +300,12 @@ def main():
     pred_before = []
     pred_after = []
     for file_instance in file_idx:
-        print("Analysis for file idx: %d" %file_instance)
+        print("\r Analysis for file idx: %d" %file_instance)
         time_idx = 20
         while(time_idx< 20.5):
             # convert time_idx to excerpt index for reconstruction
             excerpt_idx = int(np.round((time_idx * sample_rate)/(hop_size)))
-            print("excerpt_idx: %d, time_idx: %f secs" %(excerpt_idx, time_idx))
+            print("\r Excerpt_idx: %d, Time_idx: %f secs" %(excerpt_idx, time_idx))
             
             # reconstructing the selected spectrogram segment, that starts at time_idx and is of length blocklen
             # done to make sure the reconstruction works fine, and the time and frame indices are mapped correctly.
@@ -314,18 +315,18 @@ def main():
             
             # re-generating all the excerpts for the selected file_idx
             # excerpts is a 3-d array of shape: num_excerpts x blocklen x mel_spects_dimensions   
-            print("Plotting the excerpt's reconstruction")
+            # print("Plotting the excerpt's reconstruction")
             num_excerpts = len(mel_spects[file_instance]) - blocklen + 1
-            print(num_excerpts)
+            print("Number of excerpts in the file :%d" %num_excerpts)
             excerpts = np.lib.stride_tricks.as_strided(mel_spects[file_instance], shape=(num_excerpts, blocklen, mel_spects[file_instance].shape[1]), strides=(mel_spects[file_instance].strides[0], mel_spects[file_instance].strides[0], mel_spects[file_instance].strides[1]))
             
             # generating feature representations for the chosen excerpt.
             # CAUTION: Need to feed mini-batch to pre-trained model, so (mini_batch-1) following excerpts are also fed.
             scores = pred_fn_score(excerpts[excerpt_idx:excerpt_idx + batchsize])
-            print("Feature representation")
+            #print("Feature representation")
             #print(scores[file_idx])
             predictions = pred_fn(excerpts[excerpt_idx:excerpt_idx + batchsize])
-            print("Predictions score for the excerpt is:%f %f %f" %(predictions[0], predictions[1], predictions[2]))
+            print("Predictions score for the excerpt is:%f" %(predictions[0]))
             pred_before.append(predictions[0][0])
             
             # binarisation

@@ -62,7 +62,7 @@ def spectrogram(samples, sample_rate, frame_len, fps, batch=50):
                     samples[(num_frames // batch * batch) * hopsize:],
                     sample_rate, frame_len, fps, batch=1))
         spect = np.vstack(spect)
-        
+
     return spect
 
 def extract_spect(filename, sample_rate=22050, frame_len=1024, fps=70):
@@ -85,7 +85,6 @@ def extract_spect(filename, sample_rate=22050, frame_len=1024, fps=70):
     print(mag[0, :20])
     print(phase[0, :20])
     return (mag, phase)
-
 
 def create_mel_filterbank(sample_rate, frame_len, num_bands, min_freq,
                           max_freq):
