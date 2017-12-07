@@ -133,7 +133,6 @@ def main():
     
     spects_mag = [ spect[0] for spect in spects]    # magnitude per audio file
     spects_phase = [ spect[1] for spect in spects]  # phase per audio file
-    
         
     # prepare mel filterbank
     filterbank = audio.create_mel_filterbank(sample_rate, frame_len, mel_bands,
@@ -159,6 +158,7 @@ def main():
     # Without augmentation, we just precompute the normalized mel spectra
     # and create a generator that returns mini-batches of random excerpts
     mel_spects = [(spect - mean) * istd for spect in mel_spects]
+    print(mel_spects[0].shape)
 
     print("Preparing training functions...")
     # we create two functions by using two network architectures. One uses the pre-trained discriminator network
@@ -182,8 +182,8 @@ def main():
 
     # prepare and compile prediction function
     print("Compiling prediction function...")
-    pred_fn_score = theano.function([input_var], outputs_score)
-    pred_fn = theano.function([input_var], outputs_pred)
+    pred_fn_score = theano.function([input_var], outputs_score, allow_input_downcast= True)
+    pred_fn = theano.function([input_var], outputs_pred, allow_input_downcast= True)
     
     # training the Upconvolutional network - Network 2    
     input_var_deconv = T.matrix('input_var_deconv')
@@ -199,7 +199,7 @@ def main():
     # create cost expression
     outputs = lasagne.layers.get_output(gen_network, deterministic=True)
     print("Compiling training function...")
-    test_fn = theano.function([input_var_deconv], outputs)        
+    test_fn = theano.function([input_var_deconv], outputs, allow_input_downcast= True)        
     
     # run prediction loop
     print("Predicting:")
@@ -209,10 +209,11 @@ def main():
     sampled_excerpts = np.zeros((len(filelist) * n_excerpts, blocklen, mel_bands))
       
     # we calculate the reconstruction error for 'iterations' random draws and the final value is average of it.
-    iterations = 1
+    iterations = 4
     n_count = 0
     avg_error_n = 0
     counter = 0
+    print(mel_spects[0][0])
 
     while (iterations):
         counter = 0
@@ -291,7 +292,7 @@ def main():
     
     print('\r ===Instance based analysis==== \r')
     
-    file_idx = np.arange(0, 16)
+    file_idx = np.arange(0, 1)
     time_idx = 20# secs # tells given the offset, what frame_idx should it match? 
     hop_size= sample_rate/fps # samples
     dump_path = './audio'   # path to save reconstructed audio
@@ -300,7 +301,7 @@ def main():
     for file_instance in file_idx:
         print("Analysis for file idx: %d" %file_instance)
         time_idx = 20
-        while(time_idx< 50):
+        while(time_idx< 20.5):
             # convert time_idx to excerpt index for reconstruction
             excerpt_idx = int(np.round((time_idx * sample_rate)/(hop_size)))
             print("excerpt_idx: %d, time_idx: %f secs" %(excerpt_idx, time_idx))
