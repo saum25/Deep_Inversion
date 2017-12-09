@@ -12,8 +12,10 @@ def architecture_upconv_fc8(input_var, input_shape):
     net = {}
     
     net['data'] = InputLayer(input_shape, input_var)
+    print("\n")
+    print("Input data shape")
     print(net['data'].output_shape)
-    print("\r printing layer's output shape")
+    print("Layer-wise output shape")
     net['fc1'] = batch_norm(DenseLayer(net['data'], num_units=64, W=lasagne.init.HeNormal(), nonlinearity=lasagne.nonlinearities.elu))
     print(net['fc1'].output_shape)
     net['fc2'] = batch_norm(DenseLayer(net['fc1'], num_units=256, W=lasagne.init.HeNormal(), nonlinearity=lasagne.nonlinearities.elu))
@@ -51,7 +53,7 @@ def architecture_upconv_fc8(input_var, input_shape):
     net['out'] = lasagne.layers.SliceLayer(net['s1'], slice(0, 80), axis=-1)
     print(net['out'] .output_shape)
     
-    print("\r Number of parameter to be learned: %d" %(lasagne.layers.count_params(net['out'])))
+    print("Number of parameter to be learned: %d\n" %(lasagne.layers.count_params(net['out'])))
     
     return net['out']
 

@@ -46,7 +46,7 @@ def spectrogram(samples, sample_rate, frame_len, fps, batch=50):
     batch = min(batch, num_frames)
     if batch <= 1 or not samples.flags.c_contiguous:
         rfft = rfft_builder(samples[:frame_len], n=frame_len)
-        spect = np.vstack(rfft(samples[pos:pos + frame_len] * win)            # removed np.abs : now return the full complex-valued matrix
+        spect = np.vstack((rfft(samples[pos:pos + frame_len] * win))            # removed np.abs : now return the full complex-valued matrix
                           for pos in range(0, len(samples) - frame_len + 1,
                                            int(hopsize)))
     else:
@@ -55,7 +55,7 @@ def spectrogram(samples, sample_rate, frame_len, fps, batch=50):
         frames = np.lib.stride_tricks.as_strided(
                 samples, shape=(num_frames, frame_len),
                 strides=(samples.strides[0] * hopsize, samples.strides[0]))
-        spect = [rfft(frames[pos:pos + batch] * win)                          # removed np.abs
+        spect = [(rfft(frames[pos:pos + batch] * win))                          # removed np.abs
                  for pos in range(0, num_frames - batch + 1, batch)]
         if num_frames % batch:
             spect.extend(spectrogram(
@@ -75,15 +75,15 @@ def extract_spect(filename, sample_rate=22050, frame_len=1024, fps=70):
         samples = read_ffmpeg(filename, sample_rate)
     except Exception:
         samples = read_ffmpeg(filename, sample_rate, cmd='avconv')
-    print(samples[:20])
+    #print(samples[:20])
     spect = spectrogram(samples, sample_rate, frame_len, fps)
-    
+    #print(spect[0, :20])
     # extract magnitudes and phases to be used in auralization
     magnitudes, phases = librosa.core.magphase(spect.T)
     mag = magnitudes.T
     phase = phases.T
-    print(mag[0, :20])
-    print(phase[0, :20])
+    #print(mag[0, :20])
+    #print(phase[0, :20])
     return (mag, phase)
 
 def create_mel_filterbank(sample_rate, frame_len, num_bands, min_freq,
