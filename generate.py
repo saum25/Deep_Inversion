@@ -249,9 +249,9 @@ def main():
             # convert the time_idx to the excerpt index for the reconstruction
             excerpt_idx = int(np.round((time_idx * sample_rate)/(hop_size)))
             print("Time_idx: %f secs, Excerpt_idx: %d" %(time_idx, excerpt_idx))
-            
-            if (excerpt_idx > num_excerpts):
-                print("Number of excerpts are less for file: %d" %(file_instance+1))
+
+            if ((excerpt_idx +  blocklen) > num_excerpts):
+                print("------------------Number of excerpts are less for file: %d--------------------" %(file_instance+1))
                 break                      
             
             # reconstructing the selected spectrogram segment, that starts at the time_idx and is of length blocklen
