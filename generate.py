@@ -280,6 +280,14 @@ def main():
             norm_inv = util.normalise(mel_predictions[0])
             norm_inv[norm_inv<mask_threshold] = 0 # Binary mask----- 
             norm_inv[norm_inv>=mask_threshold] = 1
+            
+            # reversing the mask to keep the portions that seem not useful for the current instance prediction
+            for i in range(norm_inv.shape[0]):
+                for j in range(norm_inv.shape[1]):
+                    if norm_inv[i][j]==0:
+                        norm_inv[i][j]=1
+                    else:
+                        norm_inv[i][j]=0
     
             # masking out the input based on the mask created above
             masked_input = np.zeros((batchsize, blocklen, mel_bands))
