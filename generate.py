@@ -224,7 +224,7 @@ def main():
     print('\n===Instance based analysis====\n')
     start_offset = 10
     end_offset = 20 
-    duration =  20  # secs
+    duration =  180  # secs
     mask_threshold = 0.5
     class_threshold = 0.66  # Jan's code
     error_threshold = 0.5
