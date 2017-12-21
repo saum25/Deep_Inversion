@@ -236,9 +236,10 @@ def main():
     pred_after = [] # class predictions after masking
     gen_error = []  # error in generation per instance
     area_per_instance = [] # area covered in the generated mask based on recon
-    plot_flag = False
+    plot_flag = True
     result = []     # finally a list of tuples is created in the order
                     # threshold, total_instances, total_fail, average_area, cc_lt, cnc_lt, cc_gt, cnc_gt
+    ms_z_norm = True # standard score based normalisation of each bin after masking
     
     for mt in mask_threshold:
         print("\n ++++++Analysis for the mask threshold: %f +++++\n " %(mt))
@@ -286,7 +287,7 @@ def main():
                 norm_inv = util.normalise(mel_predictions[0])
                 norm_inv[norm_inv<mt] = 0 # Binary mask----- 
                 norm_inv[norm_inv>=mt] = 1
-    
+                    
                 # randomisation or not
                 norm_inv, area = randomise.random_selection(norm_inv, random_block = True, debug_print = False)
                 
@@ -300,10 +301,13 @@ def main():
         
                 # masking out the input based on the mask created above
                 masked_input = np.zeros((batchsize, blocklen, mel_bands))
-                unnorm_excerpt = (excerpts[excerpt_idx]/istd) + mean    # removing mean scaling as we want to renormalise latter
-                masked_input[0] = norm_inv * unnorm_excerpt # only fill the instance thats being analysed
-                masked_input = (masked_input - mean)*istd
-                
+                if ms_z_norm:
+                    unnorm_excerpt = (excerpts[excerpt_idx]/istd) + mean    # removing mean scaling as we want to renormalise latter
+                    masked_input[0] = norm_inv * unnorm_excerpt # only fill the instance thats being analysed
+                    masked_input = (masked_input - mean)*istd
+                else:
+                    masked_input[0] = norm_inv * excerpts[excerpt_idx]
+                    
                 plots.plot_figures(util.normalise(excerpts[excerpt_idx]), util.normalise(mel_predictions[0]), norm_inv, util.normalise(masked_input[0]), excerpt_idx, plot_flag)
                 
                 # reconstructing the input mel-spectrogram excerpt
