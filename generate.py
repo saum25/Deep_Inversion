@@ -28,6 +28,7 @@ import upconv
 import numpy.linalg as linalg
 import util
 import plots
+import randomise
 
 def main():
     
@@ -224,8 +225,8 @@ def main():
     print('\n===Instance based analysis====\n')
     start_offset = 10
     end_offset = 20 
-    duration =  180  # secs
-    mask_threshold = 0.5
+    duration =  2#180  # secs
+    mask_threshold = np.linspace(0, 1.1, 12)    # gives 1 as an extra value
     class_threshold = 0.66  # Jan's code
     error_threshold = 0.5
     file_idx = np.arange(0, len(filelist))    
@@ -234,118 +235,143 @@ def main():
     pred_before = []    # class predictions before masking
     pred_after = [] # class predictions after masking
     gen_error = []  # error in generation per instance
+    area_per_instance = [] # area covered in the generated mask based on recon
     plot_flag = False
+    result = []     # finally a list of tuples is created in the order
+                    # threshold, total_instances, total_fail, average_area, cc_lt, cnc_lt, cc_gt, cnc_gt
     
-    for file_instance in file_idx:
-        print("<<<<Analysis for the file: %d>>>>" %(file_instance+1))
-        time_idx = np.random.randint(start_offset, end_offset, 1)[0]   # secs # tells given the offset, what frame_idx should it match?
-        td = time_idx
-        
-        # re-generating all the excerpts for the selected file_idx
-        # excerpts is a 3-d array of shape: num_excerpts x blocklen x mel_spects_dimensions   
-        num_excerpts = len(mel_spects[file_instance]) - blocklen + 1
-        print("Number of excerpts in the file :%d" %num_excerpts)
-        excerpts = np.lib.stride_tricks.as_strided(mel_spects[file_instance], shape=(num_excerpts, blocklen, mel_spects[file_instance].shape[1]), strides=(mel_spects[file_instance].strides[0], mel_spects[file_instance].strides[0], mel_spects[file_instance].strides[1]))
-        
-        while(time_idx<= td+duration):
-            # convert the time_idx to the excerpt index for the reconstruction
-            excerpt_idx = int(np.round((time_idx * sample_rate)/(hop_size)))
-            print("Time_idx: %f secs, Excerpt_idx: %d" %(time_idx, excerpt_idx))
-
-            if ((excerpt_idx +  blocklen) > num_excerpts):
-                print("------------------Number of excerpts are less for file: %d--------------------" %(file_instance+1))
-                break                      
+    for mt in mask_threshold:
+        print("\n ++++++Analysis for the mask threshold: %f +++++\n " %(mt))
+        for file_instance in file_idx:
+            print("<<<<Analysis for the file: %d>>>>" %(file_instance+1))
+            time_idx = np.random.randint(start_offset, end_offset, 1)[0]   # secs # tells given the offset, what frame_idx should it match?
+            td = time_idx
             
-            # reconstructing the selected spectrogram segment, that starts at the time_idx and is of length blocklen
-            # done to make sure the reconstruction works fine, and the time and frame indices are mapped correctly.
-            sub_matrix_mag = spects_mag[file_instance][excerpt_idx:excerpt_idx+blocklen]
-            sub_matrix_phase = spects_phase[file_instance][excerpt_idx:excerpt_idx+blocklen]
-            util.recon_audio(sub_matrix_mag, sub_matrix_phase, dump_path,'spect_', frame_len, sample_rate/fps, sample_rate)  
+            # re-generating all the excerpts for the selected file_idx
+            # excerpts is a 3-d array of shape: num_excerpts x blocklen x mel_spects_dimensions   
+            num_excerpts = len(mel_spects[file_instance]) - blocklen + 1
+            print("Number of excerpts in the file :%d" %num_excerpts)
+            excerpts = np.lib.stride_tricks.as_strided(mel_spects[file_instance], shape=(num_excerpts, blocklen, mel_spects[file_instance].shape[1]), strides=(mel_spects[file_instance].strides[0], mel_spects[file_instance].strides[0], mel_spects[file_instance].strides[1]))
             
-            # generating feature representations for the chosen excerpt.
-            # CAUTION: Need to feed mini-batch to pre-trained model, so (mini_batch-1) following excerpts are also fed, but are not analysed
-            scores = pred_fn_score(excerpts[excerpt_idx:excerpt_idx + batchsize])
-            #print("Feature representation")
-            #print(scores[file_idx])
-            predictions = pred_fn(excerpts[excerpt_idx:excerpt_idx + batchsize])
-            print("Predictions score for the excerpt before masking:%f" %(predictions[0]))
-            pred_before.append(predictions[0][0])
-                               
-            mel_predictions = np.squeeze(test_fn(scores), axis = 1) # mel_predictions is a 3-d array of shape batch_size x blocklen x n_mels
-            error_instance = util.dist_euclidean(excerpts[excerpt_idx], mel_predictions[0])/N
-            gen_error.append(error_instance)
-            print("NRE in generating the instance: %f" %((error_instance)))
+            while(time_idx<= td+duration):
+                # convert the time_idx to the excerpt index for the reconstruction
+                excerpt_idx = int(np.round((time_idx * sample_rate)/(hop_size)))
+                print("Time_idx: %f secs, Excerpt_idx: %d" %(time_idx, excerpt_idx))
+    
+                if ((excerpt_idx +  blocklen) > num_excerpts):
+                    print("------------------Number of excerpts are less for file: %d--------------------" %(file_instance+1))
+                    break                      
                 
-            # normalising the inverted mel to create a map, and use the map to cut the section in the input mel
-            norm_inv = util.normalise(mel_predictions[0])
-            norm_inv[norm_inv<mask_threshold] = 0 # Binary mask----- 
-            norm_inv[norm_inv>=mask_threshold] = 1
-            
-            # reversing the mask to keep the portions that seem not useful for the current instance prediction
-            for i in range(norm_inv.shape[0]):
-                for j in range(norm_inv.shape[1]):
-                    if norm_inv[i][j]==0:
-                        norm_inv[i][j]=1
-                    else:
-                        norm_inv[i][j]=0
+                # reconstructing the selected spectrogram segment, that starts at the time_idx and is of length blocklen
+                # done to make sure the reconstruction works fine, and the time and frame indices are mapped correctly.
+                sub_matrix_mag = spects_mag[file_instance][excerpt_idx:excerpt_idx+blocklen]
+                sub_matrix_phase = spects_phase[file_instance][excerpt_idx:excerpt_idx+blocklen]
+                util.recon_audio(sub_matrix_mag, sub_matrix_phase, dump_path,'spect_', frame_len, sample_rate/fps, sample_rate)  
+                
+                # generating feature representations for the chosen excerpt.
+                # CAUTION: Need to feed mini-batch to pre-trained model, so (mini_batch-1) following excerpts are also fed, but are not analysed
+                scores = pred_fn_score(excerpts[excerpt_idx:excerpt_idx + batchsize])
+                #print("Feature representation")
+                #print(scores[file_idx])
+                predictions = pred_fn(excerpts[excerpt_idx:excerpt_idx + batchsize])
+                print("Predictions score for the excerpt before masking:%f" %(predictions[0]))
+                pred_before.append(predictions[0][0])
+                                   
+                mel_predictions = np.squeeze(test_fn(scores), axis = 1) # mel_predictions is a 3-d array of shape batch_size x blocklen x n_mels
+                error_instance = util.dist_euclidean(excerpts[excerpt_idx], mel_predictions[0])/N
+                gen_error.append(error_instance)
+                print("NRE in generating the instance: %f" %((error_instance)))
+                    
+                # normalising the inverted mel to create a map, and use the map to cut the section in the input mel
+                norm_inv = util.normalise(mel_predictions[0])
+                norm_inv[norm_inv<mt] = 0 # Binary mask----- 
+                norm_inv[norm_inv>=mt] = 1
     
-            # masking out the input based on the mask created above
-            masked_input = np.zeros((batchsize, blocklen, mel_bands))
-            unnorm_excerpt = (excerpts[excerpt_idx]/istd) + mean    # removing mean scaling as we want to renormalise latter
-            masked_input[0] = norm_inv * unnorm_excerpt # only fill the instance thats being analysed
-            masked_input = (masked_input - mean)*istd
-            
-            plots.plot_figures(excerpts[excerpt_idx], norm_inv, masked_input, excerpt_idx, plot_flag)
-            
-            # reconstructing the input mel-spectrogram excerpt
-            masked_spect = util.preprocess_recon(excerpts[excerpt_idx], filterbank_pinv, spects_mag [file_instance] [excerpt_idx:excerpt_idx+blocklen, bin_mel_max:bin_nyquist], istd, mean)
-            util.recon_audio(masked_spect, spects_phase[file_instance][excerpt_idx:blocklen+excerpt_idx], dump_path,'mel_',frame_len, sample_rate/fps, sample_rate)
-            
-            # reconstructing masked out version of input mel spectrogram
-            masked_spect = util.preprocess_recon(masked_input[0], filterbank_pinv, spects_mag [file_instance] [excerpt_idx:excerpt_idx+blocklen, bin_mel_max:bin_nyquist], istd, mean)
-            util.recon_audio(masked_spect, spects_phase[file_instance][excerpt_idx:blocklen+excerpt_idx], dump_path,'mask_inv_',frame_len, sample_rate/fps, sample_rate)
-            
-            time_idx += 1   # shifting the time window by 1 sec
-            
-            # create input data after masking the previous input and feed it to the network.
-            # just changing the first input.
-            predictions = pred_fn(masked_input)
-            print("Predictions score for the excerpt after masking:%f\n" %(predictions[0]))
-            pred_after.append(predictions[0][0])
-    
-    # quantify the classification performance after masking
-    ground = (np.asarray(pred_before))>class_threshold
-    pred = (np.asarray(pred_after))>class_threshold
-    class_change = np.zeros(len(ground))
-    count_pass = 0
-    count_fail = 0
-    count_cc_lt = 0
-    count_cnc_lt = 0
-    count_cc_gt = 0
-    count_cnc_gt = 0
-    
-    for i in range(len(ground)):
-        if ground[i]==pred[i]:
-            count_pass +=1
-            class_change[i] = False
-        else:
-            count_fail +=1
-            class_change [i]= True
-    print("Total instances:%d" %(count_pass+ count_fail))
-    print("Number of fails:%d" %(count_fail))
-    
-    for i in range(len(ground)):
-        if (gen_error[i]<= error_threshold):
-            if class_change[i]==True:
-                count_cc_lt +=1
+                # randomisation or not
+                norm_inv, area = randomise.random_selection(mel_predictions[0], norm_inv, random_block = True, debug_print = False)
+                
+                # reversing the mask to keep the portions that seem not useful for the current instance prediction
+                '''for i in range(norm_inv.shape[0]):
+                    for j in range(norm_inv.shape[1]):
+                        if norm_inv[i][j]==0:
+                            norm_inv[i][j]=1
+                        else:
+                            norm_inv[i][j]=0'''
+        
+                # masking out the input based on the mask created above
+                masked_input = np.zeros((batchsize, blocklen, mel_bands))
+                unnorm_excerpt = (excerpts[excerpt_idx]/istd) + mean    # removing mean scaling as we want to renormalise latter
+                masked_input[0] = norm_inv * unnorm_excerpt # only fill the instance thats being analysed
+                masked_input = (masked_input - mean)*istd
+                
+                plots.plot_figures(util.normalise(excerpts[excerpt_idx]), util.normalise(mel_predictions[0]), norm_inv, util.normalise(masked_input[0]), excerpt_idx, plot_flag)
+                
+                # reconstructing the input mel-spectrogram excerpt
+                masked_spect = util.preprocess_recon(excerpts[excerpt_idx], filterbank_pinv, spects_mag [file_instance] [excerpt_idx:excerpt_idx+blocklen, bin_mel_max:bin_nyquist], istd, mean)
+                util.recon_audio(masked_spect, spects_phase[file_instance][excerpt_idx:blocklen+excerpt_idx], dump_path,'mel_',frame_len, sample_rate/fps, sample_rate)
+                
+                # reconstructing masked out version of input mel spectrogram
+                masked_spect = util.preprocess_recon(masked_input[0], filterbank_pinv, spects_mag [file_instance] [excerpt_idx:excerpt_idx+blocklen, bin_mel_max:bin_nyquist], istd, mean)
+                util.recon_audio(masked_spect, spects_phase[file_instance][excerpt_idx:blocklen+excerpt_idx], dump_path,'mask_inv_',frame_len, sample_rate/fps, sample_rate)
+                
+                time_idx += 1   # shifting the time window by 1 sec
+                
+                # create input data after masking the previous input and feed it to the network.
+                # just changing the first input.
+                predictions = pred_fn(masked_input)
+                print("Predictions score for the excerpt after masking:%f\n" %(predictions[0]))
+                pred_after.append(predictions[0][0])
+                
+                # area per instance
+                area_per_instance.append(area)
+        
+        # quantify the classification performance after masking
+        ground = (np.asarray(pred_before))>class_threshold
+        pred = (np.asarray(pred_after))>class_threshold
+        class_change = np.zeros(len(ground))
+        count_pass = 0
+        count_fail = 0
+        count_cc_lt = 0
+        count_cnc_lt = 0
+        count_cc_gt = 0
+        count_cnc_gt = 0
+        
+        for i in range(len(ground)):
+            if ground[i]==pred[i]:
+                count_pass +=1
+                class_change[i] = False
             else:
-                count_cnc_lt +=1
-        elif (gen_error[i]> error_threshold):
-            if class_change[i]==True:
-                count_cc_gt +=1
-            else:
-                count_cnc_gt +=1
-    print("Distribution of instances: cc_lt[%d] cnc_lt[%d] cc_gt[%d] cnc_gt[%d]" %(count_cc_lt, count_cnc_lt, count_cc_gt, count_cnc_gt))
+                count_fail +=1
+                class_change [i]= True
+        print("Total instances:%d" %(count_pass+ count_fail))
+        print("Number of fails:%d" %(count_fail))
+        print("Average area: %f" %(sum(area_per_instance)/len(area_per_instance)))
+        
+        for i in range(len(ground)):
+            if (gen_error[i]<= error_threshold):
+                if class_change[i]==True:
+                    count_cc_lt +=1
+                else:
+                    count_cnc_lt +=1
+            elif (gen_error[i]> error_threshold):
+                if class_change[i]==True:
+                    count_cc_gt +=1
+                else:
+                    count_cnc_gt +=1
+        print("Distribution of instances: cc_lt[%d] cnc_lt[%d] cc_gt[%d] cnc_gt[%d]" %(count_cc_lt, count_cnc_lt, count_cc_gt, count_cnc_gt))
+        
+        # save the final results in each iteration (govern by threshold) as a tuple
+        result.append((mt,count_pass+ count_fail, count_fail, round(sum(area_per_instance)/len(area_per_instance), 2), count_cc_lt, count_cnc_lt, count_cc_gt, count_cnc_gt))
+
+        # clearing the lists : couldn't find a better way
+        pred_before = []
+        pred_after = []
+        gen_error = []
+        area_per_instance = []
+
+    # save final results
+    with open('result.txt', 'w') as fp:
+        fp.write('\n'.join('{} {} {} {} {} {} {} {}'.format(x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7]) for x in result))
 
 if __name__ == '__main__':
     main()
