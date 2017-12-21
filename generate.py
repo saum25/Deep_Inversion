@@ -288,7 +288,7 @@ def main():
                 norm_inv[norm_inv>=mt] = 1
     
                 # randomisation or not
-                norm_inv, area = randomise.random_selection(mel_predictions[0], norm_inv, random_block = True, debug_print = False)
+                norm_inv, area = randomise.random_selection(norm_inv, random_block = True, debug_print = False)
                 
                 # reversing the mask to keep the portions that seem not useful for the current instance prediction
                 '''for i in range(norm_inv.shape[0]):
