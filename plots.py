@@ -71,22 +71,30 @@ plt.ylim(0, 1)
 plt.grid()
 plt.show()'''
 
-def plot_figures(input_excerpt, mask, masked_input, excerpt_idx, flag):
+def plot_figures(input_excerpt, inv, mask, masked_input, excerpt_idx, flag):
+
     if flag:
-        plt.subplot(3, 1, 1)
+        plt.subplot(4, 1, 1)
         disp.specshow(input_excerpt.T, y_axis='mel', hop_length= 315, x_axis='off', fmin=27.5, fmax=8000, cmap = 'coolwarm')
         plt.title('Input Mel-spectrogram')
         plt.xlabel('Time')
         plt.ylabel('Hz')
         plt.colorbar()
         
-        plt.subplot(3, 1, 2)
+        plt.subplot(4, 1, 2)
+        plt.title('Inversion from FC8')
+        disp.specshow(inv.T, y_axis='mel', hop_length= 315, x_axis='off', fmin=27.5, fmax=8000, cmap='coolwarm')
+        plt.xlabel('Time')
+        plt.ylabel('Hz')
+        plt.colorbar()
+        
+        plt.subplot(4, 1, 3)
         disp.specshow(mask.T, y_axis='mel', hop_length= 315, x_axis='off', fmin=27.5, fmax=8000, cmap = 'gray_r')
         plt.title('Mask based on normalised and thresholded inverted mel')
         plt.colorbar()
         
-        plt.subplot(3, 1, 3)
-        disp.specshow((masked_input[0]).T, y_axis='mel', hop_length= 315, x_axis='time', fmin=27.5, fmax=8000, cmap = 'coolwarm')
+        plt.subplot(4, 1, 4)
+        disp.specshow((masked_input).T, y_axis='mel', hop_length= 315, x_axis='time', fmin=27.5, fmax=8000, cmap = 'coolwarm')
         plt.colorbar()
         plt.title('Masked input Mel spectrogram')
         plt.suptitle('Plots for excerpt index: %d' %(excerpt_idx))
