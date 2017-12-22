@@ -29,6 +29,7 @@ import numpy.linalg as linalg
 import util
 import plots
 import randomise
+import analysis
 
 def main():
     
@@ -225,8 +226,8 @@ def main():
     print('\n===Instance based analysis====\n')
     start_offset = 10
     end_offset = 20 
-    duration =  2#180  # secs
-    mask_threshold = np.linspace(0, 1.1, 12)    # gives 1 as an extra value
+    duration =  180  # secs
+    mask_threshold = [0.5, 0.6, 0.7]#np.linspace(0, 1.1, 12)    # gives 1 as an extra value
     class_threshold = 0.66  # Jan's code
     error_threshold = 0.5
     file_idx = np.arange(0, len(filelist))    
@@ -236,10 +237,12 @@ def main():
     pred_after = [] # class predictions after masking
     gen_error = []  # error in generation per instance
     area_per_instance = [] # area covered in the generated mask based on recon
-    plot_flag = True
+    plot_flag = False
     result = []     # finally a list of tuples is created in the order
                     # threshold, total_instances, total_fail, average_area, cc_lt, cnc_lt, cc_gt, cnc_gt
     ms_z_norm = True # standard score based normalisation of each bin after masking
+    debug_flag = True
+    abs_pred_error = []
     
     for mt in mask_threshold:
         print("\n ++++++Analysis for the mask threshold: %f +++++\n " %(mt))
@@ -289,7 +292,7 @@ def main():
                 norm_inv[norm_inv>=mt] = 1
                     
                 # randomisation or not
-                norm_inv, area = randomise.random_selection(norm_inv, random_block = True, debug_print = False)
+                norm_inv, area = randomise.random_selection(norm_inv, random_block = False, debug_print = False)
                 
                 # reversing the mask to keep the portions that seem not useful for the current instance prediction
                 '''for i in range(norm_inv.shape[0]):
@@ -328,52 +331,22 @@ def main():
                 
                 # area per instance
                 area_per_instance.append(area)
-        
-        # quantify the classification performance after masking
-        ground = (np.asarray(pred_before))>class_threshold
-        pred = (np.asarray(pred_after))>class_threshold
-        class_change = np.zeros(len(ground))
-        count_pass = 0
-        count_fail = 0
-        count_cc_lt = 0
-        count_cnc_lt = 0
-        count_cc_gt = 0
-        count_cnc_gt = 0
-        
-        for i in range(len(ground)):
-            if ground[i]==pred[i]:
-                count_pass +=1
-                class_change[i] = False
-            else:
-                count_fail +=1
-                class_change [i]= True
-        print("Total instances:%d" %(count_pass+ count_fail))
-        print("Number of fails:%d" %(count_fail))
-        print("Average area: %f" %(sum(area_per_instance)/len(area_per_instance)))
-        
-        for i in range(len(ground)):
-            if (gen_error[i]<= error_threshold):
-                if class_change[i]==True:
-                    count_cc_lt +=1
-                else:
-                    count_cnc_lt +=1
-            elif (gen_error[i]> error_threshold):
-                if class_change[i]==True:
-                    count_cc_gt +=1
-                else:
-                    count_cnc_gt +=1
-        print("Distribution of instances: cc_lt[%d] cnc_lt[%d] cc_gt[%d] cnc_gt[%d]" %(count_cc_lt, count_cnc_lt, count_cc_gt, count_cnc_gt))
-        
-        # save the final results in each iteration (govern by threshold) as a tuple
-        result.append((mt,count_pass+ count_fail, count_fail, round(sum(area_per_instance)/len(area_per_instance), 2), count_cc_lt, count_cnc_lt, count_cc_gt, count_cnc_gt))
 
+        abs_error, res_tuple = analysis.result_analysis(pred_before, pred_after, area_per_instance, gen_error, mt, class_threshold, error_threshold, debug_flag)        
+
+        result.append(res_tuple)
+        abs_pred_error.append(abs_error)
+        
         # clearing the lists : couldn't find a better way
         pred_before = []
         pred_after = []
         gen_error = []
         area_per_instance = []
 
-    # save final results
+    # saving the absolute change in prediction error
+    np.savez('pred_err.npz', **{'mt_%d'%i:abs_pred_error[i] for i in range(len(abs_pred_error))})
+    
+    # save the final results
     with open('result.txt', 'w') as fp:
         fp.write('\n'.join('{} {} {} {} {} {} {} {}'.format(x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7]) for x in result))
 
