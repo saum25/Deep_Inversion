@@ -142,7 +142,7 @@ def main():
     sampled_excerpts = np.zeros((len(filelist) * n_excerpts, blocklen, mel_bands))
       
     # we calculate the reconstruction error for 'iterations' random draws and the final value is average of it.
-    iterations = 1
+    iterations = 10
     n_count = 0
     avg_error_n = 0
     counter = 0
@@ -227,7 +227,7 @@ def main():
     start_offset = 10
     end_offset = 20 
     duration =  180  # secs
-    mask_threshold = [0.5, 0.6, 0.7]#np.linspace(0, 1.1, 12)    # gives 1 as an extra value
+    mask_threshold = np.linspace(0, 1.1, 12)    # gives 1 as an extra value
     class_threshold = 0.66  # Jan's code
     error_threshold = 0.5
     file_idx = np.arange(0, len(filelist))    

@@ -9,6 +9,7 @@ Created on 15 Oct 2017
 
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import gridspec
 
 # code to plot recon error
 '''arch = np.arange(1, 6)
@@ -53,19 +54,56 @@ plt.grid()
 plt.legend()
 plt.show()'''
 
-# code to plot histogram
+# code to plot histogram and cc analysis
+gs = gridspec.GridSpec(2, 3)
+ax0 = plt.subplot(gs[0, :]) # histogram
+ax1 = plt.subplot(gs[1, 0])
+ax2 = plt.subplot(gs[1, 1])
+ax3 = plt.subplot(gs[1, 2])
+
+idx = 0
 abs_pred_err = []
-with np.load('pred_err.npz') as f:
+
+with np.load('prederr_cc.npz') as f:
     abs_pred_err = [f['mt_%d' %i] for i in range(len(f.files))]
-data = np.vstack([abs_pred_err[0][:2675], abs_pred_err[1][:2675], abs_pred_err[2][:2675]]).T
+data = np.vstack([abs_pred_err[0][0, :2671], abs_pred_err[1][0, :2671], abs_pred_err[2][0, :2671]]).T
 bins = np.linspace(0, 1, 11)
-plt.style.use('seaborn-deep')
-#plt.hist(data, bins = bins, alpha = 0.7, label = ['mt_0.5', 'mt_0.6', 'mt_0.7'])
-#plt.hist(abs_pred_err[0], bins, alpha = 0.7, label = ['mt_0.5'])
-plt.scatter(range(len(abs_pred_err[0])), abs_pred_err[0])
-#plt.xticks(np.arange(0, max(abs_pred_err[0]) + 0.1, 0.1))
-#plt.yticks(np.arange(0, 2000 + 1, 100))
-#plt.legend(loc='upper right')
-plt.grid()
-plt.show()
+
+ax0.hist(data, bins = bins, cumulative=True, alpha = 0.7, label = ['mt_0.5', 'mt_0.6', 'mt_0.7'])
+ax0.set_xticks(np.arange(0, 1 + 0.1, 0.1))
+ax0.set_yticks(np.arange(0, 3000+1, 250))
+ax0.set_xlabel('bins')
+ax0.set_ylabel('frequency')
+ax0.set_title('CDF Histogram of the absolute prediction error')
+ax0.legend(loc='upper left')
+ax0.grid()
+
+ax1.scatter(range(len(abs_pred_err[idx][0])), abs_pred_err[idx][0], c = abs_pred_err[idx][1].reshape(1, -1), cmap=plt.cm.cool, alpha = 0.7)
+ax1.plot(0.2*np.ones(len(abs_pred_err[idx][0])), 'r--', linewidth = 2.0)
+ax1.plot(0.6*np.ones(len(abs_pred_err[idx][0])), 'b--', linewidth = 2.0)
+ax1.set_xlim(-100, len(abs_pred_err[idx][0])+ 100)
+ax1.set_ylim(-0.1, 1.1)
+ax1.set_xlabel('instance index')
+ax1.set_ylabel('abs prediction error')
+ax1.set_title('abs prediction error vs class change (mt_0.5)')
+
+ax2.scatter(range(len(abs_pred_err[idx + 1][0])), abs_pred_err[idx + 1][0], c = abs_pred_err[idx + 1][1].reshape(1, -1), cmap=plt.cm.cool, alpha = 0.7)
+ax2.set_xlim(-100, len(abs_pred_err[idx + 1][0])+ 100)
+ax2.set_ylim(-0.1, 1.1)
+ax2.plot(0.2*np.ones(len(abs_pred_err[idx + 1][0])), 'r--', linewidth = 2.0)
+ax2.plot(0.6*np.ones(len(abs_pred_err[idx+1][0])), 'b--', linewidth = 2.0)
+ax2.set_xlabel('instance index')
+ax2.set_ylabel('abs prediction error')
+ax2.set_title('abs prediction error vs class change (mt_0.6)')
+
+ax3.scatter(range(len(abs_pred_err[idx + 2][0])), abs_pred_err[idx+2][0], c = abs_pred_err[idx+2][1].reshape(1, -1), cmap=plt.cm.cool, alpha = 0.7)
+ax3.set_xlim(-100, len(abs_pred_err[idx +2][0])+ 100)
+ax3.set_ylim(-0.1, 1.1)
+ax3.plot(0.2*np.ones(len(abs_pred_err[idx+2][0])), 'r--', linewidth = 2.0)
+ax3.plot(0.6*np.ones(len(abs_pred_err[idx+2][0])), 'b--', linewidth = 2.0)
+ax3.set_xlabel('instance index')
+ax3.set_ylabel('abs prediction error')
+ax3.set_title('abs prediction error vs class change (mt_0.7)')
+
+plt.show() # for whole figure
     

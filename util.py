@@ -72,3 +72,60 @@ def normalise(x):
     Normalise a vector/ matrix, in range 0 - 1
     """
     return((x-x.min())/(x.max()-x.min()))
+
+
+# Needed to extract mean_std files for RWC dataset
+
+def list_files(dir_path):
+    """ Parses the files in the specified directory recursively and lists all the .aiff and .txt files
+    
+    Args:
+         Directory path
+     
+     Returns:
+         List of .aiff files and .txt files
+     """
+     
+    #Returns list of all files in the current directory recursively
+    #CAUTION : eventhough the subdirs is an unused variable, its removal causes exception: as os.walk needs three parameters : explore more
+    file_list=[]
+    for path, subdirs, files in os.walk(dir_path):                      
+            for filename in files:
+                f = (os.path.join(path, filename))
+                file_list.append(f)
+                
+    #Returns list of only the media files(*.aiff) recursively
+    file_list_aiff=[]
+    for f in file_list:
+        if f.endswith(".aiff"):
+            file_list_aiff.append(f)
+
+    return (file_list_aiff) 
+
+'''
+    files_all = list_files(os.path.join(datadir, 'audio'))
+    random_indices = np.random.choice(len(files_all), 20, replace=False)
+    test_files = []
+    for i in random_indices:
+        test_files.append(files_all[i])
+    test_files_split = []
+
+    for i in test_files:
+        temp = i.split('/')
+        test_files_split.append(temp[-2] + '/' + temp[-1])
+    
+    fp = open('test', 'w')
+    for item in test_files_split:
+        fp.write("%s\n" %item)
+    
+    for item in sorted(random_indices, reverse = True):
+        del files_all[item]
+        
+    train_files_split = []    
+    for i in files_all:
+        temp = i.split('/')
+        train_files_split.append(temp[-2] + '/' + temp[-1])
+    
+    fp = open('train', 'w')
+    for item in train_files_split:
+        fp.write("%s\n" %item)'''
