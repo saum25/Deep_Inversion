@@ -57,10 +57,15 @@ plt.show()'''
 abs_pred_err = []
 with np.load('pred_err.npz') as f:
     abs_pred_err = [f['mt_%d' %i] for i in range(len(f.files))]
-data = np.vstack([abs_pred_err[0], abs_pred_err[1], abs_pred_err[2]]).T
+data = np.vstack([abs_pred_err[0][:2675], abs_pred_err[1][:2675], abs_pred_err[2][:2675]]).T
 bins = np.linspace(0, 1, 11)
 plt.style.use('seaborn-deep')
-plt.hist(data, bins = bins, alpha = 0.7, label = ['mt_0.5', 'mt_0.6', 'mt_0.7'])
-plt.legend(loc='upper right')
+#plt.hist(data, bins = bins, alpha = 0.7, label = ['mt_0.5', 'mt_0.6', 'mt_0.7'])
+#plt.hist(abs_pred_err[0], bins, alpha = 0.7, label = ['mt_0.5'])
+plt.scatter(range(len(abs_pred_err[0])), abs_pred_err[0])
+#plt.xticks(np.arange(0, max(abs_pred_err[0]) + 0.1, 0.1))
+#plt.yticks(np.arange(0, 2000 + 1, 100))
+#plt.legend(loc='upper right')
+plt.grid()
 plt.show()
     

@@ -242,7 +242,7 @@ def main():
                     # threshold, total_instances, total_fail, average_area, cc_lt, cnc_lt, cc_gt, cnc_gt
     ms_z_norm = True # standard score based normalisation of each bin after masking
     debug_flag = True
-    abs_pred_error = []
+    analysis_array = []
     
     for mt in mask_threshold:
         print("\n ++++++Analysis for the mask threshold: %f +++++\n " %(mt))
@@ -332,10 +332,10 @@ def main():
                 # area per instance
                 area_per_instance.append(area)
 
-        abs_error, res_tuple = analysis.result_analysis(pred_before, pred_after, area_per_instance, gen_error, mt, class_threshold, error_threshold, debug_flag)        
+        ana_array, res_tuple = analysis.result_analysis(pred_before, pred_after, area_per_instance, gen_error, mt, class_threshold, error_threshold, debug_flag)        
 
         result.append(res_tuple)
-        abs_pred_error.append(abs_error)
+        analysis_array.append(ana_array)
         
         # clearing the lists : couldn't find a better way
         pred_before = []
@@ -344,7 +344,7 @@ def main():
         area_per_instance = []
 
     # saving the absolute change in prediction error
-    np.savez('pred_err.npz', **{'mt_%d'%i:abs_pred_error[i] for i in range(len(abs_pred_error))})
+    np.savez('prederr_cc.npz', **{'mt_%d'%i:analysis_array[i] for i in range(len(analysis_array))})
     
     # save the final results
     with open('result.txt', 'w') as fp:

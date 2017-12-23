@@ -12,7 +12,8 @@ def result_analysis(pred_before, pred_after, area_per_instance, gen_error, mt, c
     # quantify the classification performance after masking
     ground = (np.asarray(pred_before))>class_threshold
     pred = (np.asarray(pred_after))>class_threshold
-    class_change = np.zeros(len(ground))
+    class_change = np.zeros(len(ground), dtype = 'bool')
+    
     count_pass = 0
     count_fail = 0
     count_cc_lt = 0
@@ -20,12 +21,14 @@ def result_analysis(pred_before, pred_after, area_per_instance, gen_error, mt, c
     count_cc_gt = 0
     count_cnc_gt = 0
     
-    abs_error = np.abs(np.asarray(pred_before) - np.asarray(pred_after))
-        
+    # abs change in prediction
+    abs_pred_error = np.abs(np.asarray(pred_before) - np.asarray(pred_after)) # 1d float array
+    
+    # recall calculation
     for i in range(len(ground)):
-        if ground[i]==pred[i]:
+        if ground[i]==pred[i]: # recall
             count_pass +=1
-            class_change[i] = False
+            #class_change[i] = False not needed as its a bool array of false know
         else:
             count_fail +=1
             class_change [i]= True
@@ -46,9 +49,12 @@ def result_analysis(pred_before, pred_after, area_per_instance, gen_error, mt, c
         print("Number of fails:%d" %(count_fail))
         print("Average area: %f" %(sum(area_per_instance)/len(area_per_instance)))
         print("Distribution of instances: cc_lt[%d] cnc_lt[%d] cc_gt[%d] cnc_gt[%d]" %(count_cc_lt, count_cnc_lt, count_cc_gt, count_cnc_gt))
+    
+    # combine class change and prediction change information in one 2-d array    
+    analysis_array = np.vstack((abs_pred_error, class_change))
         
     # save the final results in each iteration (govern by threshold) as a tuple
-    return abs_error, (mt, count_pass+count_fail, count_fail, round(sum(area_per_instance)/len(area_per_instance), 2), count_cc_lt, count_cnc_lt, count_cc_gt, count_cnc_gt)
+    return analysis_array, (mt, count_pass+count_fail, count_fail, round(sum(area_per_instance)/len(area_per_instance), 2), count_cc_lt, count_cnc_lt, count_cc_gt, count_cnc_gt)
 
 
 
