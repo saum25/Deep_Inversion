@@ -56,6 +56,31 @@ def result_analysis(pred_before, pred_after, area_per_instance, gen_error, mt, c
     # save the final results in each iteration (govern by threshold) as a tuple
     return analysis_array, (mt, count_pass+count_fail, count_fail, round(sum(area_per_instance)/len(area_per_instance), 2), count_cc_lt, count_cnc_lt, count_cc_gt, count_cnc_gt)
 
+def mask_inversion(mask, flag, area_mask, debug_print):
+    '''
+    Reverses the mask, i.e. keeps the portion seems not useful for the classifier prediction
+    The idea is to see the performance as we keep the other information not reconstructed by
+    feature inversion. A dummy function if the flag is not enabled.
+    '''
+    if flag: # Needs to be more efficient code?
+        for i in range(mask.shape[0]):
+            for j in range(mask.shape[1]):
+                if mask[i][j]==0:
+                    mask[i][j]=1
+                else:
+                    mask[i][j]=0
+
+        # calculate enabled area of the inverted mask
+        # ideally it should be 1- area_mask, but doing it just for confirmation
+        n_bins_enabled = (mask==1).sum()
+        n_bins = mask.shape[0].mask.shape[1]
+        area_mask_inv = n_bins_enabled/float(n_bins)
+        if debug_print:
+            print("Area enabled [Before mask inversion]: %f [After mask inversion]:%f" %(area_mask, area_mask_inv))
+        area_mask = area_mask_inv
+
+    return mask, area_mask
+
 
 
 

@@ -242,6 +242,7 @@ def main():
                     # threshold, total_instances, total_fail, average_area, cc_lt, cnc_lt, cc_gt, cnc_gt
     ms_z_norm = True # standard score based normalisation of each bin after masking
     debug_flag = True
+    mask_inv_flag = True
     analysis_array = []
     
     for mt in mask_threshold:
@@ -295,13 +296,8 @@ def main():
                 norm_inv, area = randomise.random_selection(norm_inv, random_block = False, debug_print = False)
                 
                 # reversing the mask to keep the portions that seem not useful for the current instance prediction
-                '''for i in range(norm_inv.shape[0]):
-                    for j in range(norm_inv.shape[1]):
-                        if norm_inv[i][j]==0:
-                            norm_inv[i][j]=1
-                        else:
-                            norm_inv[i][j]=0'''
-        
+                norm_inv, area = analysis.mask_inversion(mask = norm_inv, flag = mask_inv_flag, area_mask = area, debug_print=True)
+                        
                 # masking out the input based on the mask created above
                 masked_input = np.zeros((batchsize, blocklen, mel_bands))
                 if ms_z_norm:
