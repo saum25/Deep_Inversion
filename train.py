@@ -253,22 +253,22 @@ def main():
                 network['fc9'], [f['param%d' % i] for i in range(len(f.files))])
 
     # create output expression
-    outputs_score = lasagne.layers.get_output(network['fc8'], deterministic=True)
+    outputs_score = lasagne.layers.get_output(network['conv1'], deterministic=True)
 
     # prepare and compile prediction function
     print("Compiling prediction function...")
     pred_fn = theano.function([input_var], outputs_score, allow_input_downcast=True)
     
-    print (lasagne.layers.get_output_shape(network['fc8']))
+    print (lasagne.layers.get_output_shape(network['conv1']))
     
     # training the Upconvolutional network - Network 2
     
-    input_var_deconv = T.matrix('input_var_deconv')
-    input_var_gen_feat = T.matrix('input_var_gen_feat')
-    #input_var_deconv = T.tensor4('input_var_deconv')
+    #input_var_deconv = T.matrix('input_var_deconv')
+    #input_var_gen_feat = T.matrix('input_var_gen_feat')
+    input_var_deconv = T.tensor4('input_var_deconv')
     #inputs_deconv = input_var_deconv.dimshuffle(0, 1, 'x', 'x') # 32 x 64 x 1 x 1. Adding the width and depth dimensions
-    gen_network = upconv.architecture_upconv_fc8(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['fc8'])[1]))
-    #gen_network = upconv.architecture_upconv_c1(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['conv1'])[1], lasagne.layers.get_output_shape(network['conv1'])[2], lasagne.layers.get_output_shape(network['conv1'])[3]), args.n_conv_layers, args.n_conv_filters)
+    #gen_network = upconv.architecture_upconv_fc8(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['fc8'])[1]))
+    gen_network = upconv.architecture_upconv_c1(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['conv1'])[1], lasagne.layers.get_output_shape(network['conv1'])[2], lasagne.layers.get_output_shape(network['conv1'])[3]), args.n_conv_layers, args.n_conv_filters)
     
 
     outputs = lasagne.layers.get_output(gen_network, deterministic=False)
@@ -278,11 +278,12 @@ def main():
     # loss: squared euclidean distance per sample in a batch
     input_space_loss = T.mean(lasagne.objectives.squared_error(outputs, inputs))
     # feature space loss: L2 loss between the features extracted from inverted input and actual features
-    feat_space_loss = T.mean(lasagne.objectives.squared_error(input_var_deconv, input_var_gen_feat))
+    #feat_space_loss = T.mean(lasagne.objectives.squared_error(input_var_deconv, input_var_gen_feat))
     # add weight decay or regularisation loss for training: needs to be checked as it appears to be regularising all layers.
-    '''all_layers = lasagne.layers.get_all_layers(gen_network)
-    l2_penalty = lasagne.regularization.regularize_layer_params(all_layers, lasagne.regularization.l2) * 0.0001'''
-    cost = input_space_loss + feat_space_loss# + l2_penalty
+    all_layers = lasagne.layers.get_all_layers(gen_network)
+    l2_penalty = lasagne.regularization.regularize_layer_params(all_layers, lasagne.regularization.l2) * 0.0001
+    #cost = input_space_loss + feat_space_loss# + l2_penalty
+    cost = input_space_loss + l2_penalty
         
     # prepare and compile training function
     params = lasagne.layers.get_all_params(gen_network, trainable=True)
@@ -305,7 +306,8 @@ def main():
     #updates = lasagne.updates.nesterov_momentum(cost, params, eta, momentum)
     updates = lasagne.updates.adam(cost, params, eta)
     print("Compiling training function...")
-    train_fn = theano.function([input_var_deconv, input_var, input_var_gen_feat], cost, updates=updates, allow_input_downcast=True)
+    #train_fn = theano.function([input_var_deconv, input_var, input_var_gen_feat], cost, updates=updates, allow_input_downcast=True)
+    train_fn = theano.function([input_var_deconv, input_var], cost, updates=updates, allow_input_downcast=True)
         
     print("Compiling validation function...")
     
@@ -343,9 +345,10 @@ def main():
             data, labels = next(batches_tr) # followed a simple styple *next(batches) from Jan is unclear what is passed.
             # labels information is a dummy variable its not used in training.
             pred = pred_fn(data)    # a theano function returns a numpy array always. Here it is a matrix of shape 32  x 64
-            gen_output = np.squeeze(gen_fn(pred), axis=1) # output shape: 32 x 1 x 115 x 80
+            '''gen_output = np.squeeze(gen_fn(pred), axis=1) # output shape: 32 x 1 x 115 x 80
             gen_output_feat = pred_fn(gen_output) # output shape: 32 x 64
-            err += train_fn(pred, data, gen_output_feat)
+            err += train_fn(pred, data, gen_output_feat)'''
+            err += train_fn(pred, data)
 
             if not np.isfinite(err):
                 print("\nEncountered NaN loss in training. Aborting.")
