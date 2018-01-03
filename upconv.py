@@ -1,7 +1,7 @@
 '''
 Created on 26 Aug 2017
 
-@author: Saumitra
+@author: Saumitra Mishra
 '''
 
 import lasagne

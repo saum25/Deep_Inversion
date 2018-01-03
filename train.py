@@ -269,7 +269,7 @@ def main():
     #inputs_deconv = input_var_deconv.dimshuffle(0, 1, 'x', 'x') # 32 x 64 x 1 x 1. Adding the width and depth dimensions
     #gen_network = upconv.architecture_upconv_fc8(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['fc8'])[1]))
     gen_network = upconv.architecture_upconv_c1(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['conv1'])[1], lasagne.layers.get_output_shape(network['conv1'])[2], lasagne.layers.get_output_shape(network['conv1'])[3]), args.n_conv_layers, args.n_conv_filters)
-    
+    #abc
 
     outputs = lasagne.layers.get_output(gen_network, deterministic=False)
     gen_fn = theano.function([input_var_deconv], outputs, allow_input_downcast= True)   # takes in features and gives out reconstructed output
