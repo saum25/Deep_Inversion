@@ -84,8 +84,8 @@ def extract_spect(filename, sample_rate=22050, frame_len=1024, fps=70):
     phase = phases.T
     #print(mag[0, :20])
     #print(phase[0, :20])
-    return (mag, phase)
-    #return spect
+    #return (mag, phase)
+    return spect
 def create_mel_filterbank(sample_rate, frame_len, num_bands, min_freq,
                           max_freq):
     """
