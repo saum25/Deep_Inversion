@@ -10,15 +10,17 @@ from lasagne.layers import (InputLayer, DenseLayer, ReshapeLayer, TransposedConv
 def architecture_upconv_fc8(input_var, input_shape):
     
     net = {}
+    #number of filters in the uconv layer
+    n_filters = 128
     
     net['data'] = InputLayer(input_shape, input_var)
     print("\n")
     print("Input data shape")
     print(net['data'].output_shape)
     print("Layer-wise output shape")
-    net['fc1'] = batch_norm(DenseLayer(net['data'], num_units=64, W=lasagne.init.HeNormal(), nonlinearity=lasagne.nonlinearities.elu))
-    print(net['fc1'].output_shape)
-    net['fc2'] = batch_norm(DenseLayer(net['fc1'], num_units=256, W=lasagne.init.HeNormal(), nonlinearity=lasagne.nonlinearities.elu))
+    #net['fc1'] = batch_norm(DenseLayer(net['data'], num_units=64, W=lasagne.init.HeNormal(), nonlinearity=lasagne.nonlinearities.elu))
+    #print(net['fc1'].output_shape)
+    net['fc2'] = batch_norm(DenseLayer(net['data'], num_units=256, W=lasagne.init.HeNormal(), nonlinearity=lasagne.nonlinearities.elu))
     print(net['fc2'].output_shape)
     net['rs1'] = ReshapeLayer(net['fc2'], (32, 16, 4, 4)) # assuming that the shape is batch x depth x row x columns
     
@@ -103,7 +105,7 @@ def architecture_upconv_fc7(input_var, input_shape):
     
     return net['out']
 
-def architecture_upconv_c5_mp6(input_var, input_shape):
+def architecture_upconv_c5_mp6(input_var, input_shape, n_conv_layers, n_conv_filters):
     
     net = {}
     
@@ -121,13 +123,13 @@ def architecture_upconv_c5_mp6(input_var, input_shape):
     print(net['c2'].output_shape)
     net['c3'] = batch_norm(Conv2DLayer(net['c2'], num_filters= 64, filter_size= 3, stride = 1, pad=1, **kwargs))
     print(net['c3'].output_shape)
-    '''net['c4'] = batch_norm(Conv2DLayer(net['c3'], num_filters= 64, filter_size= 3, stride = 1, pad=1, **kwargs))
+    net['c4'] = batch_norm(Conv2DLayer(net['c3'], num_filters= 64, filter_size= 3, stride = 1, pad=1, **kwargs))
     print(net['c4'].output_shape)
-    net['c5'] = batch_norm(Conv2DLayer(net['c4'], num_filters= 64, filter_size= 3, stride = 1, pad=1, **kwargs))
+    '''net['c5'] = batch_norm(Conv2DLayer(net['c4'], num_filters= 64, filter_size= 3, stride = 1, pad=1, **kwargs))
     print(net['c5'].output_shape)'''
     
     # Bunch of transposed convolution layers  
-    net['uc1'] = batch_norm(TransposedConv2DLayer(net['c3'], num_filters= 32, filter_size= 4, stride = 2, crop=1, **kwargs))
+    net['uc1'] = batch_norm(TransposedConv2DLayer(net['c4'], num_filters= 32, filter_size= 4, stride = 2, crop=1, **kwargs))
     print(net['uc1'].output_shape)
     '''net['c1'] = batch_norm(Conv2DLayer(net['uc1'], num_filters= 32, filter_size= 3, stride = 1, pad=1, **kwargs))
     print(net['c1'].output_shape)'''
