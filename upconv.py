@@ -50,9 +50,9 @@ def architecture_upconv_fc8(input_var, input_shape):
     
     #net['uc5'] = TransposedConv2DLayer(net['c4'], num_filters= 1, filter_size= 4, stride = 2, crop=1, **kwargs)
     #print(net['uc5'].output_shape)
-    net['uc5'] = TransposedConv2DLayer(net['c4'], num_filters= n_filters/8, filter_size= 4, stride = 2, crop=1, **kwargs)
+    net['uc5'] = TransposedConv2DLayer(net['c4'], num_filters= n_filters/16, filter_size= 4, stride = 2, crop=1, **kwargs)
     print(net['uc5'].output_shape)
-    net['c5'] = batch_norm(Conv2DLayer(net['uc5'], num_filters= n_filters/8, filter_size= 3, stride = 1, pad=1, **kwargs))
+    net['c5'] = batch_norm(Conv2DLayer(net['uc5'], num_filters= n_filters/16, filter_size= 3, stride = 1, pad=1, **kwargs))
     print(net['c5'].output_shape)
     
     net['uc6'] = TransposedConv2DLayer(net['c5'], num_filters= 1, filter_size= 4, stride = 2, crop=1, **kwargs)
