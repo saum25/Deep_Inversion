@@ -60,7 +60,7 @@ def architecture_upconv_fc8(input_var, input_shape):
     
 
     # slicing the output to 115 x 80 size
-    net['s1'] = lasagne.layers.SliceLayer(net['uc5'], slice(0, 115), axis=-2)
+    net['s1'] = lasagne.layers.SliceLayer(net['uc6'], slice(0, 115), axis=-2)
     net['out'] = lasagne.layers.SliceLayer(net['s1'], slice(0, 80), axis=-1)
     print(net['out'] .output_shape)
     
