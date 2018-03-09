@@ -11,7 +11,7 @@ def architecture_upconv_fc8(input_var, input_shape):
     
     net = {}
     #number of filters in the uconv layer
-    n_filters = 32
+    n_filters = 64
     
     net['data'] = InputLayer(input_shape, input_var)
     print("\n")
