@@ -18,12 +18,12 @@ def architecture_upconv_fc8(input_var, input_shape):
     print("Input data shape")
     print(net['data'].output_shape)
     print("Layer-wise output shape")
-    net['fc1'] = batch_norm(DenseLayer(net['data'], num_units=64, W=lasagne.init.HeNormal(), nonlinearity=lasagne.nonlinearities.elu))
+    net['fc1'] = batch_norm(DenseLayer(net['data'], num_units=256, W=lasagne.init.HeNormal(), nonlinearity=lasagne.nonlinearities.elu))
     print(net['fc1'].output_shape)
-    net['fc2'] = batch_norm(DenseLayer(net['fc1'], num_units=256, W=lasagne.init.HeNormal(), nonlinearity=lasagne.nonlinearities.elu))
+    net['fc2'] = batch_norm(DenseLayer(net['fc1'], num_units=4928, W=lasagne.init.HeNormal(), nonlinearity=lasagne.nonlinearities.elu))
     print(net['fc2'].output_shape)
     #net['rs1'] = ReshapeLayer(net['fc2'], (32, 16, 4, 4)) # assuming that the shape is batch x depth x row x columns
-    net['rs1'] = ReshapeLayer(net['fc2'], (32, 64, 2, 2)) # assuming that the shape is batch x depth x row x columns
+    net['rs1'] = ReshapeLayer(net['fc2'], (32, 64, 11, 7)) # assuming that the shape is batch x depth x row x columns
     
     kwargs = dict(nonlinearity=lasagne.nonlinearities.elu,
                   W=lasagne.init.HeNormal())
@@ -43,24 +43,24 @@ def architecture_upconv_fc8(input_var, input_shape):
     net['c3'] = batch_norm(Conv2DLayer(net['uc3'], num_filters= n_filters/4, filter_size= 3, stride = 1, pad=1, **kwargs))
     print(net['c3'].output_shape)
 
-    net['uc4'] = batch_norm(TransposedConv2DLayer(net['c3'], num_filters= n_filters/8, filter_size= 4, stride = 2, crop=1, **kwargs))
+    net['uc4'] = batch_norm(TransposedConv2DLayer(net['c3'], num_filters= 1, filter_size= 4, stride = 2, crop=1, **kwargs))
     print(net['uc4'].output_shape)
-    net['c4'] = batch_norm(Conv2DLayer(net['uc4'], num_filters= n_filters/8, filter_size= 3, stride = 1, pad=1, **kwargs))
-    print(net['c4'].output_shape)
+    '''net['c4'] = batch_norm(Conv2DLayer(net['uc4'], num_filters= n_filters/8, filter_size= 3, stride = 1, pad=1, **kwargs))
+    print(net['c4'].output_shape)'''
     
     #net['uc5'] = TransposedConv2DLayer(net['c4'], num_filters= 1, filter_size= 4, stride = 2, crop=1, **kwargs)
     #print(net['uc5'].output_shape)
-    net['uc5'] = TransposedConv2DLayer(net['c4'], num_filters= n_filters/16, filter_size= 4, stride = 2, crop=1, **kwargs)
+    '''net['uc5'] = TransposedConv2DLayer(net['c4'], num_filters= n_filters/16, filter_size= 4, stride = 2, crop=1, **kwargs)
     print(net['uc5'].output_shape)
     net['c5'] = batch_norm(Conv2DLayer(net['uc5'], num_filters= n_filters/16, filter_size= 3, stride = 1, pad=1, **kwargs))
     print(net['c5'].output_shape)
     
     net['uc6'] = TransposedConv2DLayer(net['c5'], num_filters= 1, filter_size= 4, stride = 2, crop=1, **kwargs)
-    print(net['uc6'].output_shape)
+    print(net['uc6'].output_shape)'''
     
 
     # slicing the output to 115 x 80 size
-    net['s1'] = lasagne.layers.SliceLayer(net['uc6'], slice(0, 115), axis=-2)
+    net['s1'] = lasagne.layers.SliceLayer(net['uc4'], slice(0, 115), axis=-2)
     net['out'] = lasagne.layers.SliceLayer(net['s1'], slice(0, 80), axis=-1)
     print(net['out'] .output_shape)
     
