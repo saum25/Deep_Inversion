@@ -122,7 +122,7 @@ def main():
     input_var_deconv = T.matrix('input_var_deconv')
     #input_var_deconv = T.tensor4('input_var_deconv')
     gen_network = upconv.architecture_upconv_fc8(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['fc8'])[1]))
-    #gen_network = upconv.architecture_upconv_c1(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['conv1'])[1], lasagne.layers.get_output_shape(network['conv1'])[2], lasagne.layers.get_output_shape(network['conv1'])[3]), args.n_conv_layers, args.n_conv_filters)
+    #gen_network = upconv.architecture_upconv_conv4(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['conv4'])[1], lasagne.layers.get_output_shape(network['conv4'])[2], lasagne.layers.get_output_shape(network['conv4'])[3]), args.n_conv_layers, args.n_conv_filters)
     
     # load saved weights
     with np.load(args.generatorfile) as f:
@@ -145,6 +145,7 @@ def main():
     iterations = 10
     n_count = 0
     avg_error_n = 0
+    avg_error_n_feat = 0
     counter = 0
     print("Number of elements (extracted from each file): %d" %(len(mel_spects)))
 
@@ -172,10 +173,11 @@ def main():
         # evaluating the normalising constant (N), which is given by the average pairwise euclidean distance between the randomly chosen samples in the test set
         dist_matrix = np.zeros((len(filelist) * n_excerpts, len(filelist) * n_excerpts))
         
+        
         for i in range(len(sampled_excerpts)):
             for j in range(len(sampled_excerpts)):
                 dist_matrix [i][j]= util.dist_euclidean(sampled_excerpts[i], sampled_excerpts[j])
-                
+                        
         # print(dist_matrix)
         # dist_matrix is a symmetric matrix
         # Denominator to calculate the average needs to be considering 'n' zero values in a n x n symmetric matrix
@@ -183,7 +185,16 @@ def main():
         # n*n - n is the number in the denominator
         d = len(sampled_excerpts)
         N = (np.sum(dist_matrix))/(d * (d-1))
-        print("Normalization constant: %f" %(N))
+        print("Normalization constant input space: %f" %(N))
+        
+        # for feature space loss
+        dist_matrix_featloss = np.zeros((len(filelist) * n_excerpts, len(filelist) * n_excerpts))
+        for i in range(len(sampled_excerpts)):
+            for j in range(len(sampled_excerpts)):
+                dist_matrix_featloss [i][j]= util.dist_euclidean(pred_fn_score(np.expand_dims(sampled_excerpts[i], axis=0)), pred_fn_score(np.expand_dims(sampled_excerpts[j], axis=0)))
+                
+        N_feat = (np.sum(dist_matrix_featloss))/(d * (d-1))
+        print("Normalization constant feature space: %f" %(N_feat))
         
         # generating spectrums from feature representations
         
@@ -212,12 +223,22 @@ def main():
             error_n += error
         error_n = error_n/N
         avg_error_n = error_n/len(sampled_excerpts) + avg_error_n
-        print("average normalised reconstruction error:%f iteration: %d" %(error_n/len(sampled_excerpts), n_count+1))
+        print("Average normalised reconstruction error in input space:%f iteration: %d" %(error_n/len(sampled_excerpts), n_count+1))
+
+        # feature space loss
+        
+        error_n_feat = 0
+        for i in range(len(sampled_excerpts)):
+            error_feat = util.dist_euclidean(pred_fn_score(np.expand_dims(sampled_excerpts[i], axis=0)), pred_fn_score(np.expand_dims(mel_predictions_array[i], axis=0)))
+            error_n_feat += error_feat
+        error_n_feat = error_n_feat/N_feat
+        avg_error_n_feat = error_n_feat/len(sampled_excerpts) + avg_error_n_feat
+        print("Average normalised reconstruction error in feature space:%f iteration: %d" %(error_n_feat/len(sampled_excerpts), n_count+1))
         
         iterations -=1
         n_count+=1
     print('==========')    
-    print("Average normalised reconstruction error:%f after %d iteration" %(avg_error_n/n_count, n_count))
+    print("Average normalised input reconstruction error:%f feature space loss:%f total loss: %f after %d iteration" %(avg_error_n/n_count, avg_error_n_feat/n_count, (avg_error_n+avg_error_n_feat)/n_count,n_count))
     
     #------------------------------------------------------------------------# 
     # code for instance-based feature inversion and analysis
@@ -227,29 +248,29 @@ def main():
     start_offset = 10
     end_offset = 20 
     duration =  180  # secs
-    mask_threshold = np.linspace(0, 1.1, 12)    # gives 1 as an extra value
+    mask_threshold = [0.6]#np.linspace(0, 1.1, 12)    # gives 1 as an extra value
     class_threshold = 0.66  # Jan's code
     error_threshold = 0.5
-    file_idx = np.arange(0, len(filelist))    
+    file_idx = [0]#np.arange(0, len(filelist))    
     hop_size= sample_rate/fps # samples
     dump_path = './audio'   # path to save the reconstructed audio
     pred_before = []    # class predictions before masking
     pred_after = [] # class predictions after masking
     gen_error = []  # error in generation per instance
     area_per_instance = [] # area covered in the generated mask based on recon
-    plot_flag = False
+    plot_flag = True
     result = []     # finally a list of tuples is created in the order
                     # threshold, total_instances, total_fail, average_area, cc_lt, cnc_lt, cc_gt, cnc_gt
-    ms_z_norm = True # standard score based normalisation of each bin after masking
+    ms_z_norm = False # standard score based normalisation of each bin after masking
     debug_flag = True
-    mask_inv_flag = True
+    mask_inv_flag = False
     analysis_array = []
     
     for mt in mask_threshold:
         print("\n ++++++Analysis for the mask threshold: %f +++++\n " %(mt))
         for file_instance in file_idx:
             print("<<<<Analysis for the file: %d>>>>" %(file_instance+1))
-            time_idx = np.random.randint(start_offset, end_offset, 1)[0]   # secs # tells given the offset, what frame_idx should it match?
+            time_idx = 1.428#np.random.randint(start_offset, end_offset, 1)[0]   # secs # tells given the offset, what frame_idx should it match?
             td = time_idx
             
             # re-generating all the excerpts for the selected file_idx
@@ -286,6 +307,7 @@ def main():
                 error_instance = util.dist_euclidean(excerpts[excerpt_idx], mel_predictions[0])/N
                 gen_error.append(error_instance)
                 print("NRE in generating the instance: %f" %((error_instance)))
+                print("UNRE in generating the instance: %f" %((error_instance*N)))
                     
                 # normalising the inverted mel to create a map, and use the map to cut the section in the input mel
                 norm_inv = util.normalise(mel_predictions[0])
@@ -307,7 +329,7 @@ def main():
                 else:
                     masked_input[0] = norm_inv * excerpts[excerpt_idx]
                     
-                plots.plot_figures(util.normalise(excerpts[excerpt_idx]), util.normalise(mel_predictions[0]), norm_inv, util.normalise(masked_input[0]), excerpt_idx, plot_flag)
+                plots.plot_figures(util.normalise(excerpts[excerpt_idx]), util.normalise(mel_predictions[0]), norm_inv, util.normalise(masked_input[0]), excerpt_idx, plot_flag, error_instance, time_idx)
                 
                 # reconstructing the input mel-spectrogram excerpt
                 masked_spect = util.preprocess_recon(excerpts[excerpt_idx], filterbank_pinv, spects_mag [file_instance] [excerpt_idx:excerpt_idx+blocklen, bin_mel_max:bin_nyquist], istd, mean)
@@ -317,7 +339,7 @@ def main():
                 masked_spect = util.preprocess_recon(masked_input[0], filterbank_pinv, spects_mag [file_instance] [excerpt_idx:excerpt_idx+blocklen, bin_mel_max:bin_nyquist], istd, mean)
                 util.recon_audio(masked_spect, spects_phase[file_instance][excerpt_idx:blocklen+excerpt_idx], dump_path,'mask_inv_',frame_len, sample_rate/fps, sample_rate)
                 
-                time_idx += 1   # shifting the time window by 1 sec
+                time_idx += 0.1   # shifting the time window by 1 sec
                 
                 # create input data after masking the previous input and feed it to the network.
                 # just changing the first input.
