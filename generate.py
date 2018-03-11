@@ -30,6 +30,7 @@ import util
 import plots
 import randomise
 import analysis
+import time
 
 def main():
     
@@ -137,7 +138,7 @@ def main():
     # run prediction loop
     print("Predicting:")
     # we select n_excerpts per input audio file sequentially after randomly shuffling the indices of excerpts
-    n_excerpts = 32
+    n_excerpts = 2
     # array of n_excerpts randomly chosen excerpts
     sampled_excerpts = np.zeros((len(filelist) * n_excerpts, blocklen, mel_bands))
       
@@ -147,7 +148,7 @@ def main():
     avg_error_n = 0
     avg_error_n_feat = 0
     counter = 0
-    print("Number of elements (extracted from each file): %d" %(len(mel_spects)))
+    print("Number of audio files: %d" %(len(mel_spects)))
 
     while (iterations):
         counter = 0
@@ -187,14 +188,17 @@ def main():
         N = (np.sum(dist_matrix))/(d * (d-1))
         print("Normalization constant input space: %f" %(N))
         
-        # for feature space loss
-        dist_matrix_featloss = np.zeros((len(filelist) * n_excerpts, len(filelist) * n_excerpts))
-        for i in range(len(sampled_excerpts)):
-            for j in range(len(sampled_excerpts)):
-                dist_matrix_featloss [i][j]= util.dist_euclidean(pred_fn_score(np.expand_dims(sampled_excerpts[i], axis=0)), pred_fn_score(np.expand_dims(sampled_excerpts[j], axis=0)))
-                
-        N_feat = (np.sum(dist_matrix_featloss))/(d * (d-1))
-        print("Normalization constant feature space: %f" %(N_feat))
+        if args.featloss:
+            # for feature space loss
+            t1 = time.time()
+            dist_matrix_featloss = np.zeros((len(filelist) * n_excerpts, len(filelist) * n_excerpts))
+            for i in range(len(sampled_excerpts)):
+                for j in range(len(sampled_excerpts)):
+                    dist_matrix_featloss [i][j]= util.dist_euclidean(pred_fn_score(np.expand_dims(sampled_excerpts[i], axis=0)), pred_fn_score(np.expand_dims(sampled_excerpts[j], axis=0)))
+                    
+            N_feat = (np.sum(dist_matrix_featloss))/(d * (d-1))
+            print("Normalization constant feature space: %f" %(N_feat))
+            print("Time taken for square matrix computation in feature loss case:%f" %(time.time()-t1))
         
         # generating spectrums from feature representations
         
@@ -203,7 +207,7 @@ def main():
         # in preds each element is a matrix of shape batch_size x 64, where each row correspond to features per spectrogram randomly sampled
         preds = []
         for pos in range(0, len(filelist) * n_excerpts, batchsize):
-            preds.append((pred_fn_score(sampled_excerpts[pos:pos + batchsize])))
+            preds.append((pred_fn_score(sampled_excerpts[pos:pos + batchsize]))) # if not 32 excerpts, then also it works by taking only the present ones
     
         # Step 2 : passing all features per file to generate spectrogram
         # Theano function returns a 4d array, mini_batch_size x 1 x blocklen x mel_dimensions
@@ -226,20 +230,22 @@ def main():
         print("Average normalised reconstruction error in input space:%f iteration: %d" %(error_n/len(sampled_excerpts), n_count+1))
 
         # feature space loss
-        
-        error_n_feat = 0
-        for i in range(len(sampled_excerpts)):
-            error_feat = util.dist_euclidean(pred_fn_score(np.expand_dims(sampled_excerpts[i], axis=0)), pred_fn_score(np.expand_dims(mel_predictions_array[i], axis=0)))
-            error_n_feat += error_feat
-        error_n_feat = error_n_feat/N_feat
-        avg_error_n_feat = error_n_feat/len(sampled_excerpts) + avg_error_n_feat
-        print("Average normalised reconstruction error in feature space:%f iteration: %d" %(error_n_feat/len(sampled_excerpts), n_count+1))
+        if args.featloss:
+            error_n_feat = 0
+            for i in range(len(sampled_excerpts)):
+                error_feat = util.dist_euclidean(pred_fn_score(np.expand_dims(sampled_excerpts[i], axis=0)), pred_fn_score(np.expand_dims(mel_predictions_array[i], axis=0)))
+                error_n_feat += error_feat
+            error_n_feat = error_n_feat/N_feat
+            avg_error_n_feat = error_n_feat/len(sampled_excerpts) + avg_error_n_feat
+            print("Average normalised reconstruction error in feature space:%f iteration: %d" %(error_n_feat/len(sampled_excerpts), n_count+1))
         
         iterations -=1
         n_count+=1
-    print('==========')    
-    print("Average normalised input reconstruction error:%f feature space loss:%f total loss: %f after %d iteration" %(avg_error_n/n_count, avg_error_n_feat/n_count, (avg_error_n+avg_error_n_feat)/n_count,n_count))
-    
+    print('==========')
+    if args.featloss:
+        print("Average normalised input reconstruction error:%f feature space loss:%f total loss: %f after %d iteration" %(avg_error_n/n_count, avg_error_n_feat/n_count, (avg_error_n+avg_error_n_feat)/n_count,n_count))
+    else:
+        print("Average normalised input reconstruction error:%f after %d iteration" %(avg_error_n/n_count,n_count)) 
     #------------------------------------------------------------------------# 
     # code for instance-based feature inversion and analysis
     # (1) Pick a file from dataset (dataset: Jamendo test) (2) Select a time index to read from
