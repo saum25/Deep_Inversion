@@ -274,8 +274,14 @@ def main():
     # training the Upconvolutional network - Network 2
     
     input_var_deconv = T.matrix('input_var_deconv') # extracted features from the real input : a matrix of size 32x64(fc8 layer)
-    input_var_gen_feat = T.matrix('input_var_gen_feat') # extracted features from the reconstructed input
-    input_var_comp_feat = T.matrix('input_var_comp_feat') # extracted features from the real input but may be at a different layer
+
+    # variables to handle feature space loss
+    if (args.comp_layer_name =='fc8') or (args.comp_layer_name == 'fc7'):
+        input_var_gen_feat = T.matrix('input_var_gen_feat') # extracted features from the reconstructed input
+        input_var_comp_feat = T.matrix('input_var_comp_feat') # extracted features from the real input but may be at a different layer
+    else:
+        input_var_gen_feat = T.tensor4('input_var_gen_feat')
+        input_var_comp_feat = T.tensor4('input_var_comp_feat')
     
     #input_var_deconv = T.tensor4('input_var_deconv')
     #inputs_deconv = input_var_deconv.dimshuffle(0, 1, 'x', 'x') # 32 x 64 x 1 x 1. Adding the width and depth dimensions
