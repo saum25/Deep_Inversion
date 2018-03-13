@@ -353,6 +353,9 @@ def main():
     
     patience = 15
     
+    list_training_log = []
+    list_training_log_save = [] # looks redundant, but no time to fix it
+    
     for epoch in range(epochs):
         print("\rLearning rate epoch %d: %f" %(epoch, eta.get_value()))
         err = 0
@@ -367,6 +370,9 @@ def main():
             gen_output_feat = comp_fn(gen_output) # output shape: 32 x 64
             err += train_fn(pred, comp_feat, data, gen_output_feat)
             #err += train_fn(pred, data)
+            
+            if epoch + 1 == 1 or epoch + 1 == epochs: # save training error for the first epoch or the last epoch
+                list_training_log.append(err)
 
             if not np.isfinite(err):
                 print("\nEncountered NaN loss in training. Aborting.")
@@ -451,6 +457,14 @@ def main():
     print("Saving final model")
     np.savez(args.generator_file, **{'param%d' % i: p for i, p in enumerate(
             lasagne.layers.get_all_param_values(gen_network))})
+    
+    # saving the training logs
+    # information about the start training loss, end training loss and the change/improvement in loss
+    list_training_log.append(list_training_log[0]-list_training_log[1])
+    list_training_log_save.append(tuple(list_training_log))
+    with open('models/fc8/training_log.txt', 'a+') as fp:
+        fp.write('\n'.join('%s %s %s'% x for x in list_training_log_save))
+        fp.write('\n')
             
 
 
