@@ -351,7 +351,7 @@ def main():
                 else:
                     masked_input[0] = norm_inv * excerpts[excerpt_idx]
                     
-                plots.plot_figures(util.normalise(excerpts[excerpt_idx]), util.normalise(mel_predictions[0]), norm_inv, util.normalise(masked_input[0]), excerpt_idx, plot_flag, error_instance, time_idx)
+                #plots.plot_figures(util.normalise(excerpts[excerpt_idx]), util.normalise(mel_predictions[0]), norm_inv, util.normalise(masked_input[0]), excerpt_idx, plot_flag, error_instance, time_idx)
                 
                 # reconstructing the input mel-spectrogram excerpt
                 masked_spect = util.preprocess_recon(excerpts[excerpt_idx], filterbank_pinv, spects_mag [file_instance] [excerpt_idx:excerpt_idx+blocklen, bin_mel_max:bin_nyquist], istd, mean)
