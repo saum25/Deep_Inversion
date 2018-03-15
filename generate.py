@@ -253,7 +253,7 @@ def main():
     print('\n===Instance based analysis====\n')
     start_offset = 10
     end_offset = 20 
-    duration =  180  # secs
+    duration =  0.05  # secs
     mask_threshold = [0.6]#np.linspace(0, 1.1, 12)    # gives 1 as an extra value
     class_threshold = 0.66  # Jan's code
     error_threshold = 0.5
@@ -368,11 +368,11 @@ def main():
         area_per_instance = []
 
     # saving the absolute change in prediction error
-    np.savez('prederr_cc.npz', **{'mt_%d'%i:analysis_array[i] for i in range(len(analysis_array))})
+    #np.savez('prederr_cc.npz', **{'mt_%d'%i:analysis_array[i] for i in range(len(analysis_array))})
     
     # save the final results
-    with open('result.txt', 'w') as fp:
-        fp.write('\n'.join('{} {} {} {} {} {} {} {}'.format(x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7]) for x in result))
+    #with open('result.txt', 'w') as fp:
+    #    fp.write('\n'.join('{} {} {} {} {} {} {} {}'.format(x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7]) for x in result))
 
 if __name__ == '__main__':
     main()
