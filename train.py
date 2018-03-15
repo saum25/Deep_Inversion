@@ -370,13 +370,13 @@ def main():
             gen_output_feat = comp_fn(gen_output) # output shape: 32 x 64
             err += train_fn(pred, comp_feat, data, gen_output_feat)
             #err += train_fn(pred, data)
-            
-            if epoch + 1 == 1 or epoch + 1 == epochs: # save training error for the first epoch or the last epoch
-                list_training_log.append(err)
 
             if not np.isfinite(err):
                 print("\nEncountered NaN loss in training. Aborting.")
                 sys.exit(1)
+                
+        if epoch + 1 == 1 or epoch + 1 == epochs: # save training error for the first epoch or the last epoch
+            list_training_log.append(err)
         print("Train loss: %.3f" % (err / epochsize_tr))
         loss_current_epoch = err/ epochsize_tr
         
@@ -463,7 +463,7 @@ def main():
     list_training_log.append(list_training_log[0]-list_training_log[1])
     list_training_log_save.append(tuple(list_training_log))
     with open('models/fc8/training_log.txt', 'a+') as fp:
-        fp.write('\n'.join('%s %s %s'% x for x in list_training_log_save))
+        fp.write('\n'.join('{} {} {}'.format(x[0],x[1],x[2]) for x in list_training_log_save))
         fp.write('\n')
             
 
