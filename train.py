@@ -337,7 +337,7 @@ def main():
     num_excerpts_tr = cal_excerpts(excerpt_indices_tr)
     num_excerpts_va = cal_excerpts(excerpt_indices_va)
 
-    epochs = 30
+    epochs = 3
     epochsize_tr = num_excerpts_tr/batchsize
     epochsize_va = num_excerpts_va/batchsize
 
@@ -376,7 +376,7 @@ def main():
                 sys.exit(1)
                 
         if epoch + 1 == 1 or epoch + 1 == epochs: # save training error for the first epoch or the last epoch
-            list_training_log.append(err)
+            list_training_log.append(err/epochsize_tr)
         print("Train loss: %.3f" % (err / epochsize_tr))
         loss_current_epoch = err/ epochsize_tr
         
