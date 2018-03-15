@@ -29,7 +29,7 @@ def argument_parser():
     parser.add_argument('--no-augment', action='store_false', dest='augment', help='If given, disable train-time data augmentation.') '''
     parser.add_argument('--n_conv_layers', default=1, type=int, help='number of 3x3 conv layers to be added before upconv layers')
     parser.add_argument('--n_conv_filters', default=32, type=int, help='number of filters per conv layer in the upconvolutonal architecture for Conv layer inversion')
-
+    parser.add_argument('--featloss', default=False, action='store_true', help='If given calculate loss in feature space as well')
     return parser
 
 def preprocess_recon(masked_mel, filtbank_pinv, spect_mag, istd, mean):

@@ -9,7 +9,7 @@ echo "Performance checking of the Inversion Models for FC8 inversion [Feature Sp
 echo "================================================================================"
 
 # extra case for arch idx=10.
-THEANO_FLAGS=device=gpu1 python train.py jamendo_augment.npz ./models/fc8/jamendo_augment_gen_fc8_a10.npz --featloss
+THEANO_FLAGS=device=gpu1 python generate.py jamendo_augment.npz ./models/fc8/jamendo_augment_gen_fc8_a10.npz --featloss
 
 for idx in {14..45}
 do
@@ -20,7 +20,7 @@ do
   echo
   echo "******* Model Performance Evaluation Starts *********"
 
-  THEANO_FLAGS=device=gpu1 python train.py jamendo_augment.npz ./models/fc8/jamendo_augment_gen_fc8_a${idx}.npz --featloss
+  THEANO_FLAGS=device=gpu1 python generate.py jamendo_augment.npz ./models/fc8/jamendo_augment_gen_fc8_a${idx}.npz --featloss
   #echo "jamendo_augment_gen_fc8_a${idx}.npz" 
   echo "******* Model Training Ends ***********"
 done
