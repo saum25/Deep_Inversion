@@ -1,5 +1,5 @@
 #!/bin/bash
-rm -rf training_log.txt # removes the training log file if present
+rm -rf models/fc8/training_log.txt # removes the training log file if present
 echo
 echo "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Script Starts %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% "
 echo

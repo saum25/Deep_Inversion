@@ -149,6 +149,9 @@ def main():
     avg_error_n_feat = 0
     counter = 0
     print("Number of audio files: %d" %(len(mel_spects)))
+    # saving the reconstruction error data
+    list_nre = []
+    list_performance = []
 
     while (iterations):
         counter = 0
@@ -245,7 +248,12 @@ def main():
     if args.featloss:
         print("Average normalised input reconstruction error:%f feature space loss:%f total loss: %f after %d iteration" %(avg_error_n/n_count, avg_error_n_feat/n_count, (avg_error_n+avg_error_n_feat)/n_count,n_count))
     else:
-        print("Average normalised input reconstruction error:%f after %d iteration" %(avg_error_n/n_count,n_count)) 
+        print("Average normalised input reconstruction error:%f after %d iteration" %(avg_error_n/n_count,n_count))
+    
+    list_nre.append(avg_error_n/n_count)
+    list_nre.append(avg_error_n_feat/n_count)
+    list_nre.append((avg_error_n+avg_error_n_feat)/n_count)
+    
     #------------------------------------------------------------------------# 
     # code for instance-based feature inversion and analysis
     # (1) Pick a file from dataset (dataset: Jamendo test) (2) Select a time index to read from
@@ -313,7 +321,15 @@ def main():
                 error_instance = util.dist_euclidean(excerpts[excerpt_idx], mel_predictions[0])/N
                 gen_error.append(error_instance)
                 print("NRE in generating the instance: %f" %((error_instance)))
-                print("UNRE in generating the instance: %f" %((error_instance*N)))
+                print("UNRE_inputspace in generating the instance: %f" %((error_instance*N)))
+                
+                # feature space loss
+                error_feat_ii100 = util.dist_euclidean(pred_fn_score(np.expand_dims(excerpts[excerpt_idx], axis=0)), pred_fn_score(np.expand_dims(mel_predictions[0], axis=0)))
+                print("UNRE_featspace in generating the instance: %f" %((error_feat_ii100)))
+                
+                list_nre.append(error_instance*N)
+                list_nre.append(error_feat_ii100)
+                list_nre.append(error_instance*N + error_feat_ii100)
                     
                 # normalising the inverted mel to create a map, and use the map to cut the section in the input mel
                 norm_inv = util.normalise(mel_predictions[0])
@@ -373,6 +389,13 @@ def main():
     # save the final results
     #with open('result.txt', 'w') as fp:
     #    fp.write('\n'.join('{} {} {} {} {} {} {} {}'.format(x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7]) for x in result))
+    
+    # saving the performance statistics: NRE in input space, feature space and UNRE for ii100 in both spaces
+    list_performance.append(tuple(list_nre))
+    with open('models/fc8/performance_log.txt', 'a+') as fp:
+        fp.write('\n'.join('{} {} {} {} {} {}'.format(x[0],x[1],x[2], x[3], x[4], x[5]) for x in list_performance))
+        fp.write('\n')
+    
 
 if __name__ == '__main__':
     main()
