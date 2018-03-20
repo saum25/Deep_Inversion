@@ -70,6 +70,7 @@ def architecture_upconv_fc8(input_var, input_shape):
 def architecture_upconv_fc7(input_var, input_shape):
     
     net = {}
+    n_filters = 64
     
     net['data'] = InputLayer(input_shape, input_var)
     print(net['data'].output_shape)
@@ -81,24 +82,24 @@ def architecture_upconv_fc7(input_var, input_shape):
     kwargs = dict(nonlinearity=lasagne.nonlinearities.elu,
                   W=lasagne.init.HeNormal())
     
-    net['uc1'] = batch_norm(TransposedConv2DLayer(net['rs1'], num_filters= 16, filter_size= 4, stride = 2, crop=1, **kwargs))
+    net['uc1'] = batch_norm(TransposedConv2DLayer(net['rs1'], num_filters= n_filters, filter_size= 4, stride = 2, crop=1, **kwargs))
     print(net['uc1'].output_shape)
-    net['c1'] = batch_norm(Conv2DLayer(net['uc1'], num_filters= 16, filter_size= 3, stride = 1, pad=1, **kwargs))
+    net['c1'] = batch_norm(Conv2DLayer(net['uc1'], num_filters= n_filters, filter_size= 3, stride = 1, pad=1, **kwargs))
     print(net['c1'].output_shape)    
     
-    net['uc2'] = batch_norm(TransposedConv2DLayer(net['c1'], num_filters= 8, filter_size= 4, stride = 2, crop=1, **kwargs))
+    net['uc2'] = batch_norm(TransposedConv2DLayer(net['c1'], num_filters= n_filters/2, filter_size= 4, stride = 2, crop=1, **kwargs))
     print(net['uc2'].output_shape)
-    net['c2'] = batch_norm(Conv2DLayer(net['uc2'], num_filters= 8, filter_size= 3, stride = 1, pad=1, **kwargs))
+    net['c2'] = batch_norm(Conv2DLayer(net['uc2'], num_filters= n_filters/2, filter_size= 3, stride = 1, pad=1, **kwargs))
     print(net['c2'].output_shape)    
     
-    net['uc3'] = batch_norm(TransposedConv2DLayer(net['c2'], num_filters= 4, filter_size= 4, stride = 2, crop=1, **kwargs))
+    net['uc3'] = batch_norm(TransposedConv2DLayer(net['c2'], num_filters= n_filters/4, filter_size= 4, stride = 2, crop=1, **kwargs))
     print(net['uc3'].output_shape)
-    net['c3'] = batch_norm(Conv2DLayer(net['uc3'], num_filters= 4, filter_size= 3, stride = 1, pad=1, **kwargs))
+    net['c3'] = batch_norm(Conv2DLayer(net['uc3'], num_filters= n_filters/4, filter_size= 3, stride = 1, pad=1, **kwargs))
     print(net['c3'].output_shape)
 
-    net['uc4'] = batch_norm(TransposedConv2DLayer(net['c3'], num_filters= 2, filter_size= 4, stride = 2, crop=1, **kwargs))
+    net['uc4'] = batch_norm(TransposedConv2DLayer(net['c3'], num_filters= n_filters/8, filter_size= 4, stride = 2, crop=1, **kwargs))
     print(net['uc4'].output_shape)
-    net['c4'] = batch_norm(Conv2DLayer(net['uc4'], num_filters= 2, filter_size= 3, stride = 1, pad=1, **kwargs))
+    net['c4'] = batch_norm(Conv2DLayer(net['uc4'], num_filters= n_filters/8, filter_size= 3, stride = 1, pad=1, **kwargs))
     print(net['c4'].output_shape)
     
     net['uc5'] = TransposedConv2DLayer(net['c4'], num_filters= 1, filter_size= 4, stride = 2, crop=1, **kwargs)
