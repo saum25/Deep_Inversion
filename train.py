@@ -54,6 +54,7 @@ def argument_parser():
     parser.add_argument('--n_conv_filters', default=32, type=int, help='number of filters per conv layer in the upconvolutonal architecture for Conv layer inversion')
     parser.add_argument('--w_inputloss', default=1.0, type=float, help='input space loss needs to be scaled by this factor')
     parser.add_argument('--comp_layer_name', default='fc8', help='layer from which the comparator features are extracted')
+    parser.add_argument('--nofeatloss', default=True, action='store_false', help='If given do not train with feature space loss')
     
     # lr decay schedule
     parser.add_argument('--lr_init', default= 0.001, type =float, help='initial learning rate')
@@ -264,24 +265,26 @@ def main():
     print (lasagne.layers.get_output_shape(network['fc7']))   # change here for playing with a layer
     #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     # Comparator 
-    
-    # create comparator output expression. As we need to analyse features from which layers are better
-    comparator_output = lasagne.layers.get_output(network[args.comp_layer_name], deterministic=True) # change here for playing with a layer
-    # prepare and compile prediction function
-    print("Compiling comparator function...")
-    comp_fn = theano.function([input_var], comparator_output, allow_input_downcast=True)
+    if (args.nofeatloss == True):
+        print("In Feature Space Loss Case!!")
+        # create comparator output expression. As we need to analyse features from which layers are better
+        comparator_output = lasagne.layers.get_output(network[args.comp_layer_name], deterministic=True) # change here for playing with a layer
+        # prepare and compile prediction function
+        print("Compiling comparator function...")
+        comp_fn = theano.function([input_var], comparator_output, allow_input_downcast=True)
     
     # training the Upconvolutional network - Network 2
     
     input_var_deconv = T.matrix('input_var_deconv') # extracted features from the real input : a matrix of size 32x64(fc8 layer)
 
-    # variables to handle feature space loss
-    if (args.comp_layer_name =='fc8') or (args.comp_layer_name == 'fc7'):
-        input_var_gen_feat = T.matrix('input_var_gen_feat') # extracted features from the reconstructed input
-        input_var_comp_feat = T.matrix('input_var_comp_feat') # extracted features from the real input but may be at a different layer
-    else:
-        input_var_gen_feat = T.tensor4('input_var_gen_feat')
-        input_var_comp_feat = T.tensor4('input_var_comp_feat')
+    if (args.nofeatloss == True):
+        # variables to handle feature space loss
+        if (args.comp_layer_name =='fc8') or (args.comp_layer_name == 'fc7'):
+            input_var_gen_feat = T.matrix('input_var_gen_feat') # extracted features from the reconstructed input
+            input_var_comp_feat = T.matrix('input_var_comp_feat') # extracted features from the real input but may be at a different layer
+        else:
+            input_var_gen_feat = T.tensor4('input_var_gen_feat')
+            input_var_comp_feat = T.tensor4('input_var_comp_feat')
     
     #input_var_deconv = T.tensor4('input_var_deconv')
     #inputs_deconv = input_var_deconv.dimshuffle(0, 1, 'x', 'x') # 32 x 64 x 1 x 1. Adding the width and depth dimensions
@@ -295,12 +298,15 @@ def main():
     # loss: squared euclidean distance per sample in a batch
     input_space_loss = T.mean(lasagne.objectives.squared_error(outputs, inputs))
     # feature space loss: L2 loss between the features extracted from inverted input and actual features
-    feat_space_loss = T.mean(lasagne.objectives.squared_error(input_var_comp_feat, input_var_gen_feat))
+    if (args.nofeatloss == True):
+        feat_space_loss = T.mean(lasagne.objectives.squared_error(input_var_comp_feat, input_var_gen_feat))
     # add weight decay or regularisation loss for training: needs to be checked as it appears to be regularising all layers.
     all_layers = lasagne.layers.get_all_layers(gen_network)
     l2_penalty = lasagne.regularization.regularize_layer_params(all_layers, lasagne.regularization.l2) * 0.0001
-    cost = input_space_loss * args.w_inputloss + feat_space_loss + l2_penalty
-    #cost = input_space_loss + l2_penalty
+    if (args.nofeatloss == True):
+        cost = input_space_loss * args.w_inputloss + feat_space_loss + l2_penalty
+    else:
+        cost = input_space_loss + l2_penalty
         
     # prepare and compile training function
     params = lasagne.layers.get_all_params(gen_network, trainable=True)
@@ -323,8 +329,10 @@ def main():
     #updates = lasagne.updates.nesterov_momentum(cost, params, eta, momentum)
     updates = lasagne.updates.adam(cost, params, eta)
     print("Compiling training function...")
-    train_fn = theano.function([input_var_deconv, input_var_comp_feat, input_var, input_var_gen_feat], cost, updates=updates, allow_input_downcast=True)
-    #train_fn = theano.function([input_var_deconv, input_var], cost, updates=updates, allow_input_downcast=True)
+    if (args.nofeatloss == True):
+        train_fn = theano.function([input_var_deconv, input_var_comp_feat, input_var, input_var_gen_feat], cost, updates=updates, allow_input_downcast=True)
+    else:    
+        train_fn = theano.function([input_var_deconv, input_var], cost, updates=updates, allow_input_downcast=True)
         
     print("Compiling validation function...")
     
@@ -365,11 +373,13 @@ def main():
             data, labels = next(batches_tr) # followed a simple styple *next(batches) from Jan is unclear what is passed.
             # labels information is a dummy variable its not used in training.
             pred = pred_fn(data)    # a theano function returns a numpy array always. Here it is a matrix of shape 32  x 64
-            comp_feat = comp_fn(data)
-            gen_output = np.squeeze(gen_fn(pred), axis=1) # output shape: 32 x 1 x 115 x 80
-            gen_output_feat = comp_fn(gen_output) # output shape: 32 x 64
-            err += train_fn(pred, comp_feat, data, gen_output_feat)
-            #err += train_fn(pred, data)
+            if (args.nofeatloss == True):
+                comp_feat = comp_fn(data)
+                gen_output = np.squeeze(gen_fn(pred), axis=1) # output shape: 32 x 1 x 115 x 80
+                gen_output_feat = comp_fn(gen_output) # output shape: 32 x 64
+                err += train_fn(pred, comp_feat, data, gen_output_feat)
+            else:
+                err += train_fn(pred, data)
 
             if not np.isfinite(err):
                 print("\nEncountered NaN loss in training. Aborting.")
