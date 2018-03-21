@@ -111,7 +111,7 @@ def main():
                 network['fc9'], [f['param%d' % i] for i in range(len(f.files))])
         
     # create output expression
-    outputs_score = lasagne.layers.get_output(network['fc8'], deterministic=True)
+    outputs_score = lasagne.layers.get_output(network['fc7'], deterministic=True)
     outputs_pred = lasagne.layers.get_output(network['fc9'], deterministic=True)
 
     # prepare and compile prediction function
@@ -122,7 +122,7 @@ def main():
     # training the Upconvolutional network - Network 2    
     input_var_deconv = T.matrix('input_var_deconv')
     #input_var_deconv = T.tensor4('input_var_deconv')
-    gen_network = upconv.architecture_upconv_fc8(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['fc8'])[1]))
+    gen_network = upconv.architecture_upconv_fc7(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['fc7'])[1]))
     #gen_network = upconv.architecture_upconv_conv4(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['conv4'])[1], lasagne.layers.get_output_shape(network['conv4'])[2], lasagne.layers.get_output_shape(network['conv4'])[3]), args.n_conv_layers, args.n_conv_filters)
     
     # load saved weights
