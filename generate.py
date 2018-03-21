@@ -138,7 +138,7 @@ def main():
     # run prediction loop
     print("Predicting:")
     # we select n_excerpts per input audio file sequentially after randomly shuffling the indices of excerpts
-    n_excerpts = 2
+    n_excerpts = 8
     # array of n_excerpts randomly chosen excerpts
     sampled_excerpts = np.zeros((len(filelist) * n_excerpts, blocklen, mel_bands))
       
@@ -392,7 +392,7 @@ def main():
     
     # saving the performance statistics: NRE in input space, feature space and UNRE for ii100 in both spaces
     list_performance.append(tuple(list_nre))
-    with open('models/fc8/performance_log.txt', 'a+') as fp:
+    with open('models/fc7/performance_log.txt', 'a+') as fp:
         fp.write('\n'.join('{} {} {} {} {} {}'.format(x[0],x[1],x[2], x[3], x[4], x[5]) for x in list_performance))
         fp.write('\n')
     
