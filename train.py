@@ -257,12 +257,12 @@ def main():
                 network['fc9'], [f['param%d' % i] for i in range(len(f.files))])
 
     # create output expression
-    outputs_score = lasagne.layers.get_output(network['fc7'], deterministic=True) # change here for playing with a layer
+    outputs_score = lasagne.layers.get_output(network['fc9'], deterministic=True) # change here for playing with a layer
 
     # prepare and compile prediction function
     print("Compiling prediction function...")
     pred_fn = theano.function([input_var], outputs_score, allow_input_downcast=True)
-    print (lasagne.layers.get_output_shape(network['fc7']))   # change here for playing with a layer
+    print (lasagne.layers.get_output_shape(network['fc9']))   # change here for playing with a layer
     #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     # Comparator 
     if (args.nofeatloss == True):
@@ -279,7 +279,7 @@ def main():
 
     if (args.nofeatloss == True):
         # variables to handle feature space loss
-        if (args.comp_layer_name =='fc8') or (args.comp_layer_name == 'fc7'):
+        if (args.comp_layer_name =='fc9') or (args.comp_layer_name =='fc8') or (args.comp_layer_name == 'fc7'):
             input_var_gen_feat = T.matrix('input_var_gen_feat') # extracted features from the reconstructed input
             input_var_comp_feat = T.matrix('input_var_comp_feat') # extracted features from the real input but may be at a different layer
         else:
@@ -288,7 +288,7 @@ def main():
     
     #input_var_deconv = T.tensor4('input_var_deconv')
     #inputs_deconv = input_var_deconv.dimshuffle(0, 1, 'x', 'x') # 32 x 64 x 1 x 1. Adding the width and depth dimensions
-    gen_network = upconv.architecture_upconv_fc7(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['fc7'])[1])) # change here for fc8 vs fc7 inversion
+    gen_network = upconv.architecture_upconv_fc9(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['fc9'])[1])) # change here for fc8 vs fc7 inversion
     #gen_network = upconv.architecture_upconv_c1(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['conv1'])[1], lasagne.layers.get_output_shape(network['conv1'])[2], lasagne.layers.get_output_shape(network['conv1'])[3]), args.n_conv_layers, args.n_conv_filters)
     outputs = lasagne.layers.get_output(gen_network, deterministic=False)
     
@@ -345,7 +345,7 @@ def main():
     num_excerpts_tr = cal_excerpts(excerpt_indices_tr)
     num_excerpts_va = cal_excerpts(excerpt_indices_va)
 
-    epochs = 3
+    epochs = 30
     epochsize_tr = num_excerpts_tr/batchsize
     epochsize_va = num_excerpts_va/batchsize
 
@@ -472,7 +472,7 @@ def main():
     # information about the start training loss, end training loss and the change/improvement in loss
     list_training_log.append(list_training_log[0]-list_training_log[1])
     list_training_log_save.append(tuple(list_training_log))
-    with open('models/fc8/training_log.txt', 'a+') as fp:
+    with open('models/fc9/training_log.txt', 'a+') as fp:
         fp.write('\n'.join('{} {} {}'.format(x[0],x[1],x[2]) for x in list_training_log_save))
         fp.write('\n')
             
