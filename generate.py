@@ -111,7 +111,7 @@ def main():
                 network['fc9'], [f['param%d' % i] for i in range(len(f.files))])
         
     # create output expression
-    outputs_score = lasagne.layers.get_output(network['fc7'], deterministic=True)
+    outputs_score = lasagne.layers.get_output(network['fc9'], deterministic=True)
     outputs_pred = lasagne.layers.get_output(network['fc9'], deterministic=True)
 
     # prepare and compile prediction function
@@ -122,7 +122,7 @@ def main():
     # training the Upconvolutional network - Network 2    
     input_var_deconv = T.matrix('input_var_deconv')
     #input_var_deconv = T.tensor4('input_var_deconv')
-    gen_network = upconv.architecture_upconv_fc7(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['fc7'])[1]))
+    gen_network = upconv.architecture_upconv_fc9(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['fc9'])[1]))
     #gen_network = upconv.architecture_upconv_conv4(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['conv4'])[1], lasagne.layers.get_output_shape(network['conv4'])[2], lasagne.layers.get_output_shape(network['conv4'])[3]), args.n_conv_layers, args.n_conv_filters)
     
     # load saved weights
@@ -392,7 +392,7 @@ def main():
     
     # saving the performance statistics: NRE in input space, feature space and UNRE for ii100 in both spaces
     list_performance.append(tuple(list_nre))
-    with open('models/fc7/performance_log.txt', 'a+') as fp:
+    with open('models/fc9/performance_log.txt', 'a+') as fp:
         fp.write('\n'.join('{} {} {} {} {} {}'.format(x[0],x[1],x[2], x[3], x[4], x[5]) for x in list_performance))
         fp.write('\n')
     
