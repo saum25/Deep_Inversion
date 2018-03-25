@@ -227,6 +227,53 @@ def architecture_upconv_c5_mp6(input_var, input_shape, n_conv_layers, n_conv_fil
     
     return net['out']
 
+def architecture_upconv_conv5(input_var, input_shape, n_conv_layers, n_conv_filters):
+    
+    net = {}
+    
+    kwargs = dict(nonlinearity=lasagne.nonlinearities.elu,
+                  W=lasagne.init.HeNormal())
+    
+    net['data'] = InputLayer(input_shape, input_var)
+    print("\rLayer output shapes")
+    print(net['data'].output_shape)
+    
+    # Bunch of 3 x 3 convolution layers: experimentally we found that, adding 3 conv layers in start than in middle is better: but why?
+    '''net['c1'] = batch_norm(Conv2DLayer(net['data'], num_filters= 32, filter_size= 3, stride = 1, pad=1, **kwargs))
+    print(net['c1'].output_shape)   
+    net['c2'] = batch_norm(Conv2DLayer(net['c1'], num_filters= 32, filter_size= 3, stride = 1, pad=1, **kwargs))
+    print(net['c2'].output_shape)
+    net['c3'] = batch_norm(Conv2DLayer(net['c2'], num_filters= 32, filter_size= 3, stride = 1, pad=1, **kwargs))
+    print(net['c3'].output_shape)'''
+    
+    i = 'data'
+    j = 'c1'
+    for idx in range(n_conv_layers):
+        print("Conv layer index: %d" %(idx+1))
+        net[j] = batch_norm(Conv2DLayer(net[i], num_filters= n_conv_filters, filter_size= 3, stride = 1, pad=1, **kwargs))
+        print(net[j].output_shape)
+        # renaming for next iteration
+        i = j
+        j = j[:-1] + str(idx + 2)        
+    
+    # Bunch of transposed convolution layers  
+    net['uc1'] = batch_norm(TransposedConv2DLayer(net[i], num_filters= n_conv_filters/2, filter_size= 4, stride = 2, crop=1, **kwargs))
+    print(net['uc1'].output_shape)
+    
+    net['uc2'] = batch_norm(TransposedConv2DLayer(net['uc1'], num_filters= 1, filter_size= 4, stride = 2, crop=1, **kwargs))
+    print(net['uc2'].output_shape)
+
+    # slicing the output to 115 x 80 size  
+    net['s1'] = lasagne.layers.SliceLayer(net['uc2'], slice(0, 115), axis=-2)
+    print(net['s1'].output_shape)  
+    net['out'] = lasagne.layers.SliceLayer(net['s1'], slice(0, 80), axis=-1)
+    print(net['out'] .output_shape)
+    
+    print("Number of parameter to be learned: %d" %(lasagne.layers.count_params(net['out'])))
+    
+    return net['out']
+
+
 def architecture_upconv_conv4(input_var, input_shape, n_conv_layers, n_conv_filters):
     
     net = {}
