@@ -257,12 +257,12 @@ def main():
                 network['fc9'], [f['param%d' % i] for i in range(len(f.files))])
 
     # create output expression
-    outputs_score = lasagne.layers.get_output(network['conv5'], deterministic=True) # change here for playing with a layer
+    outputs_score = lasagne.layers.get_output(network['conv4'], deterministic=True) # change here for playing with a layer
 
     # prepare and compile prediction function
     print("Compiling prediction function...")
     pred_fn = theano.function([input_var], outputs_score, allow_input_downcast=True)
-    print (lasagne.layers.get_output_shape(network['conv5']))   # change here for playing with a layer
+    print (lasagne.layers.get_output_shape(network['conv4']))   # change here for playing with a layer
     #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     # Comparator 
     if (args.nofeatloss == True):
@@ -289,7 +289,7 @@ def main():
     
     #inputs_deconv = input_var_deconv.dimshuffle(0, 1, 'x', 'x') # 32 x 64 x 1 x 1. Adding the width and depth dimensions
     #gen_network = upconv.architecture_upconv_fc7(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['fc7'])[1])) # change here for fc8 vs fc7 inversion
-    gen_network = upconv.architecture_upconv_conv5(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['conv5'])[1], lasagne.layers.get_output_shape(network['conv5'])[2], lasagne.layers.get_output_shape(network['conv5'])[3]), args.n_conv_layers, args.n_conv_filters)
+    gen_network = upconv.architecture_upconv_conv4(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['conv4'])[1], lasagne.layers.get_output_shape(network['conv4'])[2], lasagne.layers.get_output_shape(network['conv4'])[3]), args.n_conv_layers, args.n_conv_filters)
     outputs = lasagne.layers.get_output(gen_network, deterministic=False)
     
     gen_fn = theano.function([input_var_deconv], outputs, allow_input_downcast= True)   # takes in features and gives out reconstructed output
@@ -472,7 +472,7 @@ def main():
     # information about the start training loss, end training loss and the change/improvement in loss
     list_training_log.append(list_training_log[0]-list_training_log[1])
     list_training_log_save.append(tuple(list_training_log))
-    with open('models/conv5/training_log.txt', 'a+') as fp:
+    with open('models/conv4/training_log.txt', 'a+') as fp:
         fp.write('\n'.join('{} {} {}'.format(x[0],x[1],x[2]) for x in list_training_log_save))
         fp.write('\n')
             
