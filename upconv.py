@@ -386,11 +386,11 @@ def architecture_upconv_c2(input_var, input_shape, n_conv_layers, n_conv_filters
     net['uc1'] = batch_norm(TransposedConv2DLayer(net[i], num_filters= 1, filter_size= 4, stride = 2, crop=1, **kwargs))
     print(net['uc1'].output_shape)
     
-    '''net['uc2'] = batch_norm(TransposedConv2DLayer(net['uc1'], num_filters= 1, filter_size= 4, stride = 2, crop=1, **kwargs))
-    print(net['uc2'].output_shape)'''
+    net['uc2'] = batch_norm(TransposedConv2DLayer(net['uc1'], num_filters= 1, filter_size= 4, stride = 2, crop=1, **kwargs))
+    print(net['uc2'].output_shape)
 
     # slicing the output to 115 x 80 size  
-    net['s1'] = lasagne.layers.SliceLayer(net['uc1'], slice(0, 115), axis=-2)
+    net['s1'] = lasagne.layers.SliceLayer(net['uc2'], slice(0, 115), axis=-2)
     print(net['s1'].output_shape)  
     net['out'] = lasagne.layers.SliceLayer(net['s1'], slice(0, 80), axis=-1)
     print(net['out'] .output_shape)
