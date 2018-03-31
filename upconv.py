@@ -427,16 +427,15 @@ def architecture_upconv_c1(input_var, input_shape, n_conv_layers, n_conv_filters
         j = j[:-1] + str(idx + 2)     
     
     # Bunch of transposed convolution layers  
-    net['uc1'] = batch_norm(TransposedConv2DLayer(net[i], num_filters= n_conv_filters/2, filter_size= 4, stride = 2, crop=1, **kwargs))
+    '''net['uc1'] = batch_norm(TransposedConv2DLayer(net[i], num_filters= n_conv_filters/2, filter_size= 4, stride = 2, crop=1, **kwargs))
     print(net['uc1'].output_shape)
     
     net['uc2'] = batch_norm(TransposedConv2DLayer(net['uc1'], num_filters= 1, filter_size= 4, stride = 2, crop=1, **kwargs))
-    print(net['uc2'].output_shape)
+    print(net['uc2'].output_shape)'''
 
-    # slicing the output to 115 x 80 size  
-    net['s1'] = lasagne.layers.SliceLayer(net['uc2'], slice(0, 115), axis=-2)
-    print(net['s1'].output_shape)  
-    net['out'] = lasagne.layers.SliceLayer(net['s1'], slice(0, 80), axis=-1)
+    net['c1'] = batch_norm(Conv2DLayer(net[i], num_filters= 1, filter_size= 3, stride = 1, pad=1, **kwargs))
+    print(net['c1'].output_shape)
+    net['out'] = lasagne.layers.PadLayer(net['c1'], width=1)
     print(net['out'] .output_shape)
     
     print("Number of parameter to be learned: %d" %(lasagne.layers.count_params(net['out'])))
