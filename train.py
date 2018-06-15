@@ -471,11 +471,11 @@ def main():
     
     # saving the training logs
     # information about the start training loss, end training loss and the change/improvement in loss
-    '''list_training_log.append(list_training_log[0]-list_training_log[1])
+    list_training_log.append(list_training_log[0]-list_training_log[1])
     list_training_log_save.append(tuple(list_training_log))
     with open('models/conv1/training_log.txt', 'a+') as fp:
         fp.write('\n'.join('{} {} {}'.format(x[0],x[1],x[2]) for x in list_training_log_save))
-        fp.write('\n')'''
+        fp.write('\n')
             
 
 
