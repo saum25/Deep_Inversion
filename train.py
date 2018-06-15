@@ -305,7 +305,8 @@ def main():
     l2_penalty = lasagne.regularization.regularize_layer_params(all_layers, lasagne.regularization.l2) * 0.0001
     if (args.nofeatloss == True):
         print("comes here!!!!")
-        cost = input_space_loss * args.w_inputloss + feat_space_loss + l2_penalty
+        #cost = input_space_loss * args.w_inputloss + feat_space_loss + l2_penalty
+        cost = feat_space_loss + l2_penalty # changing the total loss to the feature space loss.
     else:
         cost = input_space_loss + l2_penalty
         
