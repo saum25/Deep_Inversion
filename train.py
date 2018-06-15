@@ -257,12 +257,12 @@ def main():
                 network['fc9'], [f['param%d' % i] for i in range(len(f.files))])
 
     # create output expression
-    outputs_score = lasagne.layers.get_output(network['conv1'], deterministic=True) # change here for playing with a layer
+    outputs_score = lasagne.layers.get_output(network['fc8'], deterministic=True) # enc_layer_name refers to the SVDNet(encoder) layer that needs to be inverted.
 
     # prepare and compile prediction function
     print("Compiling prediction function...")
     pred_fn = theano.function([input_var], outputs_score, allow_input_downcast=True)
-    print (lasagne.layers.get_output_shape(network['conv1']))   # change here for playing with a layer
+    print (lasagne.layers.get_output_shape(network['fc8']))   # change here for layer name
     #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     # Comparator 
     if (args.nofeatloss == True):
@@ -275,8 +275,8 @@ def main():
     
     # training the Upconvolutional network - Network 2
     
-    #input_var_deconv = T.matrix('input_var_deconv') # extracted features from the real input : a matrix of size 32x64(fc8 layer)
-    input_var_deconv = T.tensor4('input_var_deconv')
+    input_var_deconv = T.matrix('input_var_deconv') # extracted features from the real input : a matrix of size 32x64(fc8 layer)
+    #input_var_deconv = T.tensor4('input_var_deconv')
 
     if (args.nofeatloss == True):
         # variables to handle feature space loss
@@ -288,8 +288,8 @@ def main():
             input_var_comp_feat = T.tensor4('input_var_comp_feat')
     
     #inputs_deconv = input_var_deconv.dimshuffle(0, 1, 'x', 'x') # 32 x 64 x 1 x 1. Adding the width and depth dimensions
-    #gen_network = upconv.architecture_upconv_fc7(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['fc7'])[1])) # change here for fc8 vs fc7 inversion
-    gen_network = upconv.architecture_upconv_c1(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['conv1'])[1], lasagne.layers.get_output_shape(network['conv1'])[2], lasagne.layers.get_output_shape(network['conv1'])[3]), args.n_conv_layers, args.n_conv_filters)
+    gen_network = upconv.architecture_upconv_fc8(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['fc8'])[1])) # change here for fc8 vs fc7 inversion
+    #gen_network = upconv.architecture_upconv_c1(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['conv1'])[1], lasagne.layers.get_output_shape(network['conv1'])[2], lasagne.layers.get_output_shape(network['conv1'])[3]), args.n_conv_layers, args.n_conv_filters)
     outputs = lasagne.layers.get_output(gen_network, deterministic=False)
     
     gen_fn = theano.function([input_var_deconv], outputs, allow_input_downcast= True)   # takes in features and gives out reconstructed output
@@ -304,6 +304,7 @@ def main():
     all_layers = lasagne.layers.get_all_layers(gen_network)
     l2_penalty = lasagne.regularization.regularize_layer_params(all_layers, lasagne.regularization.l2) * 0.0001
     if (args.nofeatloss == True):
+        print("comes here!!!!")
         cost = input_space_loss * args.w_inputloss + feat_space_loss + l2_penalty
     else:
         cost = input_space_loss + l2_penalty
