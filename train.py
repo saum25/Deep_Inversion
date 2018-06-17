@@ -257,12 +257,12 @@ def main():
                 network['fc9'], [f['param%d' % i] for i in range(len(f.files))])
 
     # create output expression
-    outputs_score = lasagne.layers.get_output(network['conv2'], deterministic=True) # enc_layer_name refers to the SVDNet(encoder) layer that needs to be inverted.
+    outputs_score = lasagne.layers.get_output(network['conv1'], deterministic=True) # enc_layer_name refers to the SVDNet(encoder) layer that needs to be inverted.
 
     # prepare and compile prediction function
     print("Compiling prediction function...")
     pred_fn = theano.function([input_var], outputs_score, allow_input_downcast=True)
-    print (lasagne.layers.get_output_shape(network['conv2']))   # change here for layer name
+    print (lasagne.layers.get_output_shape(network['conv1']))   # change here for layer name
     #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     # Comparator 
     if (args.nofeatloss == True):
@@ -289,7 +289,7 @@ def main():
     
     #inputs_deconv = input_var_deconv.dimshuffle(0, 1, 'x', 'x') # 32 x 64 x 1 x 1. Adding the width and depth dimensions
     #gen_network = upconv.architecture_upconv_fc7(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['fc7'])[1])) # change here for fc8 vs fc7 inversion
-    gen_network = upconv.architecture_upconv_c2(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['conv2'])[1], lasagne.layers.get_output_shape(network['conv2'])[2], lasagne.layers.get_output_shape(network['conv2'])[3]), args.n_conv_layers, args.n_conv_filters)
+    gen_network = upconv.architecture_upconv_c1(input_var_deconv, (batchsize, lasagne.layers.get_output_shape(network['conv1'])[1], lasagne.layers.get_output_shape(network['conv1'])[2], lasagne.layers.get_output_shape(network['conv1'])[3]), args.n_conv_layers, args.n_conv_filters)
     outputs = lasagne.layers.get_output(gen_network, deterministic=False)
     
     gen_fn = theano.function([input_var_deconv], outputs, allow_input_downcast= True)   # takes in features and gives out reconstructed output
